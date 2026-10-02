@@ -414,7 +414,7 @@
                 return matchSearch && matchChi;
             });
 
-            // 1. Render List (Ẩn các trường "Chưa rõ")
+            // 1. Render List
             const listContainer = document.getElementById('familyList');
             if (listContainer) {
                 listContainer.innerHTML = filtered.map(p => {
@@ -439,49 +439,59 @@
                 }).join('');
             }
 
-            // 2. Render Ngang (Ẩn các trường "Chưa rõ")
+            // 2. Render Ngang (Đã chuẩn hóa gom chung tất cả thành viên cùng đời vào một khối duy nhất)
             const treeRoot = document.getElementById('dynamicTreeRoot');
             if (treeRoot) {
                 let grouped = {};
-                familyData.forEach(p => {
-                    let gen = p.generation || 'Chưa rõ đời';
-                    if (!grouped[gen]) grouped[gen] = [];
-                    grouped[gen].push(p);
+                filtered.forEach(p => {
+                    let rawGen = (p.generation || 'Chưa rõ đời').trim();
+                    // Chuẩn hóa tên đời để gộp các biến thể chữ hoa/thường hoặc khoảng trắng về một chuẩn duy nhất
+                    let genKey = rawGen;
+                    let order = getGenerationOrder(rawGen);
+                    
+                    if (!grouped[order]) {
+                        grouped[order] = { title: rawGen, members: [] };
+                    }
+                    grouped[order].members.push(p);
                 });
 
-                let sortedGens = Object.keys(grouped).sort((a, b) => getGenerationOrder(a) - getGenerationOrder(b));
-                treeRoot.innerHTML = sortedGens.map(gen => `
-                    <div class="w-full mb-8">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-amber-900 text-white px-3 py-1 rounded font-bold text-sm">${gen}</div>
-                            <div class="flex-1 h-[1px] bg-amber-200"></div>
-                        </div>
-                        <div class="print-grid-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                            ${grouped[gen].map(p => {
-                                let parentName = "";
-                                if (p.parentId) {
-                                    let pObj = familyData.find(item => item.id === p.parentId);
-                                    if (pObj) parentName = pObj.fullName;
-                                }
-                                return `
-                                    <div class="bg-amber-50/60 p-3 rounded-lg border border-amber-200 shadow-sm flex flex-col justify-between text-xs">
-                                        <div>
-                                            <div class="font-bold text-amber-900 text-sm">${p.fullName}</div>
-                                            <div class="text-amber-800 font-semibold">Chi: ${p.chi || 'Gốc'}</div>
-                                            ${p.spouse && p.spouse !== 'Chưa rõ' ? `<div>💍 Phối: ${p.spouse}</div>` : ''}
-                                            ${p.birthYear && p.birthYear !== 'Chưa rõ' ? `<div>📅 ${p.birthYear}</div>` : ''}
-                                            ${parentName ? `<div class="mt-1 bg-amber-100/80 px-1.5 py-0.5 rounded border border-amber-200 font-medium text-[11px]">↑ Từ: ${parentName}</div>` : ''}
+                let sortedOrders = Object.keys(grouped).sort((a, b) => parseInt(a) - parseInt(b));
+                
+                treeRoot.innerHTML = sortedOrders.map(order => {
+                    let group = grouped[order];
+                    return `
+                        <div class="w-full mb-8">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="bg-amber-900 text-white px-4 py-1.5 rounded-lg font-bold text-sm shadow">${group.title}</div>
+                                <div class="flex-1 h-[1px] bg-amber-200"></div>
+                            </div>
+                            <div class="print-grid-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                ${group.members.map(p => {
+                                    let parentName = "";
+                                    if (p.parentId) {
+                                        let pObj = familyData.find(item => item.id === p.parentId);
+                                        if (pObj) parentName = pObj.fullName;
+                                    }
+                                    return `
+                                        <div class="bg-amber-50/60 p-3 rounded-lg border border-amber-200 shadow-sm flex flex-col justify-between text-xs">
+                                            <div>
+                                                <div class="font-bold text-amber-900 text-sm">${p.fullName}</div>
+                                                <div class="text-amber-800 font-semibold">Chi: ${p.chi || 'Gốc'}</div>
+                                                ${p.spouse && p.spouse !== 'Chưa rõ' ? `<div>💍 Phối: ${p.spouse}</div>` : ''}
+                                                ${p.birthYear && p.birthYear !== 'Chưa rõ' ? `<div>📅 ${p.birthYear}</div>` : ''}
+                                                ${parentName ? `<div class="mt-1 bg-amber-100/80 px-1.5 py-0.5 rounded border border-amber-200 font-medium text-[11px]">↑ Từ: ${parentName}</div>` : ''}
+                                            </div>
+                                            <div class="mt-2 pt-1 border-t border-amber-200 flex justify-between items-center no-print">
+                                                <span class="text-slate-500">${p.location && p.location !== 'Chưa rõ' ? p.location : ''}</span>
+                                                <button onclick="editMember('${p.id}')" class="text-amber-900 hover:underline font-bold">Sửa</button>
+                                            </div>
                                         </div>
-                                        <div class="mt-2 pt-1 border-t border-amber-200 flex justify-between items-center no-print">
-                                            <span class="text-slate-500">${p.location && p.location !== 'Chưa rõ' ? p.location : ''}</span>
-                                            <button onclick="editMember('${p.id}')" class="text-amber-900 hover:underline font-bold">Sửa</button>
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
+                                    `;
+                                }).join('')}
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
         }
 
