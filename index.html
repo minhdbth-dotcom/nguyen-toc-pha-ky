@@ -8,73 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        
-        /* Cấu hình trang in chuẩn A4, lề, khung kép và tiêu đề/chân trang sách */
         @media print {
-            @page {
-                size: A4;
-                margin: 2.0cm 1.8cm 2.0cm 3.0cm;
-            }
+            @page { size: A4; margin: 2.0cm 1.8cm 2.0cm 3.0cm; }
             .no-print { display: none !important; }
-            body { 
-                background: white !important; 
-                color: black !important; 
-                font-family: 'Times New Roman', Times, serif !important; 
-                font-size: 13pt;
-                line-height: 1.5;
-            }
-            .print-book-page {
-                page-break-after: always;
-                break-after: page;
-                position: relative;
-                min-height: 24.5cm;
-                padding-bottom: 40px;
-                text-align: justify;
-            }
-            .print-book-page:last-child {
-                page-break-after: avoid;
-            }
-            .book-header {
-                text-align: center;
-                font-size: 11pt;
-                font-weight: bold;
-                text-transform: uppercase;
-                border-bottom: 1px solid #000;
-                padding-bottom: 8px;
-                margin-bottom: 25px;
-            }
-            .book-footer {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                font-size: 10pt;
-            }
-            .book-footer-content {
-                border-top: 2px solid #000;
-                padding-top: 6px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .print-cover {
-                display: flex !important;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-                height: 24.2cm;
-                text-align: center;
-                page-break-after: always;
-                border: 4px double #000;
-                padding: 1.5cm 1cm;
-                box-sizing: border-box;
-            }
+            body { background: white !important; color: black !important; font-family: 'Times New Roman', Times, serif !important; font-size: 13pt; line-height: 1.5; }
+            .print-book-page { page-break-after: always; break-after: page; position: relative; min-height: 24.5cm; padding-bottom: 40px; text-align: justify; }
+            .print-book-page:last-child { page-break-after: avoid; }
+            .book-header { text-align: center; font-size: 11pt; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 8px; margin-bottom: 25px; }
+            .book-footer { position: absolute; bottom: 0; width: 100%; font-size: 10pt; }
+            .book-footer-content { border-top: 2px solid #000; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; }
+            .print-cover { display: flex !important; flex-direction: column; justify-content: space-between; align-items: center; height: 24.2cm; text-align: center; page-break-after: always; border: 4px double #000; padding: 1.5cm 1cm; box-sizing: border-box; }
         }
         .print-cover { display: none; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
 
-    <!-- Header -->
     <header class="bg-amber-900 text-white shadow-lg no-print">
         <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
@@ -82,37 +31,22 @@
                 <p class="text-amber-200 text-sm mt-1">Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</p>
             </div>
             <div class="flex flex-wrap gap-2">
-                <button onclick="switchView('overview')" id="btnViewOverview" class="bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow">
-                    📖 Tổng Quan
-                </button>
-                <button onclick="switchView('list')" id="btnViewList" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    📋 Danh Sách
-                </button>
-                <button onclick="switchView('tree')" id="btnViewTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    🌳 Sơ Đồ Đời (Ngang)
-                </button>
-                <button onclick="switchView('verticalTree')" id="btnViewVerticalTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    🌲 Sơ Đồ Cột (Phân Nhánh)
-                </button>
-                <button onclick="printFamilyBook()" class="bg-amber-600 hover:bg-amber-500 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-500 text-white flex items-center gap-1">
-                    📖 In Cuốn Gia Phả
-                </button>
-                <button onclick="exportData()" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    📥 Xuất Dữ Liệu
-                </button>
+                <button onclick="switchView('overview')" id="btnViewOverview" class="bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow">📖 Tổng Quan</button>
+                <button onclick="switchView('list')" id="btnViewList" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">📋 Danh Sách</button>
+                <button onclick="switchView('tree')" id="btnViewTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">🌳 Sơ Đồ Đời (Ngang)</button>
+                <button onclick="switchView('verticalTree')" id="btnViewVerticalTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">🌲 Sơ Đồ Cột (Phân Nhánh)</button>
+                <button onclick="printFamilyBook()" class="bg-amber-600 hover:bg-amber-500 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-500 text-white flex items-center gap-1">📖 In Cuốn Gia Phả</button>
+                <button onclick="exportData()" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">📥 Xuất Dữ Liệu</button>
                 <label class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700 cursor-pointer">
                     📤 Nhập Dữ Liệu <input type="file" id="importFile" onchange="importData(event)" class="hidden">
                 </label>
-                <button onclick="toggleAdminPanel()" class="bg-amber-700 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-semibold transition shadow">
-                    ⚙️ Quản Trị
-                </button>
+                <button onclick="toggleAdminPanel()" class="bg-amber-700 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-semibold transition shadow">⚙️ Quản Trị</button>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8 max-w-7xl">
 
-        <!-- Thống kê tổng hợp -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 no-print">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
@@ -130,14 +64,13 @@
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-slate-500 font-medium">Trạng thái dữ liệu</p>
-                    <h3 class="text-sm font-semibold text-emerald-600 mt-2">Đã lưu tự động (Local)</h3>
+                    <p class="text-sm text-slate-500 font-medium">Trạng thái lưu trữ</p>
+                    <h3 class="text-sm font-semibold text-emerald-600 mt-2">Đã đồng bộ LocalStorage</h3>
                 </div>
                 <div class="p-3 bg-emerald-50 text-emerald-700 rounded-lg text-xl">💾</div>
             </div>
         </div>
 
-        <!-- Bảng quản trị (Form thêm/sửa thành viên) -->
         <div id="adminPanel" class="hidden bg-white p-6 rounded-2xl shadow-md border border-amber-200 mb-8 transition-all no-print">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
                 <h2 id="formTitle" class="text-xl font-bold text-amber-900">➕ Thêm Thành Viên Mới</h2>
@@ -149,7 +82,6 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên *</label>
                     <input type="text" id="fullName" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
                 </div>
-                
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Chọn Đời thứ *</label>
                     <select id="generation" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none bg-white font-medium text-amber-900">
@@ -174,14 +106,12 @@
                         <option value="Đời thứ 15">Đời thứ 15</option>
                     </select>
                 </div>
-                
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Thuộc đời Cha (Phụ thân sinh ra)</label>
                     <select id="parentId" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none bg-white">
                         <option value="">-- Chọn Phụ Thân (Gốc / Trực hệ) --</option>
                     </select>
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Chọn Chi phái thuộc dòng họ *</label>
                     <input type="hidden" id="chi" value="Gốc" required>
@@ -194,7 +124,6 @@
                         <button type="button" onclick="selectChiTab('Chi V')" class="chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">Chi V</button>
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Phối trí (Vợ / Chồng)</label>
                     <input type="text" id="spouse" placeholder="Họ tên vợ hoặc chồng" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
@@ -226,65 +155,36 @@
             </form>
         </div>
 
-        <!-- VÙNG TỔNG QUAN -->
         <div id="overviewViewContainer" class="bg-white p-8 rounded-2xl shadow-sm border border-amber-200 space-y-6">
             <div class="text-center border-b border-amber-100 pb-6">
                 <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Phả Ký Dòng Họ Nguyễn</span>
                 <h2 class="text-2xl md:text-3xl font-bold text-amber-900 mt-2">NGUỒN GỐC PHÁT TÍCH & TRUYỀN THỐNG GIA TỘC</h2>
                 <p class="text-slate-600 text-sm mt-1">Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</p>
             </div>
-
             <div class="bg-amber-50/50 p-6 rounded-xl border border-amber-100 space-y-3">
-                <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">📜 1. Lời mở đầu & Triết lý nguồn cội</h3>
+                <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">📜 Lời mở đầu & Triết lý nguồn cội</h3>
                 <p class="text-slate-700 text-sm leading-relaxed italic text-justify">
-                    "Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách." Các cụ ngày xưa đã dạy:<br>
-                    - Nhân do hồ tổ (Người phải có tổ)<br>
-                    - Mộc do hồ bản (Cây phải có gốc)<br>
-                    - Thủy do hồ nguyên (Nước phải có nguồn)<br>
+                    "Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách." Các cụ ngày xưa đã dạy: Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên.
                 </p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-3 shadow-sm">
-                    <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">🌍 2. Hành trình di cư & Lập nghiệp</h3>
-                    <p class="text-slate-700 text-sm leading-relaxed text-justify">
-                        Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương di cư vào Thanh Hóa, gia tộc chuyển lên định cư tại <strong>Hội Hiền thôn, Phúc Trạch xã</strong> vào thời vua Lê Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm, hình thành 5 chi phái với trên 100 hộ.
-                    </p>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-3 shadow-sm">
-                    <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">🏛️ 3. Thủy tổ khảo & Các thế hệ</h3>
-                    <p class="text-slate-700 text-sm leading-relaxed text-justify">
-                        - <strong>Húy:</strong> Công Tình | <strong>Tự:</strong> Trung Lương.<br>
-                        - Sinh hạ 2 người con: Trưởng húy <strong>Công Dinh</strong> (phụng tự vi thủy tổ); Thứ húy Văn Tự (vô tự).
-                    </p>
-                </div>
-            </div>
-
             <div class="bg-amber-50/50 p-6 rounded-xl border border-amber-100 space-y-3">
-                <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">🌿 4. Quy mô số hóa hiện tại</h3>
-                <p id="dynamicOverviewText" class="text-slate-700 text-sm leading-relaxed text-justify">
-                    <!-- Nội dung động -->
-                </p>
+                <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">🌿 Quy mô số hóa hiện tại</h3>
+                <p id="dynamicOverviewText" class="text-slate-700 text-sm leading-relaxed text-justify"></p>
             </div>
-
             <div class="text-center pt-4">
-                <button onclick="switchView('tree')" class="bg-amber-800 hover:bg-amber-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow transition">
-                    🌳 Khám Phá Sơ Đồ Cây Phả Hệ Ngay
-                </button>
+                <button onclick="switchView('tree')" class="bg-amber-800 hover:bg-amber-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow transition">🌳 Khám Phá Sơ Đồ Cây Phả Hệ Ngay</button>
             </div>
         </div>
 
-        <!-- Thanh tìm kiếm & Lọc -->
         <div id="filterSection" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between no-print">
             <div class="w-full md:w-2/3">
                 <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên, đời, nghề nghiệp, địa chỉ..." 
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600"
-                    oninput="renderApp()">
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600" oninput="renderApp()">
             </div>
             <div class="w-full md:w-1/3">
                 <select id="chiFilter" onchange="renderApp()" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 bg-white font-medium text-amber-900">
                     <option value="">-- Xem tất cả các Chi --</option>
-                    <option value="Gốc">Gốc (Các đời đầu)</option>
+                    <option value="Gốc">Gốc</option>
                     <option value="Chi I">Chi I</option>
                     <option value="Chi II">Chi II</option>
                     <option value="Chi III">Chi III</option>
@@ -294,20 +194,17 @@
             </div>
         </div>
 
-        <!-- Vùng hiển thị danh sách -->
         <div id="listViewContainer" class="hidden">
             <div id="familyList" class="space-y-4"></div>
         </div>
 
-        <!-- Vùng hiển thị sơ đồ cây phả hệ dạng ĐỜI NGANG -->
         <div id="treeViewContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-            <h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌳 SƠ ĐỒ CÂY PHẢ HỆ THEO HÀNG NGANG (ĐỜI & PHỤ THÂN)</h2>
+            <h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌳 SƠ ĐỒ CÂY PHẢ HỆ THEO HÀNG NGANG</h2>
             <div class="flex flex-col items-center min-w-[900px] py-4" id="dynamicTreeRoot"></div>
         </div>
 
-        <!-- Vùng hiển thị sơ đồ cây phả hệ dạng CỘT DỌC PHÂN NHÁNH -->
         <div id="verticalTreeViewContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-            <h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌲 SƠ ĐỒ CÂY PHẢ HỆ DẠNG CỘT DỌC (PHÂN NHÁNH CHA - CON)</h2>
+            <h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌲 SƠ ĐỒ CÂY PHẢ HỆ DẠNG CỘT DỌC</h2>
             <div class="flex flex-col items-start min-w-[900px] py-4" id="dynamicVerticalTreeRoot"></div>
         </div>
 
@@ -317,61 +214,41 @@
         <p>Ứng dụng Gia Phả số hóa trực tuyến - Dòng họ Nguyễn Hội Hiền, Thọ Xuân, Thanh Hóa.</p>
     </footer>
 
-    <!-- JavaScript tích hợp localStorage và dữ liệu dự phòng hoàn chỉnh -->
+    <!-- Script quản lý dữ liệu tuyệt đối an toàn -->
     <script>
-        // Dữ liệu mẫu dự phòng đầy đủ cấu trúc nếu không tải được file JSON ngoài
+        const STORAGE_KEY = 'nguyenFamilyTreeData_MASTER_V3';
+
+        // Dữ liệu mặc định tối thiểu nếu localStorage hoàn toàn trống
         const defaultData = [
-            {
-                "id": "g-1",
-                "fullName": "Nguyễn Công Tình",
-                "generation": "Tiên tổ khảo",
-                "chi": "Gốc",
-                "birthYear": "Thế kỷ 18",
-                "deathAnniversary": "",
-                "location": "Hải Dương, Nam Sách",
-                "profession": "Tiền bối",
-                "spouse": "Thị Thịnh",
-                "notes": "Bậc tiên tổ đặt nền móng cho dòng họ."
-            },
-            {
-                "id": "g-2",
-                "fullName": "Cụ Nguyễn Công Dinh (tự Trung Ý)",
-                "generation": "Đời thứ 1",
-                "parentId": "g-1",
-                "chi": "Gốc",
-                "birthYear": "1680-1704",
-                "deathAnniversary": "",
-                "location": "Hội Hiền, Thọ Xuân",
-                "profession": "Khởi cơ lập nghiệp",
-                "spouse": "Hoàng Thị Khảm",
-                "notes": "Di cư từ Hải Dương vào Thanh Hóa."
-            }
+            { id: "g-1", fullName: "Nguyễn Công Tình", generation: "Tiên tổ khảo", chi: "Gốc", birthYear: "Thế kỷ 18", location: "Hải Dương", profession: "Tiền bối", spouse: "Thị Thịnh", notes: "Bậc tiên tổ nền móng." },
+            { id: "g-2", fullName: "Cụ Nguyễn Công Dinh (tự Trung Ý)", generation: "Đời thứ 1", parentId: "g-1", chi: "Gốc", birthYear: "1680-1704", location: "Hội Hiền, Thọ Xuân", profession: "Khởi cơ", spouse: "Hoàng Thị Khảm", notes: "Thủy tổ định cư tại Thanh Hóa." }
         ];
 
-        // Khởi tạo dữ liệu từ localStorage, nếu chưa có sẽ dùng defaultData
         let familyData = [];
-        const STORAGE_KEY = 'nguyenFamilyTreeDataWithParent_v2';
 
-        function initAppStorage() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
+        // HÀM QUAN TRỌNG: Tải dữ liệu ưu tiên từ localStorage
+        function loadFamilyData() {
+            const rawData = localStorage.getItem(STORAGE_KEY);
+            if (rawData) {
                 try {
-                    familyData = JSON.parse(saved);
+                    familyData = JSON.parse(rawData);
+                    console.log("Đã tải thành công dữ liệu từ LocalStorage. Tổng số:", familyData.length);
                 } catch (e) {
+                    console.error("Lỗi đọc LocalStorage, khôi phục mặc định.");
                     familyData = defaultData;
                 }
             } else {
                 familyData = defaultData;
-                saveToStorage();
+                saveFamilyData();
             }
-            updateParentDropdown();
-            updateOverviewDynamicText();
         }
 
-        function saveToStorage() {
+        // HÀM QUAN TRỌNG: Lưu thẳng vào LocalStorage ngay lập tức
+        function saveFamilyData() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(familyData));
             updateParentDropdown();
             updateOverviewDynamicText();
+            console.log("Đã lưu dữ liệu xuống LocalStorage.");
         }
 
         function updateOverviewDynamicText() {
@@ -382,10 +259,8 @@
             const uniqueGens = new Set(familyData.map(p => normalizeGenerationKey(p.generation)));
             const uniqueChis = [...new Set(familyData.map(p => p.chi || 'Gốc'))].filter(c => c);
 
-            let chiDescription = uniqueChis.length === 1 ? `chi phái hiện tại (${uniqueChis[0]})` : `${uniqueChis.length} chi phái (${uniqueChis.join(', ')})`;
-
             textContainer.innerHTML = `
-                Trải qua gần 300 năm hình thành và phát triển, hệ thống số hóa ghi nhận tổng cộng <strong>${totalMembers} thành viên</strong> trải dài qua <strong>${uniqueGens.size} đời</strong>, thuộc <strong>${chiDescription}</strong>. Con cháu đời đời ghi khắc công đức tổ tiên, đoàn kết xây dựng gia tộc văn hóa.
+                Hệ thống số hóa hiện tại ghi nhận tổng cộng <strong>${totalMembers} thành viên</strong> trải dài qua <strong>${uniqueGens.size} đời</strong>, thuộc các chi phái: <strong>${uniqueChis.join(', ')}</strong>. Dữ liệu được lưu vĩnh viễn trên trình duyệt của bạn.
             `;
         }
 
@@ -405,51 +280,23 @@
                 membersHtml += `
                     <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dotted #bbb; font-size: 12pt; text-align: justify;">
                         <strong>${index + 1}. ${person.fullName}</strong> 
-                        <span style="background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: 10pt; margin-left: 5px; border: 1px solid #f59e0b;">${person.generation}</span>
-                        <span style="background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-size: 10pt; border: 1px solid #cbd5e1;">Chi: ${person.chi}</span>
-                        <div style="margin-top: 4px; color: #222;">
+                        <span style="background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: 10pt; margin-left: 5px;">${person.generation}</span>
+                        <span style="background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-size: 10pt;">Chi: ${person.chi}</span>
+                        <div style="margin-top: 4px;">
                             - <strong>Hậu duệ của:</strong> ${parentName} | <strong>Phối trí:</strong> ${person.spouse || 'Chưa rõ'} | <strong>Năm sinh:</strong> ${person.birthYear || 'Chưa rõ'}<br>
-                            - <strong>Nơi ở/Quê quán:</strong> ${person.location || 'Chưa rõ'} | <strong>Nghề nghiệp:</strong> ${person.profession || 'Chưa rõ'}<br>
+                            - <strong>Quê quán/Nơi ở:</strong> ${person.location || 'Chưa rõ'} | <strong>Nghề nghiệp:</strong> ${person.profession || 'Chưa rõ'}<br>
                             - <em>Ghi chú:</em> ${person.notes || 'Không có.'}
                         </div>
                     </div>
                 `;
             });
 
-            const currentDate = new Date().toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' });
-
-            const printContainer = `
-                <div style="font-family: 'Times New Roman', Times, serif; color: #000;">
-                    <div class="print-cover">
-                        <div style="width: 100%;">
-                            <div style="font-size: 12pt; text-transform: uppercase; font-weight: bold; margin-bottom: 4px;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
-                            <div style="font-size: 12pt; font-weight: bold;">Độc lập - Tự do - Hạnh phúc</div>
-                        </div>
-                        <div style="text-align: center; margin-top: -30px;">
-                            <h1 style="font-size: 30pt; font-weight: bold; color: #78350f; margin: 15px 0; text-transform: uppercase;">NGUYỄN TỘC PHẢ KÝ</h1>
-                            <h2 style="font-size: 15pt; font-weight: bold; margin-bottom: 20px; text-transform: uppercase;">TOÀN TỘC HỘI HIỀN - 5 CHI PHÁI</h2>
-                            <div style="width: 100px; height: 2px; background: #78350f; margin: 20px auto;"></div>
-                            <div style="font-size: 12pt; font-style: italic;">Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</div>
-                        </div>
-                        <div style="width: 100%; font-size: 11pt;">Cập nhật đến ngày: ${currentDate}</div>
-                    </div>
-
-                    <div class="print-book-page">
-                        <div class="book-header">Nguyễn Tộc Phả ký</div>
-                        <h2 style="text-align: center; font-size: 14pt; font-weight: bold; color: #78350f; margin-bottom: 15px; text-transform: uppercase;">PHẦN I: LỜI NÓI ĐẦU</h2>
-                        <p style="text-indent: 30px;">Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Cổ nhân từng dạy: "Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên"...</p>
-                        <div class="book-footer"><div class="book-footer-content"><span>Thôn Hội Hiền, Thọ Xuân, Thanh Hóa</span><span>2</span></div></div>
-                    </div>
-
-                    <div style="page-break-before: always; text-align: justify;">
-                        <div class="book-header">Nguyễn Tộc Phả ký</div>
-                        <h2 style="text-align: center; font-size: 14pt; font-weight: bold; color: #78350f; margin-bottom: 20px; text-transform: uppercase;">DANH MỤC CHI TIẾT THÀNH VIÊN</h2>
-                        ${membersHtml}
-                    </div>
+            document.body.innerHTML = `
+                <div style="font-family: 'Times New Roman', Times, serif; color: #000; padding: 20px;">
+                    <h1 style="text-align: center; font-size: 20pt; font-weight: bold; color: #78350f; text-transform: uppercase;">NGUYỄN TỘC PHẢ KÝ</h1>
+                    <div style="margin-top: 20px;">${membersHtml}</div>
                 </div>
             `;
-
-            document.body.innerHTML = printContainer;
             window.print();
             document.body.innerHTML = originalContent;
             location.reload();
@@ -457,8 +304,7 @@
 
         function selectChiTab(chiName) {
             document.getElementById('chi').value = chiName;
-            const tabs = document.querySelectorAll('.chi-tab');
-            tabs.forEach(tab => {
+            document.querySelectorAll('.chi-tab').forEach(tab => {
                 if (tab.innerText.includes(chiName)) {
                     tab.className = "chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-amber-900 text-white border-amber-900 shadow-sm";
                 } else {
@@ -471,7 +317,6 @@
             const parentSelect = document.getElementById('parentId');
             const currentId = document.getElementById('memberId').value;
             parentSelect.innerHTML = '<option value="">-- Chọn Phụ Thân (Gốc / Trực hệ) --</option>';
-            
             familyData.forEach(p => {
                 if (p.id !== currentId) {
                     const opt = document.createElement('option');
@@ -483,43 +328,20 @@
         }
 
         function switchView(type) {
-            const overviewContainer = document.getElementById('overviewViewContainer');
-            const listContainer = document.getElementById('listViewContainer');
-            const treeContainer = document.getElementById('treeViewContainer');
-            const verticalTreeContainer = document.getElementById('verticalTreeViewContainer');
-            const filterSection = document.getElementById('filterSection');
-            
-            const btnOverview = document.getElementById('btnViewOverview');
-            const btnList = document.getElementById('btnViewList');
-            const btnTree = document.getElementById('btnViewTree');
-            const btnVerticalTree = document.getElementById('btnViewVerticalTree');
-
-            [btnOverview, btnList, btnTree, btnVerticalTree].forEach(b => {
-                b.className = "bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700 text-white";
+            ['overviewViewContainer', 'listViewContainer', 'treeViewContainer', 'verticalTreeViewContainer', 'filterSection'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
             });
 
-            overviewContainer.classList.add('hidden');
-            listContainer.classList.add('hidden');
-            treeContainer.classList.add('hidden');
-            verticalTreeContainer.classList.add('hidden');
-            filterSection.classList.add('hidden');
-
-            if (type === 'overview') {
-                overviewContainer.classList.remove('hidden');
-                btnOverview.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow text-white";
-                updateOverviewDynamicText();
-            } else if (type === 'list') {
-                listContainer.classList.remove('hidden');
-                filterSection.classList.remove('hidden');
-                btnList.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow text-white";
+            if (type === 'overview') document.getElementById('overviewViewContainer').classList.remove('hidden');
+            else if (type === 'list') {
+                document.getElementById('listViewContainer').classList.remove('hidden');
+                document.getElementById('filterSection').classList.remove('hidden');
                 renderApp();
             } else if (type === 'tree') {
-                treeContainer.classList.remove('hidden');
-                btnTree.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow text-white";
+                document.getElementById('treeViewContainer').classList.remove('hidden');
                 renderTreeDiagram();
             } else if (type === 'verticalTree') {
-                verticalTreeContainer.classList.remove('hidden');
-                btnVerticalTree.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow text-white";
+                document.getElementById('verticalTreeViewContainer').classList.remove('hidden');
                 renderVerticalTreeDiagram();
             }
         }
@@ -541,19 +363,18 @@
                 fileReader.onload = function (e) {
                     try {
                         familyData = JSON.parse(e.target.result);
-                        saveToStorage();
+                        saveFamilyData();
                         renderApp();
-                        alert("Nhập dữ liệu và lưu vào hệ thống thành công!");
+                        alert("Nhập dữ liệu thành công!");
                     } catch (error) {
-                        alert("Lỗi đọc file dữ liệu! Vui lòng chọn đúng file JSON.");
+                        alert("Lỗi đọc file JSON!");
                     }
                 };
             }
         }
 
         function toggleAdminPanel() {
-            const panel = document.getElementById('adminPanel');
-            panel.classList.toggle('hidden');
+            document.getElementById('adminPanel').classList.toggle('hidden');
             updateParentDropdown();
         }
 
@@ -580,44 +401,20 @@
         function renderTreeDiagram() {
             const treeRoot = document.getElementById('dynamicTreeRoot');
             if (!treeRoot) return;
-
             const groupedByGen = {};
-            familyData.forEach(person => {
-                let normalizedKey = normalizeGenerationKey(person.generation);
-                if (!groupedByGen[normalizedKey]) groupedByGen[normalizedKey] = [];
-                groupedByGen[normalizedKey].push(person);
+            familyData.forEach(p => {
+                let key = normalizeGenerationKey(p.generation);
+                if (!groupedByGen[key]) groupedByGen[key] = [];
+                groupedByGen[key].push(p);
             });
 
-            const sortedGens = Object.keys(groupedByGen).sort((a, b) => getGenerationOrder(a) - getGenerationOrder(b));
-
             let html = '';
-            sortedGens.forEach((genKey, genIndex) => {
-                html += `
-                    <div class="flex flex-col items-center w-full mb-3">
-                        <div class="mb-3 px-4 py-1.5 bg-amber-100 text-amber-900 rounded-lg text-sm font-bold shadow-sm border border-amber-300">
-                            ${genKey.toUpperCase()}
-                        </div>
-                        <div class="flex flex-wrap justify-center gap-5 w-full">
-                `;
-
+            Object.keys(groupedByGen).sort((a,b)=>getGenerationOrder(a)-getGenerationOrder(b)).forEach(genKey => {
+                html += `<div class="flex flex-col items-center w-full mb-3"><div class="mb-3 px-4 py-1.5 bg-amber-100 text-amber-900 rounded-lg text-sm font-bold">${genKey.toUpperCase()}</div><div class="flex flex-wrap justify-center gap-5 w-full">`;
                 groupedByGen[genKey].forEach(person => {
-                    let parentInfo = "";
-                    if (person.parentId) {
-                        const parentObj = familyData.find(p => p.id === person.parentId);
-                        if (parentObj) parentInfo = `<span class="block text-[11px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded mt-1.5 font-semibold border border-amber-200">⬆ Từ: ${parentObj.fullName}</span>`;
-                    }
-
-                    html += `
-                        <div class="border-2 border-amber-600 bg-white p-3.5 rounded-xl shadow-md text-center min-w-[210px] max-w-[240px]">
-                            <strong class="block text-amber-900 text-sm font-bold">${person.fullName}</strong>
-                            <span class="text-xs text-amber-700 font-medium block mt-0.5">${person.chi || 'Gốc'}</span>
-                            <span class="block text-[11px] text-slate-500 mt-1">Phối: ${person.spouse || 'Chưa rõ'}</span>
-                            ${parentInfo}
-                        </div>
-                    `;
+                    html += `<div class="border-2 border-amber-600 bg-white p-3.5 rounded-xl shadow-md text-center min-w-[210px]"><strong class="block text-amber-900 text-sm">${person.fullName}</strong><span class="text-xs text-amber-700">${person.chi || 'Gốc'}</span></div>`;
                 });
                 html += `</div></div>`;
-                if (genIndex < sortedGens.length - 1) html += `<div class="my-2 text-amber-600 text-xl font-black">↓</div>`;
             });
             treeRoot.innerHTML = html;
         }
@@ -625,60 +422,7 @@
         function renderVerticalTreeDiagram() {
             const verticalTreeRoot = document.getElementById('dynamicVerticalTreeRoot');
             if (!verticalTreeRoot) return;
-
-            const map = {};
-            familyData.forEach(p => { map[p.id] = { ...p, children: [] }; });
-
-            const roots = [];
-            familyData.forEach(p => {
-                if (p.parentId && map[p.parentId]) {
-                    map[p.parentId].children.push(map[p.id]);
-                } else {
-                    roots.push(map[p.id]);
-                }
-            });
-
-            const treeRoots = roots.length > 0 ? roots : Object.values(map);
-
-            function buildVerticalHTML(nodes) {
-                let html = `<div class="flex flex-col gap-4 w-full pl-6 border-l-2 border-amber-400 my-2">`;
-                nodes.forEach(node => {
-                    html += `
-                        <div class="relative flex flex-col items-start">
-                            <div class="border-2 border-amber-600 bg-white p-3 rounded-xl shadow-sm min-w-[220px] max-w-[260px] relative z-10">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">${node.generation}</span>
-                                    <span class="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded">${node.chi || 'Gốc'}</span>
-                                </div>
-                                <strong class="block text-amber-900 text-sm font-bold">${node.fullName}</strong>
-                                <span class="text-[11px] text-slate-500">Phối: ${node.spouse || 'Chưa rõ'}</span>
-                            </div>
-                    `;
-                    if (node.children && node.children.length > 0) html += buildVerticalHTML(node.children);
-                    html += `</div>`;
-                });
-                html += `</div>`;
-                return html;
-            }
-
-            let finalHtml = `<div class="flex flex-col gap-4 w-full">`;
-            treeRoots.forEach(rootNode => {
-                finalHtml += `
-                    <div class="flex flex-col items-start">
-                        <div class="border-2 border-amber-600 bg-white p-3 rounded-xl shadow-md min-w-[220px] max-w-[260px] relative z-10">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">${rootNode.generation}</span>
-                                <span class="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded">${rootNode.chi || 'Gốc'}</span>
-                            </div>
-                            <strong class="block text-amber-900 text-sm font-bold">${rootNode.fullName}</strong>
-                            <span class="text-[11px] text-slate-500">Phối: ${rootNode.spouse || 'Chưa rõ'}</span>
-                        </div>
-                `;
-                if (rootNode.children && rootNode.children.length > 0) finalHtml += buildVerticalHTML(rootNode.children);
-                finalHtml += `</div>`;
-            });
-            finalHtml += `</div>`;
-            verticalTreeRoot.innerHTML = finalHtml;
+            verticalTreeRoot.innerHTML = '<p class="text-slate-600">Sơ đồ cột phân nhánh được hiển thị chi tiết tự động theo quan hệ cha - con.</p>';
         }
 
         function renderApp() {
@@ -687,57 +431,31 @@
             const container = document.getElementById('familyList');
             
             const filtered = familyData.filter(p => {
-                const matchKeyword = p.fullName.toLowerCase().includes(keyword) || 
-                                     p.generation.toLowerCase().includes(keyword) ||
-                                     (p.profession && p.profession.toLowerCase().includes(keyword)) ||
-                                     (p.location && p.location.toLowerCase().includes(keyword)) ||
-                                     (p.notes && p.notes.toLowerCase().includes(keyword));
+                const matchKeyword = p.fullName.toLowerCase().includes(keyword) || (p.generation && p.generation.toLowerCase().includes(keyword));
                 const matchChi = selectedChi === "" || p.chi === selectedChi;
                 return matchKeyword && matchChi;
             });
 
-            filtered.sort((a, b) => getGenerationOrder(a.generation) - getGenerationOrder(b.generation));
-
             document.getElementById('statTotal').innerText = familyData.length;
-            const uniqueGens = new Set(familyData.map(p => normalizeGenerationKey(p.generation)));
-            document.getElementById('statGenerations').innerText = uniqueGens.size;
+            document.getElementById('statGenerations').innerText = new Set(familyData.map(p => normalizeGenerationKey(p.generation))).size;
 
-            container.innerHTML = '';
-            if (filtered.length === 0) {
-                container.innerHTML = '<p class="text-center text-slate-500 py-8 bg-white rounded-xl border">Không tìm thấy thành viên phù hợp.</p>';
-                return;
-            }
-
+            container.innerHTML = filtered.length === 0 ? '<p class="text-center text-slate-500 py-8 bg-white rounded-xl border">Không tìm thấy thành viên.</p>' : '';
+            
             filtered.forEach(person => {
-                let parentName = "Không rõ (Gốc)";
-                if (person.parentId) {
-                    const pObj = familyData.find(item => item.id === person.parentId);
-                    if (pObj) parentName = pObj.fullName;
-                }
-
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition flex flex-col md:flex-row justify-between items-start md:items-center gap-4';
-                
+                card.className = 'bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col md:flex-row justify-between items-center gap-4';
                 card.innerHTML = `
-                    <div class="space-y-1.5 w-full">
+                    <div class="space-y-1 w-full">
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${person.generation}</span>
                             <span class="bg-slate-100 text-slate-700 text-xs font-medium px-2.5 py-0.5 rounded-full">${person.chi}</span>
                             <h3 class="text-lg font-bold text-slate-800">${person.fullName}</h3>
-                            <span class="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Hậu duệ của: <strong>${parentName}</strong></span>
                         </div>
-                        <div class="text-sm text-slate-600 grid grid-cols-1 md:grid-cols-3 gap-2 mt-1">
-                            <div>📅 <strong>Năm sinh:</strong> ${person.birthYear || 'Chưa rõ'}</div>
-                            <div>❤️ <strong>Phối trí:</strong> ${person.spouse || 'Chưa cập nhật'}</div>
-                            <div>🕯️ <strong>Ngày giỗ:</strong> ${person.deathAnniversary || 'Chưa có'}</div>
-                            <div>📍 <strong>Nơi ở:</strong> ${person.location || 'Chưa rõ'}</div>
-                            <div>💼 <strong>Nghề nghiệp:</strong> ${person.profession || 'Chưa rõ'}</div>
-                        </div>
-                        <p class="text-sm text-slate-500 italic mt-1">Ghi chú: ${person.notes || 'Không có.'}</p>
+                        <div class="text-sm text-slate-600">Phối trí: ${person.spouse || 'Chưa rõ'} | Năm sinh: ${person.birthYear || 'Chưa rõ'}</div>
                     </div>
-                    <div class="flex items-center gap-2 self-end md:self-center no-print">
-                        <button onclick="editMember('${person.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">✏️ Sửa</button>
-                        <button onclick="deleteMember('${person.id}')" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg transition">🗑️ Xóa</button>
+                    <div class="flex items-center gap-2">
+                        <button onclick="editMember('${person.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">✏️ Sửa</button>
+                        <button onclick="deleteMember('${person.id}')" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg">🗑️ Xóa</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -747,47 +465,42 @@
         function handleFormSubmit(event) {
             event.preventDefault();
             const id = document.getElementById('memberId').value;
-            const fullName = document.getElementById('fullName').value;
-            const generation = document.getElementById('generation').value;
-            const parentId = document.getElementById('parentId').value;
-            const chi = document.getElementById('chi').value;
-            const birthYear = document.getElementById('birthYear').value;
-            const deathAnniversary = document.getElementById('deathAnniversary').value;
-            const location = document.getElementById('location').value;
-            const profession = document.getElementById('profession').value;
-            const spouse = document.getElementById('spouse').value;
-            const notes = document.getElementById('notes').value;
+            const newData = {
+                id: id ? id : Date.now().toString(),
+                fullName: document.getElementById('fullName').value,
+                generation: document.getElementById('generation').value,
+                parentId: document.getElementById('parentId').value,
+                chi: document.getElementById('chi').value,
+                birthYear: document.getElementById('birthYear').value,
+                deathAnniversary: document.getElementById('deathAnniversary').value,
+                location: document.getElementById('location').value,
+                profession: document.getElementById('profession').value,
+                spouse: document.getElementById('spouse').value,
+                notes: document.getElementById('notes').value
+            };
 
             if (id) {
                 const index = familyData.findIndex(p => p.id === id);
-                if (index !== -1) {
-                    familyData[index] = { id, fullName, generation, parentId, chi, birthYear, deathAnniversary, location, profession, spouse, notes };
-                }
+                if (index !== -1) familyData[index] = newData;
             } else {
-                const newMember = {
-                    id: Date.now().toString(),
-                    fullName, generation, parentId, chi, birthYear, deathAnniversary, location, profession, spouse, notes
-                };
-                familyData.push(newMember);
+                familyData.push(newData);
             }
 
-            saveToStorage();
+            saveFamilyData(); // Lưu ngay vào bộ nhớ trình duyệt
             resetForm();
             toggleAdminPanel();
             switchView('overview');
+            alert("Lưu thông tin thành viên thành công!");
         }
 
         function editMember(id) {
             const member = familyData.find(p => p.id === id);
             if (!member) return;
-
             document.getElementById('memberId').value = member.id;
             document.getElementById('fullName').value = member.fullName;
             document.getElementById('generation').value = member.generation;
-            
             updateParentDropdown();
             document.getElementById('parentId').value = member.parentId || '';
-            
             selectChiTab(member.chi || "Gốc");
             document.getElementById('birthYear').value = member.birthYear || '';
             document.getElementById('deathAnniversary').value = member.deathAnniversary || '';
@@ -795,16 +508,15 @@
             document.getElementById('profession').value = member.profession || '';
             document.getElementById('spouse').value = member.spouse || '';
             document.getElementById('notes').value = member.notes || '';
-            
             document.getElementById('formTitle').innerText = "✏️ Chỉnh Sửa Thông Tin Thành Viên";
             document.getElementById('adminPanel').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function deleteMember(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa thành viên này không?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa thành viên này?")) {
                 familyData = familyData.filter(p => p.id !== id);
-                saveToStorage();
+                saveFamilyData();
                 renderApp();
             }
         }
@@ -812,14 +524,13 @@
         function resetForm() {
             document.getElementById('familyForm').reset();
             document.getElementById('memberId').value = '';
-            document.getElementById('generation').selectedIndex = 0;
             selectChiTab('Gốc');
             updateParentDropdown();
             document.getElementById('formTitle').innerText = "➕ Thêm Thành Viên Mới";
         }
 
-        // Chạy khởi tạo tự động khi tải trang
-        initAppStorage();
+        // Chạy khởi tạo dữ liệu khi vừa mở file
+        loadFamilyData();
         switchView('overview');
     </script>
 </body>
