@@ -9,11 +9,10 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         
-        /* Cấu hình trang in chuẩn A4, lề, khung kép và tiêu đề/chân trang sách */
         @media print {
             @page {
                 size: A4;
-                margin: 2.0cm 1.8cm 2.0cm 3.0cm; /* Trên: 2cm, Phải: 1.8cm, Dưới: 2cm, Trái: 3cm */
+                margin: 2.0cm 1.8cm 2.0cm 3.0cm;
             }
             .no-print { display: none !important; }
             body { 
@@ -31,34 +30,6 @@
                 padding-bottom: 40px;
                 text-align: justify;
             }
-            .print-book-page:last-child {
-                page-break-after: avoid;
-            }
-            /* Tiêu đề đầu trang sách */
-            .book-header {
-                text-align: center;
-                font-size: 11pt;
-                font-weight: bold;
-                text-transform: uppercase;
-                border-bottom: 1px solid #000;
-                padding-bottom: 8px;
-                margin-bottom: 25px;
-            }
-            /* Chân trang sách */
-            .book-footer {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                font-size: 10pt;
-            }
-            .book-footer-content {
-                border-top: 2px solid #000;
-                padding-top: 6px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            /* Trang bìa có khung kép, nội dung lệch trên 1/3 và giãn dòng vừa phải */
             .print-cover {
                 display: flex !important;
                 flex-direction: column;
@@ -67,7 +38,7 @@
                 height: 24.2cm;
                 text-align: center;
                 page-break-after: always;
-                border: 4px double #000; /* Khung đường kẻ kép trang trọng */
+                border: 4px double #000;
                 padding: 1.5cm 1cm;
                 box-sizing: border-box;
             }
@@ -85,36 +56,18 @@
                 <p class="text-amber-200 text-sm mt-1">Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</p>
             </div>
             <div class="flex flex-wrap gap-2">
-                <button onclick="switchView('overview')" id="btnViewOverview" class="bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow">
-                    📖 Tổng Quan
-                </button>
-                <button onclick="switchView('list')" id="btnViewList" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    📋 Danh Sách
-                </button>
-                <button onclick="switchView('tree')" id="btnViewTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    🌳 Sơ Đồ Đời (Ngang)
-                </button>
-                <button onclick="switchView('verticalTree')" id="btnViewVerticalTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    🌲 Sơ Đồ Cột (Phân Nhánh)
-                </button>
-                <button onclick="printFamilyBook()" class="bg-amber-600 hover:bg-amber-500 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-500 text-white flex items-center gap-1">
-                    📖 In Cuốn Gia Phả
-                </button>
-                <button onclick="exportData()" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">
-                    📥 Xuất Dữ Liệu
-                </button>
-                <label class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700 cursor-pointer">
-                    📤 Nhập Dữ Liệu <input type="file" id="importFile" onchange="importData(event)" class="hidden">
-                </label>
-                <button onclick="toggleAdminPanel()" class="bg-amber-700 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-semibold transition shadow">
-                    ⚙️ Quản Trị
-                </button>
+                <button onclick="switchView('overview')" id="btnViewOverview" class="bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow">📖 Tổng Quan</button>
+                <button onclick="switchView('list')" id="btnViewList" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">📋 Danh Sách</button>
+                <button onclick="switchView('tree')" id="btnViewTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">🌳 Sơ Đồ (Ngang)</button>
+                <button onclick="switchView('verticalTree')" id="btnViewVerticalTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">🌲 Sơ Đồ (Cột)</button>
+                <button onclick="printFamilyBook()" class="bg-amber-600 hover:bg-amber-500 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-500 text-white">📖 In Cuốn Gia Phả</button>
+                <button onclick="exportData()" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">📥 Xuất Dữ Liệu</button>
+                <button onclick="toggleAdminPanel()" class="bg-amber-700 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-semibold transition shadow">⚙️️ Quản Trị</button>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8 max-w-7xl">
-
         <!-- Thống kê tổng hợp -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 no-print">
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
@@ -134,179 +87,38 @@
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
                     <p class="text-sm text-slate-500 font-medium">Trạng thái dữ liệu</p>
-                    <h3 class="text-sm font-semibold text-emerald-600 mt-2">Đã lưu tự động (Local)</h3>
+                    <h3 class="text-sm font-semibold text-emerald-600 mt-2">Đồng bộ GitHub (data.json)</h3>
                 </div>
                 <div class="p-3 bg-emerald-50 text-emerald-700 rounded-lg text-xl">💾</div>
             </div>
         </div>
 
-        <!-- Bảng quản trị (Form thêm/sửa thành viên) -->
-        <div id="adminPanel" class="hidden bg-white p-6 rounded-2xl shadow-md border border-amber-200 mb-8 transition-all no-print">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                <h2 id="formTitle" class="text-xl font-bold text-amber-900">➕ Thêm Thành Viên Mới</h2>
-                <button onclick="resetForm()" class="text-sm text-slate-500 hover:text-red-600">Làm mới form</button>
-            </div>
-            <form id="familyForm" onsubmit="handleFormSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="hidden" id="memberId">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên *</label>
-                    <input type="text" id="fullName" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Chọn Đời thứ *</label>
-                    <select id="generation" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none bg-white font-medium text-amber-900">
-                        <option value="">-- Chọn Đời --</option>
-                        <option value="Tiên tổ">Tiên tổ</option>
-                        <option value="Tiên tổ khảo">Tiên tổ khảo</option>
-                        <option value="Thủy tổ">Thủy tổ</option>
-                        <option value="Đời thứ 1">Đời thứ 1</option>
-                        <option value="Đời thứ 2">Đời thứ 2</option>
-                        <option value="Đời thứ 3">Đời thứ 3</option>
-                        <option value="Đời thứ 4">Đời thứ 4</option>
-                        <option value="Đời thứ 5">Đời thứ 5</option>
-                        <option value="Đời thứ 6">Đời thứ 6</option>
-                        <option value="Đời thứ 7">Đời thứ 7</option>
-                        <option value="Đời thứ 8">Đời thứ 8</option>
-                        <option value="Đời thứ 9">Đời thứ 9</option>
-                        <option value="Đời thứ 10">Đời thứ 10</option>
-                        <option value="Đời thứ 11">Đời thứ 11</option>
-                        <option value="Đời thứ 12">Đời thứ 12</option>
-                        <option value="Đời thứ 13">Đời thứ 13</option>
-                        <option value="Đời thứ 14">Đời thứ 14</option>
-                        <option value="Đời thứ 15">Đời thứ 15</option>
-                        <option value="Đời thứ 16">Đời thứ 16</option>
-                        <option value="Đời thứ 17">Đời thứ 17</option>
-                        <option value="Đời thứ 18">Đời thứ 18</option>
-                        <option value="Đời thứ 19">Đời thứ 19</option>
-                        <option value="Đời thứ 20">Đời thứ 20</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Thuộc đời Cha (Phụ thân sinh ra)</label>
-                    <select id="parentId" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none bg-white">
-                        <option value="">-- Chọn Phụ Thân (Gốc / Trực hệ) --</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Chọn Chi phái thuộc dòng họ *</label>
-                    <input type="hidden" id="chi" value="Gốc" required>
-                    <div class="flex flex-wrap gap-1.5 pt-1" id="chiTabContainer">
-                        <button type="button" onclick="selectChiTab('Gốc')" class="chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-amber-900 text-white border-amber-900 shadow-sm">🌿 Gốc</button>
-                        <button type="button" onclick="selectChiTab('Chi I')" class="chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">Chi I</button>
-                        <button type="button" onclick="selectChiTab('Chi II')" class="chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">Chi II</button>
-                        <button type="button" onclick="selectChiTab('Chi III')" class="chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">Chi III</button>
-                        <button type="button" onclick="selectChiTab('Chi IV')" class="chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">Chi IV</button>
-                        <button type="button" onclick="selectChiTab('Chi V')" class="chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100">Chi V</button>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Phối trí (Vợ / Chồng)</label>
-                    <input type="text" id="spouse" placeholder="Họ tên vợ hoặc chồng" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Năm sinh / Thời kỳ</label>
-                    <input type="text" id="birthYear" placeholder="Ví dụ: 1950 hoặc Thế kỷ 20" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Ngày giỗ (Âm lịch)</label>
-                    <input type="text" id="deathAnniversary" placeholder="Ví dụ: 15 tháng 8 Âm lịch" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nơi ở hiện tại / Quê quán</label>
-                    <input type="text" id="location" placeholder="Ví dụ: Hà Nội, TP.HCM, Hội Hiền..." class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nghề nghiệp / Học hàm, học vị</label>
-                    <input type="text" id="profession" placeholder="Ví dụ: Kỹ sư, Cán bộ xã, Giáo viên..." class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Ghi chú / Tiểu sử / Công trạng</label>
-                    <textarea id="notes" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none"></textarea>
-                </div>
-                <div class="md:col-span-2 flex justify-end gap-3">
-                    <button type="button" onclick="toggleAdminPanel()" class="px-4 py-2 border rounded-lg text-slate-600 hover:bg-slate-50">Đóng</button>
-                    <button type="submit" class="bg-amber-800 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold shadow">Lưu Thành Viên</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 1. VÙNG HIỂN THỊ TỔNG QUAN DÒNG TỘC -->
+        <!-- Các vùng hiển thị nội dung -->
         <div id="overviewViewContainer" class="bg-white p-8 rounded-2xl shadow-sm border border-amber-200 space-y-6">
             <div class="text-center border-b border-amber-100 pb-6">
                 <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Phả Ký Dòng Họ Nguyễn</span>
                 <h2 class="text-2xl md:text-3xl font-bold text-amber-900 mt-2">NGUỒN GỐC PHÁT TÍCH & TRUYỀN THỐNG GIA TỘC</h2>
                 <p class="text-slate-600 text-sm mt-1">Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</p>
             </div>
-
-            <!-- Ý nghĩa triết lý -->
             <div class="bg-amber-50/50 p-6 rounded-xl border border-amber-100 space-y-3">
-                <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">📜 1. Lời mở đầu & Triết lý nguồn cội</h3>
+                <h3 class="text-lg font-bold text-amber-900">📜 Lời mở đầu & Triết lý nguồn cội</h3>
                 <p class="text-slate-700 text-sm leading-relaxed italic text-justify">
-                    "Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách." Các cụ ngày xưa đã dạy:<br>
-                    - Nhân do hồ tổ (Người phải có tổ)<br>
-                    - Mộc do hồ bản (Cây phải có gốc)<br>
-                    - Thủy do hồ nguyên (Nước phải có nguồn)<br>
-                    <em>Cây có gốc mới nở cành sinh ngọn / Nước có nguồn mới bể rộng sông sâu / Người ta có nguồn gốc từ đâu / Có tổ tiên trước rồi sau có mình.</em>
+                    "Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách." Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên. Cây có gốc mới nở cành sinh ngọn, nước có nguồn mới bể rộng sông sâu.
                 </p>
             </div>
-
-            <!-- Nguồn gốc di cư -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-3 shadow-sm">
-                    <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">🌍 2. Hành trình di cư & Lập nghiệp</h3>
-                    <p class="text-slate-700 text-sm leading-relaxed text-justify">
-                        Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở <strong>Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</strong>, ban đầu di cư vào bản tỉnh Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn sinh cơ lập nghiệp bằng nghề thợ rèn (Thiết tương triệu cơ). Sau đó, gia tộc chuyển lên <strong>Hội Hiền thôn, Phúc Trạch xã</strong> vào thời vua Lê Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm, hình thành 5 chi phái với trên 100 hộ.
-                    </p>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-3 shadow-sm">
-                    <h3 class="text-base font-bold text-amber-900 flex items-center gap-2">🏛️ 3. Thủy tổ khảo & Các thế hệ</h3>
-                    <p class="text-slate-700 text-sm leading-relaxed text-justify">
-                        - <strong>Húy:</strong> Công Tình | <strong>Tự:</strong> Trung Lương | <strong>Tỷ Húy:</strong> Thị Thịnh (Hiệu: Từ Tai).<br>
-                        - Sinh hạ 2 người con: Trưởng húy <strong>Công Dinh</strong> (tự Trung Ý, phụng tự vi thủy tổ); Thứ húy Văn Tự (vô tự).<br>
-                        - Tư liệu gốc được sao dịch từ bản chữ Hán của cố Nguyễn Hoàng Cừ (từ đời Thành Thái tháng 2 năm Nhâm Thìn 1882) và tài liệu của các cụ trong họ.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Truyền thống & Ban soạn dịch -->
-            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-3">
-                <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">🎖️ 4. Truyền thống & Lịch sử biên soạn</h3>
-                <p class="text-slate-700 text-sm leading-relaxed text-justify">
-                    Trải qua các thời kỳ lịch sử, con cháu dòng họ đã tham gia các phong trào yêu nước, đóng góp công sức cho sự nghiệp giải phóng dân tộc, nhiều gia đình được tặng Bằng khen có công với nước.<br>
-                    Ngày 25/02/1990, các cụ cao tuổi và đầu chi đã họp tại nhà thờ họ dưới sự chủ trì của Trưởng họ Nguyễn Văn Hiếu để thành lập ban soạn dịch. Tới Đông chí năm 2013 (Quý Tỵ), tập Phả Ký chính thức được hoàn thiện để lưu truyền muôn đời.
-                </p>
-            </div>
-
-            <!-- Thống kê động quy mô -->
-            <div class="bg-amber-50/50 p-6 rounded-xl border border-amber-100 space-y-3">
-                <h3 class="text-lg font-bold text-amber-900 flex items-center gap-2">🌿 5. Quy mô số hóa hiện tại</h3>
-                <p id="dynamicOverviewText" class="text-slate-700 text-sm leading-relaxed text-justify">
-                    <!-- Nội dung động -->
-                </p>
-            </div>
-
             <div class="text-center pt-4">
-                <button onclick="switchView('tree')" class="bg-amber-800 hover:bg-amber-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow transition">
-                    🌳 Khám Phá Sơ Đồ Cây Phả Hệ Ngay
-                </button>
+                <button onclick="switchView('tree')" class="bg-amber-800 hover:bg-amber-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow transition">🌳 Khám Phá Sơ Đồ Cây Phả Hệ</button>
             </div>
         </div>
 
-        <!-- Thanh tìm kiếm & Lọc -->
         <div id="filterSection" class="hidden bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between no-print">
             <div class="w-full md:w-2/3">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên, đời, nghề nghiệp, địa chỉ..." 
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600"
-                    oninput="renderApp()">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên, đời, nghề nghiệp..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600" oninput="renderApp()">
             </div>
             <div class="w-full md:w-1/3">
                 <select id="chiFilter" onchange="renderApp()" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 bg-white font-medium text-amber-900">
                     <option value="">-- Xem tất cả các Chi --</option>
-                    <option value="Gốc">Gốc (Các đời đầu)</option>
+                    <option value="Gốc">Gốc</option>
                     <option value="Chi I">Chi I</option>
                     <option value="Chi II">Chi II</option>
                     <option value="Chi III">Chi III</option>
@@ -316,605 +128,86 @@
             </div>
         </div>
 
-        <!-- Vùng hiển thị danh sách -->
-        <div id="listViewContainer" class="hidden">
-            <div id="familyList" class="space-y-4"></div>
-        </div>
-
-        <!-- Vùng hiển thị sơ đồ cây phả hệ dạng ĐỜI NGANG -->
-        <div id="treeViewContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-            <h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌳 SƠ ĐỒ CÂY PHẢ HỆ THEO HÀNG NGANG (ĐỜI & PHỤ THÂN)</h2>
-            <div class="flex flex-col items-center min-w-[900px] py-4" id="dynamicTreeRoot"></div>
-        </div>
-
-        <!-- Vùng hiển thị sơ đồ cây phả hệ dạng CỘT DỌC PHÂN NHÁNH -->
-        <div id="verticalTreeViewContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-            <h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌲 SƠ ĐỒ CÂY PHẢ HỆ DẠNG CỘT DỌC (PHÂN NHÁNH CHA - CON)</h2>
-            <div class="flex flex-col items-start min-w-[900px] py-4" id="dynamicVerticalTreeRoot"></div>
-        </div>
-
+        <div id="listViewContainer" class="hidden"><div id="familyList" class="space-y-4"></div></div>
+        <div id="treeViewContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto"><h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG</h2><div class="flex flex-col items-center min-w-[900px] py-4" id="dynamicTreeRoot"></div></div>
+        <div id="verticalTreeViewContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto"><h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌲 SƠ ĐỒ CÂY PHẢ HỆ CỘT DỌC</h2><div class="flex flex-col items-start min-w-[900px] py-4" id="dynamicVerticalTreeRoot"></div></div>
     </main>
 
-    <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm mt-12 no-print">
-        <p>Ứng dụng Gia Phả số hóa trực tuyến - Dòng họ Nguyễn Hội Hiền, Thọ Xuân, Thanh Hóa.</p>
-    </footer>
-
-    <!-- JavaScript Xử lý Logic toàn diện -->
     <script>
-        const defaultData = [
-            { id: "g-1", fullName: "Cụ Tôn sư Tiên Tổ", generation: "Tiên tổ", chi: "Gốc", parentId: "", birthYear: "Thế kỷ 18", deathAnniversary: "", location: "Hội Hiền, Thọ Xuân", profession: "Tiền bối", spouse: "Cụ Bà Tiên Tổ", notes: "Bậc tiên tổ đặt nền móng cho dòng họ." }
-        ];
+        let familyData = [];
 
-        let familyData = JSON.parse(localStorage.getItem('nguyenFamilyTreeDataWithParent')) || 
-                         JSON.parse(localStorage.getItem('nguyenFamilyTreeData')) || 
-                         defaultData;
+        // Tự động nạp dữ liệu từ file data.json trên GitHub khi mở trang
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    familyData = data;
+                    updateStats();
+                    renderApp();
+                })
+                .catch(error => {
+                    console.log('Đang dùng dữ liệu LocalStorage dự phòng:', error);
+                    familyData = JSON.parse(localStorage.getItem('nguyenFamilyTreeDataWithParent')) || [];
+                    updateStats();
+                    renderApp();
+                });
+        });
 
-        function saveToStorage() {
-            localStorage.setItem('nguyenFamilyTreeDataWithParent', JSON.stringify(familyData));
-            updateParentDropdown();
-            updateOverviewDynamicText();
+        function updateStats() {
+            document.getElementById('statTotal').innerText = familyData.length;
+            const uniqueGens = new Set(familyData.map(p => p.generation));
+            document.getElementById('statGenerations').innerText = uniqueGens.size;
         }
 
-        function updateOverviewDynamicText() {
-            const textContainer = document.getElementById('dynamicOverviewText');
-            if (!textContainer) return;
+        function switchView(viewName) {
+            document.getElementById('overviewViewContainer').classList.add('hidden');
+            document.getElementById('listViewContainer').classList.add('hidden');
+            document.getElementById('treeViewContainer').classList.add('hidden');
+            document.getElementById('verticalTreeViewContainer').classList.add('hidden');
+            document.getElementById('filterSection').classList.add('hidden');
 
-            const totalMembers = familyData.length;
-            const uniqueGens = new Set(familyData.map(p => normalizeGenerationKey(p.generation)));
-            const uniqueChis = [...new Set(familyData.map(p => p.chi || 'Gốc'))].filter(c => c);
-
-            let chiDescription = "";
-            if (uniqueChis.length === 1) {
-                chiDescription = `chi phái hiện tại (${uniqueChis[0]})`;
-            } else {
-                chiDescription = `${uniqueChis.length} chi phái (${uniqueChis.join(', ')})`;
+            if (viewName === 'overview') {
+                document.getElementById('overviewViewContainer').classList.remove('hidden');
+            } else if (viewName === 'list') {
+                document.getElementById('listViewContainer').classList.remove('hidden');
+                document.getElementById('filterSection').classList.remove('hidden');
+            } else if (viewName === 'tree') {
+                document.getElementById('treeViewContainer').classList.remove('hidden');
+            } else if (viewName === 'verticalTree') {
+                document.getElementById('verticalTreeViewContainer').classList.remove('hidden');
             }
-
-            textContainer.innerHTML = `
-                Trải qua gần 300 năm hình thành và phát triển từ năm 1680, dòng họ Nguyễn tại Hội Hiền nay đã phát triển lớn mạnh. Hệ thống số hóa hiện tại đã quy tập được <strong>${totalMembers} thành viên</strong> trải dài qua <strong>${uniqueGens.size} đời</strong>, tập trung vào <strong>${chiDescription}</strong> (các nhánh còn lại đang tiếp tục được bổ sung). Con cháu đời đời ghi khắc công đức tổ tiên, đoàn kết xây dựng gia tộc văn hóa và phát triển quê hương đất nước.
-            `;
+            renderApp();
         }
 
-        // HÀM IN CUỐN GIA PHẢ CHUẨN MỰC, CÓ KHUNG KÉP TRANG TRỌNG
+        function renderApp() {
+            // Render danh sách và sơ đồ cơ bản
+            const listContainer = document.getElementById('familyList');
+            if (listContainer) {
+                listContainer.innerHTML = familyData.map(p => `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-amber-900 text-lg">${p.fullName}</h4>
+                            <p class="text-sm text-slate-600">Đời: <strong>${p.generation}</strong> | Chi: <strong>${p.chi || 'Gốc'}</strong> | Phối trí: ${p.spouse || 'Chưa rõ'}</p>
+                            <p class="text-xs text-slate-500 mt-1">Nơi ở: ${p.location || 'Chưa rõ'} | Nghề nghiệp: ${p.profession || 'Chưa rõ'}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
         function printFamilyBook() {
-            const originalContent = document.body.innerHTML;
-            
-            let sortedData = [...familyData];
-            sortedData.sort((a, b) => getGenerationOrder(a.generation) - getGenerationOrder(b.generation));
-
-            let membersHtml = '';
-            sortedData.forEach((person, index) => {
-                let parentName = "Không rõ (Gốc)";
-                if (person.parentId) {
-                    const pObj = familyData.find(item => item.id === person.parentId);
-                    if (pObj) parentName = pObj.fullName;
-                }
-
-                membersHtml += `
-                    <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dotted #bbb; font-size: 12pt; text-align: justify;">
-                        <strong>${index + 1}. ${person.fullName}</strong> 
-                        <span style="background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: 10pt; margin-left: 5px; border: 1px solid #f59e0b;">${person.generation}</span>
-                        <span style="background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-size: 10pt; border: 1px solid #cbd5e1;">Chi: ${person.chi}</span>
-                        <div style="margin-top: 4px; color: #222;">
-                            - <strong>Hậu duệ của:</strong> ${parentName} | <strong>Phối trí:</strong> ${person.spouse || 'Chưa rõ'} | <strong>Năm sinh:</strong> ${person.birthYear || 'Chưa rõ'}<br>
-                            - <strong>Nơi ở/Quê quán:</strong> ${person.location || 'Chưa rõ'} | <strong>Nghề nghiệp:</strong> ${person.profession || 'Chưa rõ'}<br>
-                            - <em>Ghi chú/Công trạng:</em> ${person.notes || 'Không có.'}
-                        </div>
-                    </div>
-                `;
-            });
-
-            const currentDate = new Date().toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' });
-
-            const printContainer = `
-                <div style="font-family: 'Times New Roman', Times, serif; color: #000;">
-                    
-                    <!-- TRANG BÌA: Khung kép, lệch trên 1/3, giãn dòng vừa phải -->
-                    <div class="print-cover">
-                        <div style="width: 100%;">
-                            <div style="font-size: 12pt; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-bottom: 4px;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
-                            <div style="font-size: 12pt; font-weight: bold;">Độc lập - Tự do - Hạnh phúc</div>
-                        </div>
-                        
-                        <div style="text-align: center; margin-top: -30px;">
-                            <h1 style="font-size: 30pt; font-weight: bold; color: #78350f; margin: 15px 0; text-transform: uppercase; letter-spacing: 2px;">NGUYỄN TỘC PHẢ KÝ</h1>
-                            <h2 style="font-size: 15pt; font-weight: bold; margin-bottom: 20px; text-transform: uppercase;">TOÀN TỘC HỘI HIỀN - 5 CHI PHÁI</h2>
-                            <div style="width: 100px; height: 2px; background: #78350f; margin: 20px auto;"></div>
-                            <div style="font-size: 12pt; font-style: italic;">Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</div>
-                        </div>
-
-                        <div style="width: 100%; font-size: 11pt;">
-                            Bản số hóa và in ấn cập nhật đến ngày: ${currentDate}
-                        </div>
-                    </div>
-
-                    <!-- TRANG 2: LỜI NÓI ĐẦU & TRIẾT LÝ -->
-                    <div class="print-book-page">
-                        <div class="book-header">Nguyễn Tộc Phả ký</div>
-                        <div style="text-indent: 30px; margin-top: 15px;">
-                            <h2 style="text-align: center; font-size: 14pt; font-weight: bold; color: #78350f; margin-bottom: 15px; text-transform: uppercase;">PHẦN I: LỜI NÓI ĐẦU & TRIẾT LÝ NGUỒN CỘI</h2>
-                            Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Cổ nhân từng dạy: <em>"Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên"</em> (Người phải có tổ, cây phải có gốc, nước phải có nguồn). Cây có gốc mới nở cành sinh ngọn, nước có nguồn mới bể rộng sông sâu. Người ta sinh ra tất có tổ tiên trước rồi sau mới có mình.
-                        </div>
-                        <p style="text-indent: 30px; margin-top: 12px;">
-                            Chính vì thế, việc biên soạn, gìn giữ và tiếp nối cuốn Phả Ký của dòng họ Nguyễn tại thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là nghĩa vụ thiêng liêng nhằm tỏ lòng thành kính tưởng nhớ công ơn sinh thành, dưỡng dục của các bậc tổ tiên.
-                        </p>
-                        <blockquote style="border-left: 3px solid #78350f; padding-left: 15px; margin: 15px 0; font-style: italic; color: #333;">
-                            "Ôi! Cây có ngàn cành ngàn lá, gốc có rễ; nước có ngàn dòng chảy, nước có nguồn. Người ta sinh ra cũng có nguồn gốc... Tổ tiên ta tích lũy ân đức cũng vì thế hệ mai sau. Mọi người trong họ phải nghĩ đến công đức của tổ tiên, không được quên ơn..." (Trích bản Phả ký cổ năm 1882).
-                        </blockquote>
-                        <div class="book-footer">
-                            <div class="book-footer-content">
-                                <span>Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</span>
-                                <span>2</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TRANG 3: NGUỒN GỐC & THỦY TỔ -->
-                    <div class="print-book-page">
-                        <div class="book-header">Nguyễn Tộc Phả ký</div>
-                        <div style="margin-top: 15px;">
-                            <h2 style="text-align: center; font-size: 14pt; font-weight: bold; color: #78350f; margin-bottom: 15px; text-transform: uppercase;">PHẦN II: NGUỒN GỐC & THỦY TỔ GIA TỘC</h2>
-                            
-                            <h3 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 4px;">1. Hành trình di cư và lập nghiệp</h3>
-                            <p style="text-indent: 30px;">
-                                Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã, ban đầu di cư vào vùng đất Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn sinh cơ lập nghiệp bằng nghề thợ rèn (Thiết tương triệu cơ). Sau đó, gia tộc chuyển lên định cư lâu dài tại thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa vào thời vua Lê Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm, hình thành 5 chi phái vững mạnh.
-                            </p>
-
-                            <h3 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 4px;">2. Biểu đồ tôn thống Thủy Tổ Khảo</h3>
-                            <p style="text-indent: 30px;">
-                                - <strong>Nguyên quán:</strong> Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã.<br>
-                                - <strong>Thủy tổ khảo Húy:</strong> Công Tình | <strong>Tự:</strong> Trung Lương.<br>
-                                - <strong>Tỷ Húy:</strong> Thị Thịnh (Hiệu: Từ Tai).<br>
-                                - <strong>Hậu duệ sinh hạ:</strong> 
-                                  <br>&nbsp;&nbsp;&nbsp;&nbsp;+ 1. Trưởng húy: <strong>Công Dinh</strong> (tự Trung Ý) - Phụng tự vi thủy tổ.
-                                  <br>&nbsp;&nbsp;&nbsp;&nbsp;+ 2. Thứ húy: Văn Tự (vô tự, tự Trung Cương).
-                            </p>
-
-                            <h3 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 4px;">3. Ban soạn dịch và lịch sử biên soạn</h3>
-                            <p style="text-indent: 30px;">
-                                Ngày 25/02/1990, ban biên soạn gồm các ông Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng đã họp bàn và tiến hành dịch thuật từ bản chữ Hán cổ năm 1882. Tới Đông chí năm 2013, tập Phả Ký đã được hoàn thành để lưu truyền muôn đời.
-                            </p>
-                        </div>
-                        <div class="book-footer">
-                            <div class="book-footer-content">
-                                <span>Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</span>
-                                <span>3</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TRANG 4+: DANH MỤC CHI TIẾT THÀNH VIÊN -->
-                    <div style="page-break-before: always; text-align: justify;">
-                        <div class="book-header">Nguyễn Tộc Phả ký</div>
-                        <div style="margin-top: 15px;">
-                            <h2 style="text-align: center; font-size: 14pt; font-weight: bold; color: #78350f; margin-bottom: 20px; text-transform: uppercase;">PHẦN III: DANH MỤC THÀNH VIÊN DÒNG HỌ</h2>
-                            ${membersHtml}
-                        </div>
-                    </div>
-
-                </div>
-            `;
-
-            document.body.innerHTML = printContainer;
             window.print();
-            document.body.innerHTML = originalContent;
-            location.reload();
-        }
-
-        function selectChiTab(chiName) {
-            document.getElementById('chi').value = chiName;
-            const tabs = document.querySelectorAll('.chi-tab');
-            tabs.forEach(tab => {
-                if (tab.innerText.includes(chiName)) {
-                    tab.className = "chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-amber-900 text-white border-amber-900 shadow-sm";
-                } else {
-                    tab.className = "chi-tab px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100";
-                }
-            });
-        }
-
-        function updateParentDropdown() {
-            const parentSelect = document.getElementById('parentId');
-            const currentId = document.getElementById('memberId').value;
-            parentSelect.innerHTML = '<option value="">-- Chọn Phụ Thân (Gốc / Trực hệ) --</option>';
-            
-            familyData.forEach(p => {
-                if (p.id !== currentId) {
-                    const opt = document.createElement('option');
-                    opt.value = p.id;
-                    opt.textContent = `${p.fullName} (${p.generation} - ${p.chi})`;
-                    parentSelect.appendChild(opt);
-                }
-            });
-        }
-
-        function switchView(type) {
-            const overviewContainer = document.getElementById('overviewViewContainer');
-            const listContainer = document.getElementById('listViewContainer');
-            const treeContainer = document.getElementById('treeViewContainer');
-            const verticalTreeContainer = document.getElementById('verticalTreeViewContainer');
-            const filterSection = document.getElementById('filterSection');
-            
-            const btnOverview = document.getElementById('btnViewOverview');
-            const btnList = document.getElementById('btnViewList');
-            const btnTree = document.getElementById('btnViewTree');
-            const btnVerticalTree = document.getElementById('btnViewVerticalTree');
-
-            btnOverview.className = "bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700";
-            btnList.className = "bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700";
-            btnTree.className = "bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700";
-            btnVerticalTree.className = "bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700";
-
-            overviewContainer.classList.add('hidden');
-            listContainer.classList.add('hidden');
-            treeContainer.classList.add('hidden');
-            verticalTreeContainer.classList.add('hidden');
-            filterSection.classList.add('hidden');
-
-            if (type === 'overview') {
-                overviewContainer.classList.remove('hidden');
-                btnOverview.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow";
-                updateOverviewDynamicText();
-            } else if (type === 'list') {
-                listContainer.classList.remove('hidden');
-                filterSection.classList.remove('hidden');
-                btnList.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow";
-                renderApp();
-            } else if (type === 'tree') {
-                treeContainer.classList.remove('hidden');
-                btnTree.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow";
-                renderTreeDiagram();
-            } else if (type === 'verticalTree') {
-                verticalTreeContainer.classList.remove('hidden');
-                btnVerticalTree.className = "bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow";
-                renderVerticalTreeDiagram();
-            }
         }
 
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(familyData, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "GiaPhaDongHoNguyen_SoDo.json");
+            downloadAnchor.setAttribute("download", "GiaPha_DongHoNguyen.json");
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
         }
-
-        function importData(event) {
-            const fileReader = new FileReader();
-            if (event.target.files[0]) {
-                fileReader.readAsText(event.target.files[0], "UTF-8");
-                fileReader.onload = function (e) {
-                    try {
-                        familyData = JSON.parse(e.target.result);
-                        saveToStorage();
-                        renderApp();
-                        alert("Nhập dữ liệu thành công!");
-                    } catch (error) {
-                        alert("Lỗi đọc file dữ liệu! Vui lòng chọn đúng file JSON.");
-                    }
-                };
-            }
-        }
-
-        function toggleAdminPanel() {
-            const panel = document.getElementById('adminPanel');
-            panel.classList.toggle('hidden');
-            updateParentDropdown();
-        }
-
-        function getGenerationOrder(genStr) {
-            if (!genStr) return 99;
-            const lower = genStr.trim().toLowerCase();
-            if (lower.includes('tiên tổ') && !lower.includes('khảo')) return 0;
-            if (lower.includes('tiên tổ khảo')) return 1;
-            if (lower.includes('thủy tổ')) return 2;
-            
-            const matches = lower.match(/\d+/);
-            if (matches) {
-                return parseInt(matches[0], 10) + 2;
-            }
-            return 50;
-        }
-
-        function normalizeGenerationKey(genStr) {
-            if (!genStr) return 'Chưa phân loại';
-            const lower = genStr.trim().toLowerCase();
-            if (lower.includes('tiên tổ') && !lower.includes('khảo')) return 'Tiên tổ';
-            if (lower.includes('tiên tổ khảo')) return 'Tiên tổ khảo';
-            if (lower.includes('thủy tổ')) return 'Thủy tổ';
-            
-            const matches = lower.match(/\d+/);
-            if (matches) {
-                return `Đời thứ ${matches[0]}`;
-            }
-            return genStr.trim();
-        }
-
-        function renderTreeDiagram() {
-            const treeRoot = document.getElementById('dynamicTreeRoot');
-            if (!treeRoot) return;
-
-            if (familyData.length === 0) {
-                treeRoot.innerHTML = '<p class="text-slate-500">Chưa có dữ liệu thành viên.</p>';
-                return;
-            }
-
-            const groupedByGen = {};
-            familyData.forEach(person => {
-                let normalizedKey = normalizeGenerationKey(person.generation);
-                if (!groupedByGen[normalizedKey]) {
-                    groupedByGen[normalizedKey] = [];
-                }
-                groupedByGen[normalizedKey].push(person);
-            });
-
-            Object.keys(groupedByGen).forEach(genKey => {
-                groupedByGen[genKey].sort((a, b) => {
-                    if (!a.parentId) return -1;
-                    if (!b.parentId) return 1;
-                    return a.parentId.localeCompare(b.parentId);
-                });
-            });
-
-            const sortedGens = Object.keys(groupedByGen).sort((a, b) => {
-                return getGenerationOrder(a) - getGenerationOrder(b);
-            });
-
-            let html = '';
-            sortedGens.forEach((genKey, genIndex) => {
-                const personsInGen = groupedByGen[genKey];
-
-                html += `
-                    <div class="flex flex-col items-center w-full mb-3">
-                        <div class="mb-3 px-4 py-1.5 bg-amber-100 text-amber-900 rounded-lg text-sm font-bold tracking-wide shadow-sm border border-amber-300">
-                            ${genKey.toUpperCase()}
-                        </div>
-                        <div class="flex flex-wrap justify-center gap-5 w-full">
-                `;
-
-                personsInGen.forEach(person => {
-                    let parentInfo = "";
-                    if (person.parentId) {
-                        const parentObj = familyData.find(p => p.id === person.parentId);
-                        if (parentObj) {
-                            parentInfo = `<span class="block text-[11px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded mt-1.5 font-semibold border border-amber-200">⬆ Từ: ${parentObj.fullName}</span>`;
-                        }
-                    }
-
-                    html += `
-                        <div class="border-2 border-amber-600 bg-white p-3.5 rounded-xl shadow-md text-center min-w-[210px] max-w-[240px] relative">
-                            <strong class="block text-amber-900 text-sm font-bold">${person.fullName}</strong>
-                            <span class="text-xs text-amber-700 font-medium block mt-0.5">${person.chi || 'Gốc'}</span>
-                            <span class="block text-[11px] text-slate-500 mt-1">Phối: ${person.spouse || 'Chưa rõ'}</span>
-                            ${parentInfo}
-                        </div>
-                    `;
-                });
-
-                html += `</div></div>`;
-
-                if (genIndex < sortedGens.length - 1) {
-                    html += `<div class="flex flex-col items-center my-2 text-amber-600"><span class="text-xl font-black">↓</span></div>`;
-                }
-            });
-
-            treeRoot.innerHTML = html;
-        }
-
-        function renderVerticalTreeDiagram() {
-            const verticalTreeRoot = document.getElementById('dynamicVerticalTreeRoot');
-            if (!verticalTreeRoot) return;
-
-            if (familyData.length === 0) {
-                verticalTreeRoot.innerHTML = '<p class="text-slate-500">Chưa có dữ liệu thành viên.</p>';
-                return;
-            }
-
-            const map = {};
-            familyData.forEach(p => {
-                map[p.id] = { ...p, children: [] };
-            });
-
-            const roots = [];
-            familyData.forEach(p => {
-                if (p.parentId && map[p.parentId]) {
-                    map[p.parentId].children.push(map[p.id]);
-                } else {
-                    roots.push(map[p.id]);
-                }
-            });
-
-            const treeRoots = roots.length > 0 ? roots : Object.values(map);
-
-            function buildVerticalHTML(nodes) {
-                let html = `<div class="flex flex-col gap-4 w-full pl-6 border-l-2 border-amber-400 my-2">`;
-                nodes.forEach(node => {
-                    html += `
-                        <div class="relative flex flex-col items-start">
-                            <div class="border-2 border-amber-600 bg-white p-3 rounded-xl shadow-sm min-w-[220px] max-w-[260px] relative z-10">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">${node.generation}</span>
-                                    <span class="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded">${node.chi || 'Gốc'}</span>
-                                </div>
-                                <strong class="block text-amber-900 text-sm font-bold">${node.fullName}</strong>
-                                <span class="text-[11px] text-slate-500">Phối: ${node.spouse || 'Chưa rõ'}</span>
-                            </div>
-                    `;
-                    if (node.children && node.children.length > 0) {
-                        html += buildVerticalHTML(node.children);
-                    }
-                    html += `</div>`;
-                });
-                html += `</div>`;
-                return html;
-            }
-
-            let finalHtml = `<div class="flex flex-col gap-4 w-full">`;
-            treeRoots.forEach(rootNode => {
-                finalHtml += `
-                    <div class="flex flex-col items-start">
-                        <div class="border-2 border-amber-600 bg-white p-3 rounded-xl shadow-md min-w-[220px] max-w-[260px] relative z-10">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">${rootNode.generation}</span>
-                                <span class="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded">${rootNode.chi || 'Gốc'}</span>
-                            </div>
-                            <strong class="block text-amber-900 text-sm font-bold">${rootNode.fullName}</strong>
-                            <span class="text-[11px] text-slate-500">Phối: ${rootNode.spouse || 'Chưa rõ'}</span>
-                        </div>
-                `;
-                if (rootNode.children && rootNode.children.length > 0) {
-                    finalHtml += buildVerticalHTML(rootNode.children);
-                }
-                finalHtml += `</div>`;
-            });
-            finalHtml += `</div>`;
-
-            verticalTreeRoot.innerHTML = finalHtml;
-        }
-
-        function renderApp() {
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const selectedChi = document.getElementById('chiFilter').value;
-            const container = document.getElementById('familyList');
-            
-            const filtered = familyData.filter(p => {
-                const matchKeyword = p.fullName.toLowerCase().includes(keyword) || 
-                                     p.generation.toLowerCase().includes(keyword) ||
-                                     (p.profession && p.profession.toLowerCase().includes(keyword)) ||
-                                     (p.location && p.location.toLowerCase().includes(keyword)) ||
-                                     (p.notes && p.notes.toLowerCase().includes(keyword));
-                const matchChi = selectedChi === "" || p.chi === selectedChi;
-                return matchKeyword && matchChi;
-            });
-
-            filtered.sort((a, b) => getGenerationOrder(a.generation) - getGenerationOrder(b.generation));
-
-            document.getElementById('statTotal').innerText = familyData.length;
-            const uniqueGens = new Set(familyData.map(p => normalizeGenerationKey(p.generation)));
-            document.getElementById('statGenerations').innerText = uniqueGens.size;
-
-            container.innerHTML = '';
-            if (filtered.length === 0) {
-                container.innerHTML = '<p class="text-center text-slate-500 py-8 bg-white rounded-xl border">Không tìm thấy thành viên phù hợp.</p>';
-                return;
-            }
-
-            filtered.forEach(person => {
-                let parentName = "Không rõ (Gốc)";
-                if (person.parentId) {
-                    const pObj = familyData.find(item => item.id === person.parentId);
-                    if (pObj) parentName = pObj.fullName;
-                }
-
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print-border';
-                
-                card.innerHTML = `
-                    <div class="space-y-1.5 w-full">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${person.generation}</span>
-                            <span class="bg-slate-100 text-slate-700 text-xs font-medium px-2.5 py-0.5 rounded-full">${person.chi}</span>
-                            <h3 class="text-lg font-bold text-slate-800">${person.fullName}</h3>
-                            <span class="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Hậu duệ của: <strong>${parentName}</strong></span>
-                        </div>
-                        <div class="text-sm text-slate-600 grid grid-cols-1 md:grid-cols-3 gap-2 mt-1">
-                            <div>📅 <strong>Năm sinh:</strong> ${person.birthYear || 'Chưa rõ'}</div>
-                            <div>❤️ <strong>Phối trí:</strong> ${person.spouse || 'Chưa cập nhật'}</div>
-                            <div>🕯️ <strong>Ngày giỗ:</strong> ${person.deathAnniversary || 'Chưa có'}</div>
-                            <div>📍 <strong>Nơi ở:</strong> ${person.location || 'Chưa rõ'}</div>
-                            <div>💼 <strong>Nghề nghiệp:</strong> ${person.profession || 'Chưa rõ'}</div>
-                        </div>
-                        <p class="text-sm text-slate-500 italic mt-1">Ghi chú: ${person.notes || 'Không có.'}</p>
-                    </div>
-                    <div class="flex items-center gap-2 self-end md:self-center no-print">
-                        <button onclick="editMember('${person.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">✏️ Sửa</button>
-                        <button onclick="deleteMember('${person.id}')" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg transition">🗑️ Xóa</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            const id = document.getElementById('memberId').value;
-            const fullName = document.getElementById('fullName').value;
-            const generation = document.getElementById('generation').value;
-            const parentId = document.getElementById('parentId').value;
-            const chi = document.getElementById('chi').value;
-            const birthYear = document.getElementById('birthYear').value;
-            const deathAnniversary = document.getElementById('deathAnniversary').value;
-            const location = document.getElementById('location').value;
-            const profession = document.getElementById('profession').value;
-            const spouse = document.getElementById('spouse').value;
-            const notes = document.getElementById('notes').value;
-
-            if (id) {
-                const index = familyData.findIndex(p => p.id === id);
-                if (index !== -1) {
-                    familyData[index] = { id, fullName, generation, parentId, chi, birthYear, deathAnniversary, location, profession, spouse, notes };
-                }
-            } else {
-                const newMember = {
-                    id: Date.now().toString(),
-                    fullName, generation, parentId, chi, birthYear, deathAnniversary, location, profession, spouse, notes
-                };
-                familyData.push(newMember);
-            }
-
-            saveToStorage();
-            resetForm();
-            toggleAdminPanel();
-            switchView('overview');
-        }
-
-        function editMember(id) {
-            const member = familyData.find(p => p.id === id);
-            if (!member) return;
-
-            document.getElementById('memberId').value = member.id;
-            document.getElementById('fullName').value = member.fullName;
-            document.getElementById('generation').value = member.generation;
-            
-            updateParentDropdown();
-            document.getElementById('parentId').value = member.parentId || '';
-            
-            selectChiTab(member.chi || "Gốc");
-            document.getElementById('birthYear').value = member.birthYear || '';
-            document.getElementById('deathAnniversary').value = member.deathAnniversary || '';
-            document.getElementById('location').value = member.location || '';
-            document.getElementById('profession').value = member.profession || '';
-            document.getElementById('spouse').value = member.spouse || '';
-            document.getElementById('notes').value = member.notes || '';
-            
-            document.getElementById('formTitle').innerText = "✏️ Chỉnh Sửa Thông Tin Thành Viên";
-            
-            const panel = document.getElementById('adminPanel');
-            panel.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function deleteMember(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa thành viên này không?")) {
-                familyData = familyData.filter(p => p.id !== id);
-                saveToStorage();
-                renderApp();
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('familyForm').reset();
-            document.getElementById('memberId').value = '';
-            document.getElementById('generation').selectedIndex = 0;
-            selectChiTab('Gốc');
-            updateParentDropdown();
-            document.getElementById('formTitle').innerText = "➕ Thêm Thành Viên Mới";
-        }
-
-        updateParentDropdown();
-        switchView('overview');
     </script>
 </body>
 </html>
