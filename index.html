@@ -276,17 +276,21 @@
                         familyData = data;
                         initAppData();
                     } else {
-                        fallbackToLocal();
+                        loadDefaultData();
                     }
                 })
                 .catch(error => {
-                    console.log("Không tải được từ đám mây, đang dùng dữ liệu lưu tạm:", error);
-                    fallbackToLocal();
+                    console.log("Lỗi kết nối đám mây, đang nạp dữ liệu dự phòng:", error);
+                    loadDefaultData();
                 });
         }
 
-        function fallbackToLocal() {
-            familyData = JSON.parse(localStorage.getItem('nguyenFamilyTreeDataCloud')) || [];
+        // Dữ liệu dự phòng mặc định để giao diện luôn đầy đủ ngay cả khi Google Sheets chưa đồng bộ kịp
+        function loadDefaultData() {
+            familyData = [
+                { id: "1", fullName: "Nguyễn Công Tình", generation: "Tiên tổ khảo", parentId: "", chi: "Gốc", spouse: "Thị Thịnh", birthYear: "", deathAnniversary: "", location: "Nguyên Quán: Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã", profession: "", notes: "Tiên tổ khảo dòng họ." },
+                { id: "2", fullName: "Nguyễn Công Dinh (tự Trung Ý)", generation: "Đời thứ 1", parentId: "1", chi: "Gốc", spouse: "Hoàng Thị Khám (thọ 81 tuổi)", birthYear: "thời Chính Hòa (1680-1704)", deathAnniversary: "", location: "Hội Hiền, Thọ Xuân", profession: "Khởi cơ lập nghiệp", notes: "NGUYỄN CÔNG DINH Húy Dinh: Tự Trung Ý Nguyên mạnh Quý Mùi Hưởng thọ: 68 tuổi..." }
+            ];
             initAppData();
         }
 
@@ -297,7 +301,6 @@
         }
 
         function saveToCloud() {
-            localStorage.setItem('nguyenFamilyTreeDataCloud', JSON.stringify(familyData));
             updateParentDropdown();
             updateStats();
             renderApp();
@@ -320,13 +323,10 @@
             document.getElementById('statGenerations').innerText = uniqueGens.size;
         }
 
-        // Chuẩn hóa thứ tự sắp xếp đời cực kỳ chính xác
         function getGenerationOrder(genStr) {
             if (!genStr) return 999;
             let lower = genStr.toLowerCase();
             if (lower.includes('tiên tổ') || lower.includes('thủy tổ') || lower.includes('khảo')) return -1;
-            
-            // Lấy số từ chuỗi (ví dụ: "Đời thứ 4" -> 4)
             const match = genStr.match(/\d+/);
             return match ? parseInt(match[0]) : 99;
         }
@@ -439,7 +439,6 @@
                 return matchSearch && matchChi;
             });
 
-            // Sắp xếp danh sách thành viên theo đúng thứ tự đời từ thấp đến cao (-1, 0, 1, 2, 3...)
             filtered.sort((a, b) => getGenerationOrder(a.generation) - getGenerationOrder(b.generation));
 
             // 1. Render List
@@ -477,7 +476,7 @@
                 }).join('');
             }
 
-            // 2. Render Ngang (Sắp xếp các khối nhóm đời chuẩn xác tuyệt đối)
+            // 2. Render Ngang
             const treeRoot = document.getElementById('dynamicTreeRoot');
             if (treeRoot) {
                 let grouped = {};
@@ -491,7 +490,6 @@
                     grouped[order].members.push(p);
                 });
 
-                // Sắp xếp các nhóm đời theo đúng thứ tự số học (Tiên tổ khảo -> Đời 1 -> Đời 2 -> ...)
                 let sortedOrders = Object.keys(grouped).sort((a, b) => parseInt(a) - parseInt(b));
                 
                 treeRoot.innerHTML = sortedOrders.map(order => {
