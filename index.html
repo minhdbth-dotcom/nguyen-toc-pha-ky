@@ -9,7 +9,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         
-        /* Cấu hình trang in chuẩn A4, lề, khung kép và ẩn các phần tử không cần thiết */
         @media print {
             @page {
                 size: A4 portrait;
@@ -22,14 +21,6 @@
                 font-family: 'Times New Roman', Times, serif !important; 
                 font-size: 12pt;
                 line-height: 1.5;
-            }
-            .print-book-page {
-                page-break-after: always;
-                break-after: page;
-                position: relative;
-                min-height: 25cm;
-                padding-bottom: 30px;
-                text-align: justify;
             }
             .print-cover {
                 display: flex !important;
@@ -64,8 +55,7 @@
             <div class="flex flex-wrap gap-2">
                 <button onclick="switchView('overview')" id="btnViewOverview" class="bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded-lg text-xs font-semibold transition shadow">📖 Tổng Quan</button>
                 <button onclick="switchView('list')" id="btnViewList" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">📋 Danh Sách</button>
-                <button onclick="switchView('tree')" id="btnViewTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">🌳 Sơ Đồ Ngang</button>
-                <button onclick="switchView('verticalTree')" id="btnViewVerticalTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">🌲 Sơ Đồ Cột</button>
+                <button onclick="switchView('tree')" id="btnViewTree" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">🌳 Sơ Đồ Phả Hệ</button>
                 <button onclick="printFamilyBook()" class="bg-amber-600 hover:bg-amber-500 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-500 text-white flex items-center gap-1">📖 In Gia Phả</button>
                 <button onclick="exportData()" class="bg-amber-800 hover:bg-amber-700 px-3 py-2 rounded-lg text-xs font-semibold transition shadow border border-amber-700">📥 Xuất Dữ Liệu</button>
                 <button onclick="toggleAdminPanel()" class="bg-amber-700 hover:bg-amber-600 px-4 py-2 rounded-lg text-sm font-semibold transition shadow">⚙️ Quản Trị</button>
@@ -264,12 +254,6 @@
             <div class="flex flex-col items-center py-4" id="dynamicTreeRoot"></div>
         </div>
 
-        <!-- 4. SƠ ĐỒ CỘT -->
-        <div id="verticalTreeViewContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h2 class="text-xl font-bold text-amber-900 mb-6 text-center">🌲 SƠ ĐỒ CÂY PHẢ HỆ DẠNG CỘT DỌC</h2>
-            <div class="flex flex-col items-start py-4" id="dynamicVerticalTreeRoot"></div>
-        </div>
-
     </main>
 
     <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm mt-12 no-print">
@@ -412,13 +396,11 @@
             document.getElementById('overviewViewContainer').classList.add('hidden');
             document.getElementById('listViewContainer').classList.add('hidden');
             document.getElementById('treeViewContainer').classList.add('hidden');
-            document.getElementById('verticalTreeViewContainer').classList.add('hidden');
             document.getElementById('filterSection').classList.add('hidden');
 
             if (viewName === 'overview') document.getElementById('overviewViewContainer').classList.remove('hidden');
             else if (viewName === 'list') { document.getElementById('listViewContainer').classList.remove('hidden'); document.getElementById('filterSection').classList.remove('hidden'); }
             else if (viewName === 'tree') document.getElementById('treeViewContainer').classList.remove('hidden');
-            else if (viewName === 'verticalTree') document.getElementById('verticalTreeViewContainer').classList.remove('hidden');
             renderApp();
         }
 
@@ -432,24 +414,32 @@
                 return matchSearch && matchChi;
             });
 
-            // 1. Render List
+            // 1. Render List (Ẩn các trường "Chưa rõ")
             const listContainer = document.getElementById('familyList');
             if (listContainer) {
-                listContainer.innerHTML = filtered.map(p => `
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-amber-900 text-base">${p.fullName} <span class="text-xs font-normal bg-amber-100 px-2 py-0.5 rounded text-amber-800">${p.generation}</span></h4>
-                            <p class="text-xs text-slate-600 mt-1">Chi: ${p.chi || 'Gốc'} | Phối: ${p.spouse || 'Chưa rõ'} | Quê quán: ${p.location || 'Chưa rõ'}</p>
+                listContainer.innerHTML = filtered.map(p => {
+                    let details = [];
+                    details.push(`Chi: ${p.chi || 'Gốc'}`);
+                    if (p.spouse && p.spouse !== 'Chưa rõ') details.push(`Phối: ${p.spouse}`);
+                    if (p.location && p.location !== 'Chưa rõ') details.push(`Quê quán: ${p.location}`);
+                    if (p.profession) details.push(`Nghề: ${p.profession}`);
+
+                    return `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-amber-900 text-base">${p.fullName} <span class="text-xs font-normal bg-amber-100 px-2 py-0.5 rounded text-amber-800">${p.generation}</span></h4>
+                                <p class="text-xs text-slate-600 mt-1">${details.join(' | ')}</p>
+                            </div>
+                            <div class="flex gap-2 no-print">
+                                <button onclick="editMember('${p.id}')" class="px-2.5 py-1 bg-slate-100 text-xs rounded border">Sửa</button>
+                                <button onclick="deleteMember('${p.id}')" class="px-2.5 py-1 bg-red-50 text-red-600 text-xs rounded border border-red-200">Xóa</button>
+                            </div>
                         </div>
-                        <div class="flex gap-2 no-print">
-                            <button onclick="editMember('${p.id}')" class="px-2.5 py-1 bg-slate-100 text-xs rounded border">Sửa</button>
-                            <button onclick="deleteMember('${p.id}')" class="px-2.5 py-1 bg-red-50 text-red-600 text-xs rounded border border-red-200">Xóa</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
 
-            // 2. Render Ngang
+            // 2. Render Ngang (Ẩn các trường "Chưa rõ")
             const treeRoot = document.getElementById('dynamicTreeRoot');
             if (treeRoot) {
                 let grouped = {};
@@ -478,12 +468,12 @@
                                         <div>
                                             <div class="font-bold text-amber-900 text-sm">${p.fullName}</div>
                                             <div class="text-amber-800 font-semibold">Chi: ${p.chi || 'Gốc'}</div>
-                                            ${p.spouse ? `<div>💍 Phối: ${p.spouse}</div>` : ''}
-                                            ${p.birthYear ? `<div>📅 ${p.birthYear}</div>` : ''}
+                                            ${p.spouse && p.spouse !== 'Chưa rõ' ? `<div>💍 Phối: ${p.spouse}</div>` : ''}
+                                            ${p.birthYear && p.birthYear !== 'Chưa rõ' ? `<div>📅 ${p.birthYear}</div>` : ''}
                                             ${parentName ? `<div class="mt-1 bg-amber-100/80 px-1.5 py-0.5 rounded border border-amber-200 font-medium text-[11px]">↑ Từ: ${parentName}</div>` : ''}
                                         </div>
                                         <div class="mt-2 pt-1 border-t border-amber-200 flex justify-between items-center no-print">
-                                            <span class="text-slate-500">${p.location || ''}</span>
+                                            <span class="text-slate-500">${p.location && p.location !== 'Chưa rõ' ? p.location : ''}</span>
                                             <button onclick="editMember('${p.id}')" class="text-amber-900 hover:underline font-bold">Sửa</button>
                                         </div>
                                     </div>
