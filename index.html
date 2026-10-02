@@ -84,9 +84,9 @@
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
                     <p class="text-sm text-slate-500 font-medium">Trạng thái dữ liệu</p>
-                    <h3 class="text-sm font-semibold text-emerald-600 mt-2">Đồng bộ GitHub (data.json)</h3>
+                    <h3 class="text-sm font-semibold text-emerald-600 mt-2">Đám mây Google Sheets (Live)</h3>
                 </div>
-                <div class="p-3 bg-emerald-50 text-emerald-700 rounded-lg text-xl">💾</div>
+                <div class="p-3 bg-emerald-50 text-emerald-700 rounded-lg text-xl">☁️️</div>
             </div>
         </div>
 
@@ -262,16 +262,33 @@
 
     <script>
         let familyData = [];
+        const API_URL = "https://script.google.com/macros/s/AKfycbxFRhjQbX8iP14VsoWt2UgaWbqiChpjhje9zjeAwgeeiqwu3fIbp0UWkvb5PizIg8wenw/exec";
 
         document.addEventListener("DOMContentLoaded", function() {
-            fetch('data.json')
-                .then(response => response.json())
-                .then(data => { familyData = data; initAppData(); })
-                .catch(error => {
-                    familyData = JSON.parse(localStorage.getItem('nguyenFamilyTreeDataWithParent')) || [];
-                    initAppData();
-                });
+            loadDataFromCloud();
         });
+
+        function loadDataFromCloud() {
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        familyData = data;
+                        initAppData();
+                    } else {
+                        fallbackToLocal();
+                    }
+                })
+                .catch(error => {
+                    console.log("Không tải được từ đám mây, đang dùng dữ liệu lưu tạm:", error);
+                    fallbackToLocal();
+                });
+        }
+
+        function fallbackToLocal() {
+            familyData = JSON.parse(localStorage.getItem('nguyenFamilyTreeDataCloud')) || [];
+            initAppData();
+        }
 
         function initAppData() {
             updateStats();
@@ -279,11 +296,24 @@
             renderApp();
         }
 
-        function saveToStorage() {
-            localStorage.setItem('nguyenFamilyTreeDataWithParent', JSON.stringify(familyData));
+        function saveToCloud() {
+            // Lưu tạm vào localStorage trước
+            localStorage.setItem('nguyenFamilyTreeDataCloud', JSON.stringify(familyData));
             updateParentDropdown();
             updateStats();
             renderApp();
+
+            // Gửi dữ liệu đồng bộ lên Google Sheets (Đám mây)
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(familyData)
+            }).then(() => {
+                console.log("Đã đồng bộ dữ liệu lên Google Sheets thành công!");
+            }).catch(err => {
+                console.error("Lỗi đồng bộ đám mây:", err);
+            });
         }
 
         function updateStats() {
@@ -361,9 +391,9 @@
             if (existingIndex >= 0) familyData[existingIndex] = memberObj;
             else familyData.push(memberObj);
 
-            saveToStorage();
+            saveToCloud();
             toggleAdminPanel();
-            alert('Đã lưu thông tin thành viên thành công!');
+            alert('Đã lưu thành viên và tự động đồng bộ lên Google Sheets thành công!');
         }
 
         function editMember(id) {
@@ -388,7 +418,7 @@
         function deleteMember(id) {
             if (confirm('Bạn có chắc chắn muốn xóa thành viên này?')) {
                 familyData = familyData.filter(item => item.id !== id && item.parentId !== id);
-                saveToStorage();
+                saveToCloud();
             }
         }
 
@@ -414,7 +444,7 @@
                 return matchSearch && matchChi;
             });
 
-            // 1. Render List (Hiển thị thêm thông tin Phụ thân)
+            // 1. Render List
             const listContainer = document.getElementById('familyList');
             if (listContainer) {
                 listContainer.innerHTML = filtered.map(p => {
@@ -488,7 +518,7 @@
                                                     <div><span class="font-semibold text-amber-800">Chi:</span> ${p.chi || 'Gốc'}</div>
                                                     ${p.spouse && p.spouse !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">💍 Phối:</span> ${p.spouse}</div>` : ''}
                                                     ${p.birthYear && p.birthYear !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">📅 Sinh:</span> ${p.birthYear}</div>` : ''}
-                                                    ${p.deathAnniversary && p.deathAnniversary !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">🕯️ Giỗ:</span> ${p.deathAnniversary}</div>` : ''}
+                                                    ${p.deathAnniversary && p.deathAnniversary !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">🕯️️ Giỗ:</span> ${p.deathAnniversary}</div>` : ''}
                                                     ${p.profession ? `<div><span class="font-semibold text-amber-800">💼 Nghề:</span> ${p.profession}</div>` : ''}
                                                     ${p.location && p.location !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">📍 Quê:</span> ${p.location}</div>` : ''}
                                                     ${parentName ? `<div class="bg-amber-100/80 px-2 py-1 rounded border border-amber-200 font-medium text-[11px] text-amber-900 mt-1">↑ Phụ thân: ${parentName}</div>` : ''}
