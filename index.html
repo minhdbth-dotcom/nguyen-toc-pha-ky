@@ -421,6 +421,8 @@
                     let details = [];
                     details.push(`Chi: ${p.chi || 'Gốc'}`);
                     if (p.spouse && p.spouse !== 'Chưa rõ') details.push(`Phối: ${p.spouse}`);
+                    if (p.birthYear && p.birthYear !== 'Chưa rõ') details.push(`Năm sinh: ${p.birthYear}`);
+                    if (p.deathAnniversary && p.deathAnniversary !== 'Chưa rõ') details.push(`Giỗ: ${p.deathAnniversary}`);
                     if (p.location && p.location !== 'Chưa rõ') details.push(`Quê quán: ${p.location}`);
                     if (p.profession) details.push(`Nghề: ${p.profession}`);
 
@@ -429,6 +431,7 @@
                             <div>
                                 <h4 class="font-bold text-amber-900 text-base">${p.fullName} <span class="text-xs font-normal bg-amber-100 px-2 py-0.5 rounded text-amber-800">${p.generation}</span></h4>
                                 <p class="text-xs text-slate-600 mt-1">${details.join(' | ')}</p>
+                                ${p.notes ? `<p class="text-xs text-slate-500 italic mt-1 bg-slate-50 p-1.5 rounded border-l-2 border-amber-600">${p.notes}</p>` : ''}
                             </div>
                             <div class="flex gap-2 no-print">
                                 <button onclick="editMember('${p.id}')" class="px-2.5 py-1 bg-slate-100 text-xs rounded border">Sửa</button>
@@ -439,14 +442,12 @@
                 }).join('');
             }
 
-            // 2. Render Ngang (Đã chuẩn hóa gom chung tất cả thành viên cùng đời vào một khối duy nhất)
+            // 2. Render Ngang (Hiển thị đầy đủ tối đa mọi thông tin trên từng thẻ)
             const treeRoot = document.getElementById('dynamicTreeRoot');
             if (treeRoot) {
                 let grouped = {};
                 filtered.forEach(p => {
                     let rawGen = (p.generation || 'Chưa rõ đời').trim();
-                    // Chuẩn hóa tên đời để gộp các biến thể chữ hoa/thường hoặc khoảng trắng về một chuẩn duy nhất
-                    let genKey = rawGen;
                     let order = getGenerationOrder(rawGen);
                     
                     if (!grouped[order]) {
@@ -473,16 +474,19 @@
                                         if (pObj) parentName = pObj.fullName;
                                     }
                                     return `
-                                        <div class="bg-amber-50/60 p-3 rounded-lg border border-amber-200 shadow-sm flex flex-col justify-between text-xs">
+                                        <div class="bg-amber-50/60 p-3 rounded-lg border border-amber-200 shadow-sm flex flex-col justify-between text-xs space-y-1.5">
                                             <div>
                                                 <div class="font-bold text-amber-900 text-sm">${p.fullName}</div>
                                                 <div class="text-amber-800 font-semibold">Chi: ${p.chi || 'Gốc'}</div>
                                                 ${p.spouse && p.spouse !== 'Chưa rõ' ? `<div>💍 Phối: ${p.spouse}</div>` : ''}
-                                                ${p.birthYear && p.birthYear !== 'Chưa rõ' ? `<div>📅 ${p.birthYear}</div>` : ''}
+                                                ${p.birthYear && p.birthYear !== 'Chưa rõ' ? `<div>📅 Sinh: ${p.birthYear}</div>` : ''}
+                                                ${p.deathAnniversary && p.deathAnniversary !== 'Chưa rõ' ? `<div>🕯️ Giỗ: ${p.deathAnniversary}</div>` : ''}
+                                                ${p.profession ? `<div>💼 Nghề: ${p.profession}</div>` : ''}
+                                                ${p.location && p.location !== 'Chưa rõ' ? `<div>📍 Quê: ${p.location}</div>` : ''}
                                                 ${parentName ? `<div class="mt-1 bg-amber-100/80 px-1.5 py-0.5 rounded border border-amber-200 font-medium text-[11px]">↑ Từ: ${parentName}</div>` : ''}
+                                                ${p.notes ? `<div class="mt-1 text-slate-600 italic bg-white/70 p-1 rounded border">${p.notes}</div>` : ''}
                                             </div>
-                                            <div class="mt-2 pt-1 border-t border-amber-200 flex justify-between items-center no-print">
-                                                <span class="text-slate-500">${p.location && p.location !== 'Chưa rõ' ? p.location : ''}</span>
+                                            <div class="pt-1.5 border-t border-amber-200 flex justify-end items-center no-print">
                                                 <button onclick="editMember('${p.id}')" class="text-amber-900 hover:underline font-bold">Sửa</button>
                                             </div>
                                         </div>
