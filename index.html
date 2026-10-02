@@ -94,8 +94,13 @@
         <div id="adminPanel" class="hidden bg-white p-6 rounded-2xl shadow-md border border-amber-200 mb-8 transition-all no-print">
             <div class="flex flex-col md:flex-row justify-between items-center mb-4 pb-2 border-b border-slate-100 gap-3">
                 <h2 id="formTitle" class="text-xl font-bold text-amber-900">➕ Thêm Thành Viên Mới</h2>
-                <div class="flex items-center gap-2">
-                    <button onclick="changePasswordPrompt()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-amber-300">🔑 Đổi mật khẩu Admin</button>
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Nút Nhập File JSON -->
+                    <label class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer shadow flex items-center gap-1">
+                        📥 Nhập File JSON
+                        <input type="file" id="importFile" accept=".json" onchange="importDataFromJson(event)" class="hidden">
+                    </label>
+                    <button onclick="changePasswordPrompt()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-amber-300">🔑 Đổi mật khẩu</button>
                     <button onclick="resetForm()" class="text-sm text-slate-500 hover:text-red-600 px-2">Làm mới form</button>
                 </div>
             </div>
@@ -334,7 +339,7 @@
             });
         }
 
-        // Đăng nhập Admin với mật khẩu lấy từ localStorage (mặc định là '123456')
+        // Đăng nhập Admin (Cố định an toàn với mật khẩu mặc định '123456')
         function toggleAdminPanel() {
             if (!isAdmin) {
                 let currentPassword = localStorage.getItem('nguyenAdminPassword') || '123456';
@@ -357,7 +362,7 @@
             }
         }
 
-        // Tính năng đổi mật khẩu trực tiếp trên giao diện
+        // Đổi mật khẩu trực tiếp trên giao diện
         function changePasswordPrompt() {
             let currentPassword = localStorage.getItem('nguyenAdminPassword') || '123456';
             let oldPass = prompt("Nhập mật khẩu quản trị hiện tại:");
@@ -379,6 +384,32 @@
 
             localStorage.setItem('nguyenAdminPassword', newPass);
             alert("Đổi mật khẩu quản trị thành công!");
+        }
+
+        // Tính năng Nhập dữ liệu hàng loạt từ file JSON
+        function importDataFromJson(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (Array.isArray(importedData)) {
+                        if (confirm(`Tìm thấy ${importedData.length} thành viên trong file. Bạn có muốn thay thế toàn bộ dữ liệu hiện tại không?`)) {
+                            familyData = importedData;
+                            saveToStorage();
+                            alert("Nhập dữ liệu từ file JSON thành công!");
+                        }
+                    } else {
+                        alert("File JSON không đúng định dạng cấu trúc danh sách thành viên!");
+                    }
+                } catch (err) {
+                    alert("Lỗi đọc file JSON: " + err.message);
+                }
+                event.target.value = ''; // Reset input file
+            };
+            reader.readAsText(file);
         }
 
         function resetForm() {
