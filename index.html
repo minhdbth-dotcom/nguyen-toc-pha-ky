@@ -92,9 +92,12 @@
 
         <!-- Bảng quản trị -->
         <div id="adminPanel" class="hidden bg-white p-6 rounded-2xl shadow-md border border-amber-200 mb-8 transition-all no-print">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 pb-2 border-b border-slate-100 gap-3">
                 <h2 id="formTitle" class="text-xl font-bold text-amber-900">➕ Thêm Thành Viên Mới</h2>
-                <button onclick="resetForm()" class="text-sm text-slate-500 hover:text-red-600">Làm mới form</button>
+                <div class="flex items-center gap-2">
+                    <button onclick="changePasswordPrompt()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-amber-300">🔑 Đổi mật khẩu Admin</button>
+                    <button onclick="resetForm()" class="text-sm text-slate-500 hover:text-red-600 px-2">Làm mới form</button>
+                </div>
             </div>
             <form id="familyForm" onsubmit="handleFormSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input type="hidden" id="memberId">
@@ -262,6 +265,7 @@
 
     <script>
         let familyData = [];
+        let isAdmin = false;
 
         document.addEventListener("DOMContentLoaded", function() {
             fetch('data.json')
@@ -330,8 +334,51 @@
             });
         }
 
+        // Đăng nhập Admin với mật khẩu lấy từ localStorage (mặc định là '123456')
         function toggleAdminPanel() {
-            document.getElementById('adminPanel').classList.toggle('hidden');
+            if (!isAdmin) {
+                let currentPassword = localStorage.getItem('nguyenAdminPassword') || '123456';
+                let password = prompt("Vui lòng nhập mật khẩu quản trị (Admin):");
+                if (password === null) return;
+                
+                if (password === currentPassword) {
+                    isAdmin = true;
+                    alert("Đăng nhập quyền Admin thành công!");
+                } else {
+                    alert("Mật khẩu không chính xác!");
+                    return;
+                }
+            }
+            
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                resetForm();
+            }
+        }
+
+        // Tính năng đổi mật khẩu trực tiếp trên giao diện
+        function changePasswordPrompt() {
+            let currentPassword = localStorage.getItem('nguyenAdminPassword') || '123456';
+            let oldPass = prompt("Nhập mật khẩu quản trị hiện tại:");
+            if (oldPass === null) return;
+
+            if (oldPass !== currentPassword) {
+                alert("Mật khẩu hiện tại không chính xác!");
+                return;
+            }
+
+            let newPass = prompt("Nhập mật khẩu quản trị mới:");
+            if (newPass === null || newPass.trim() === "") return;
+
+            let confirmPass = prompt("Xác nhận lại mật khẩu mới:");
+            if (newPass !== confirmPass) {
+                alert("Mật khẩu xác nhận không khớp. Vui lòng thử lại!");
+                return;
+            }
+
+            localStorage.setItem('nguyenAdminPassword', newPass);
+            alert("Đổi mật khẩu quản trị thành công!");
         }
 
         function resetForm() {
@@ -414,7 +461,7 @@
                 return matchSearch && matchChi;
             });
 
-            // 1. Render List (Hiển thị thêm thông tin Phụ thân)
+            // 1. Render List
             const listContainer = document.getElementById('familyList');
             if (listContainer) {
                 listContainer.innerHTML = filtered.map(p => {
@@ -441,8 +488,10 @@
                                 ${p.notes ? `<p class="text-xs text-slate-700 italic mt-2 bg-amber-50/50 p-2 rounded border-l-2 border-amber-700">${p.notes}</p>` : ''}
                             </div>
                             <div class="flex gap-2 no-print">
-                                <button onclick="editMember('${p.id}')" class="px-2.5 py-1 bg-slate-100 text-xs rounded border">Sửa</button>
-                                <button onclick="deleteMember('${p.id}')" class="px-2.5 py-1 bg-red-50 text-red-600 text-xs rounded border border-red-200">Xóa</button>
+                                ${isAdmin ? `
+                                    <button onclick="editMember('${p.id}')" class="px-2.5 py-1 bg-slate-100 text-xs rounded border hover:bg-slate-200">Sửa</button>
+                                    <button onclick="deleteMember('${p.id}')" class="px-2.5 py-1 bg-red-50 text-red-600 text-xs rounded border border-red-200 hover:bg-red-100">Xóa</button>
+                                ` : ''}
                             </div>
                         </div>
                     `;
@@ -488,7 +537,7 @@
                                                     <div><span class="font-semibold text-amber-800">Chi:</span> ${p.chi || 'Gốc'}</div>
                                                     ${p.spouse && p.spouse !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">💍 Phối:</span> ${p.spouse}</div>` : ''}
                                                     ${p.birthYear && p.birthYear !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">📅 Sinh:</span> ${p.birthYear}</div>` : ''}
-                                                    ${p.deathAnniversary && p.deathAnniversary !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">🕯️ Giỗ:</span> ${p.deathAnniversary}</div>` : ''}
+                                                    ${p.deathAnniversary && p.deathAnniversary !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">🕯 Giỗ:</span> ${p.deathAnniversary}</div>` : ''}
                                                     ${p.profession ? `<div><span class="font-semibold text-amber-800">💼 Nghề:</span> ${p.profession}</div>` : ''}
                                                     ${p.location && p.location !== 'Chưa rõ' ? `<div><span class="font-semibold text-amber-800">📍 Quê:</span> ${p.location}</div>` : ''}
                                                     ${parentName ? `<div class="bg-amber-100/80 px-2 py-1 rounded border border-amber-200 font-medium text-[11px] text-amber-900 mt-1">↑ Phụ thân: ${parentName}</div>` : ''}
@@ -500,7 +549,7 @@
                                                 ` : ''}
                                             </div>
                                             <div class="pt-1.5 border-t border-amber-200 flex justify-end items-center no-print">
-                                                <button onclick="editMember('${p.id}')" class="text-amber-900 hover:underline font-bold text-xs">Sửa</button>
+                                                ${isAdmin ? `<button onclick="editMember('${p.id}')" class="text-amber-900 hover:underline font-bold text-xs">Sửa</button>` : ''}
                                             </div>
                                         </div>
                                     `;
