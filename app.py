@@ -280,67 +280,112 @@ tab_xuat = tabs[5]
 tab_nhap = tabs[6]
 tab_quan_tri = tabs[7]
 
-# --- NỘI DUNG LỜI TỰA CHUẨN XÁC CỦA DÒNG HỌ ---
-loi_tua_html = """
-    <h2 style="color: #795548; text-align: center; margin-bottom: 25px;">📜 NGUYỄN TỘC PHẢ KÝ</h2>
-    <p>Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Các cụ ngày xưa đã nói:</p>
-    <p style="text-align: center; font-weight: bold; margin: 15px 0;">
+
+# --- HÀM HIỂN THỊ NỘI DUNG LỜI TỰA BẰNG STREAMLIT NATIVE ---
+def render_loi_tua():
+    st.markdown(
+        "<h2 style='color: #795548; text-align: center;'>📜 NGUYỄN TỘC PHẢ KÝ</h2>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Các cụ ngày xưa đã nói:"
+    )
+    st.markdown(
+        """
+    <div style="text-align: center; font-weight: bold; margin: 15px 0;">
         Nhân do hồ tổ<br>
         Mộc do hồ bản<br>
         Thủy do hồ nguyên.
-    </p>
-    <p><b>Đại ý như sau:</b></p>
-    <ul style="list-style-type: none; padding-left: 20px;">
-        <li>• Người phải có tổ</li>
-        <li>• Cây phải có gốc</li>
-        <li>• Nước phải có nguồn</li>
-    </ul>
-    <p>Hoặc cũng có câu thơ như sau:</p>
-    <p style="text-align: center; font-style: italic; margin: 15px 0;">
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+    st.markdown("**Đại ý như sau:**")
+    st.markdown(
+        "- Người phải có tổ\n- Cây phải có gốc\n- Nước phải có nguồn\n- Người phải có hàng xóm láng giềng...."
+    )
+    st.markdown("Hoặc cũng có câu thơ như sau:")
+    st.markdown(
+        """
+    <div style="text-align: center; font-style: italic; margin: 15px 0;">
         Cây có gốc mới nở cành sinh ngọn<br>
         Nước có nguồn mới bể rộng sông sâu<br>
         Người ta có nguồn gốc từ đâu<br>
         Có tổ tiên trước rồi sau có mình.
-    </p>
-    <p>Như vậy việc biên soạn, sao chép lại quá trình hình thành và phát triển của họ NGUYỄN ở thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là một việc rất cần thiết và quan trọng. Để tỏ lòng thành kính tưởng nhớ tới công ơn của các bậc tổ tiên dòng họ Nguyễn, những người đã có công sinh thành và phát triển dòng họ.</p>
-    
-    <p>Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương Tỉnh, Nam Sách Phủ, Tuyên Minh huyện, An Đô Hạ xã. Ban đầu đi di cư vào tại bản tỉnh Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn, sinh cơ lập nghiệp (Thiết tương triệu cơ) nghĩa là làm nghề thợ rèn. Sau đó chuyển lên Hội Hiền Thôn, Phúc Trạch xã, vào thời cố Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm, đã có 15 đời nối tiếp, hình thành 5 chi, có trên 100 hộ, là một trong những họ đông nhất của làng.</p>
-    
-    <p>Do thời cuộc nhất là sau Cách mạng Tháng Tám năm 1945 đến nay có nhiều hộ, nhiều cá nhân trong dòng họ đã thoát ly đi xây dựng vùng kinh tế mới, đi công tác, học tập và chiến đấu ở nhiều vùng trên mọi miền đất nước. Các thế hệ có những anh dũng hy sinh cho sự nghiệp giải phóng dân tộc và bảo vệ Tổ quốc, nhất là thời kỳ đế quốc phong kiến ông cha ta đã tham gia các phong trào, Hội Ái Nghĩa, Hội Tương Tế, hướng nghiệp, Thanh niên Cách Mạng Đồng Chí Hội.....</p>
-    
-    <p>Có nhiều gia đình được Nhà nước tặng Bằng Khen Gia đình có công với nước, Bảng Vàng Danh Dự, Gia đình vẻ vang, có nhiều cá nhân được tặng huân huy chương và các phần thưởng cao quý khác.</p>
-    
-    <p>Càng nghiên cứu tìm hiểu về cội nguồn gốc tích tôn thống Nguyễn tộc, thân thế và sự nghiệp của ông cha ta chúng ta càng tự hào về quá khứ và hiện tại như bức đại tự ở nhà thờ đã nêu:</p>
-    <p style="text-align: center; font-weight: bold; color: #b71c1c; margin: 15px 0;">KÍNH NHƯ TẠI</p>
-    <p>Và hai câu đối:</p>
-    <p style="text-align: center; font-style: italic; margin: 10px 0;">
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "Như vậy việc biên soạn, sao chép lại quá trình hình thành và phát triển của họ NGUYỄN ở thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là một việc rất cần thiết và quan trọng. Để tỏ lòng thành kính tưởng nhớ tới công ơn của các bậc tổ tiên dòng họ Nguyễn, những người đã có công sinh thành và phát triển dòng họ."
+    )
+    st.markdown(
+        "Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương Tỉnh, Nam Sách Phủ, Tuyên Minh huyện, An Đô Hạ xã. Ban đầu đi di cư vào tại bản tỉnh Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn. Sinh cơ lập nghiệp (Thiết tương triệu cơ) Nghĩa là làm nghề thợ rèn. Sau đó chuyển lên Hội Hiền Thôn, Phúc Trạch xã, vào thời cố Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm. Đã có 15 đời nối tiếp, hình thành 5 chi, có trên 100 hộ, là một trong những họ đông nhất của làng."
+    )
+    st.markdown(
+        "Do thời cuộc nhất là sau cách mạng tháng tám năm 1945 đến nay có nhiều hộ, nhiều cá nhân trong dòng họ đã thoát ly đi xây dựng vùng kinh tế mới, đi công tác, học tập và chiến đấu ở nhiều vùng trên mọi miền đất nước. Các thế hệ có những anh dũng hy sinh cho sự nghiệp giải phóng dân tộc và bảo vệ Tổ quốc, nhất là thời kỳ đế quốc phong kiến ông cha ta đã tham gia các phong trào, Hội Ái Nghĩa, Hội Tương Tế, hướng nghiệp, Thanh niên Cách Mạng Đồng Chí Hội....."
+    )
+    st.markdown(
+        "Có nhiều gia đình được Nhà nước tặng Bằng Khen Gia đình có công với nước. Bảng Vàng Danh Dự. Gia đình vẻ vang, có nhiều cá nhân được tặng huân huy chương và các phần thưởng cao quý khác."
+    )
+    st.markdown(
+        "Càng nghiên cứu tìm hiểu về cội nguồn gốc tích tôn thống Nguyễn tộc, thân thế và sự nghiệp của ông cha ta chúng ta càng tự hào về quá khứ và hiện tại như bức đại tự ở nhà thờ đã nêu:"
+    )
+    st.markdown(
+        "<div style='text-align: center; font-weight: bold; color: #b71c1c; margin: 15px 0;'>KÍNH NHƯ TẠI</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown("Và hai câu đối:")
+    st.markdown(
+        """
+    <div style="text-align: center; font-style: italic; margin: 10px 0;">
         Cương thường chi trậu ngất trung thiên<br>
         Bản thế vi niên tử tôn sinh.
-    </p>
-    <p>Hoặc hai câu đối ở cột cạnh bức bình phong ở sân cũng ghi:</p>
-    <p style="text-align: center; font-style: italic; margin: 10px 0;">
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+    st.markdown("Hoặc hai câu đối ở cột cạnh bức bình phong ở sân cũng ghi")
+    st.markdown(
+        """
+    <div style="text-align: center; font-style: italic; margin: 10px 0;">
         Nhân nghĩa căn cơ tùy vĩnh thế<br>
         Cương thường đề trậu ngất trung thiên
-    </p>
-    <p style="text-align: center; font-weight: bold; margin: 15px 0;">Thật vậy<br>Tổ tông công đức bao trùm hậu thế<br>Con cháu muôn đời không sao quên được</p>
-    
-    <p>Vì thế theo nguyện vọng chung xây dựng và giữ vững tôn thống NGUYỄN TỘC là trách nhiệm và nghĩa vụ của mỗi thành viên trong dòng họ. Do đó ngày 25-02-1990 tức là ngày Xuân Kỵ ngày 01 tháng 02 năm Canh Ngọ các ông đầu chi và các cụ cao tuổi trong họ đã họp tại nhà ông Nguyễn Văn Chơn (nhà thờ của họ) dưới sự chủ trì của ông Nguyễn Văn Hiếu trưởng họ, đã họp bàn nhiều việc trong đó có việc viết gia phả và thành lập ban soạn dịch, tìm hiểu để viết lại gia phả, y sao lại bản chính của các cụ để lại là quan trọng. Phải nói đây là cuộc họp có nhiều ý nghĩa của cả họ.</p>
-    
-    <p>Ngày 11-03-1990 tức ngày 15 tháng 02 năm Canh Ngọ ban viết gia phả gồm có các ông sau: <b>Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng</b>, và lên kế hoạch tiến hành dịch và viết phấn đấu đến Đông chí phải hoàn thành tập NGUYỄN TỘC PHẢ KÝ.</p>
-    
-    <p>Tập NGUYỄN TỘC PHẢ KÝ này được viết căn cứ vào các tư liệu sau đây: Dịch từ chữ Hán cuốn phả ký của cố Nguyễn Hoàng Cừ sao chép trước lúc đi thi nhưng chỉ được đến đời thứ tám và các quyển viết tay bằng chữ Quốc ngữ của ông NGỌC MƠN (cố Vợi), NGỌC HIỆP, các ông trưởng chi một VĂN HIẾU, TRƯỜNG AN, và các ông cao tuổi trong họ cung cấp đồng thời có sự giúp đỡ của các ông ĐOÀN ĐỈNH, ÔNG TÂM, CỤ GIÁO CHINH, ÔNG PHÓ ĐIỀN Nam Giang và tra khảo các gia phả khác của các dòng họ có liên quan, đến tận các gia đình trong dòng họ để ghi chép lại.</p>
-    
-    <p>Do những hạn chế trong việc sưu tầm, biên soạn cũng như sự hiểu biết nên việc biên soạn chắc chắn không tránh khỏi những thiếu sót, rất mong được sự đóng góp và bổ sung ý kiến của các Cụ, Ông, Bà, con cháu trong và ngoài dòng họ để các lần tái bản sau được đầy đủ rõ ràng hơn. Mãi tới Đông chí năm 2013 (Quý Tỵ) con cháu mới sao chép, biên soạn lại được tập NGUYỄN TỘC PHẢ KÝ này với đầy đủ ý nghĩa và hy vọng nó sẽ tiếp thêm sức mạnh cho dòng họ Nguyễn để có những thắng lợi mới, góp phần vào sự phát triển của dòng họ cũng như góp phần cho sự phát triển của cả dân tộc.</p>
-    
-    <p>Trong quá trình sao viết lại không sao tránh khỏi những thiếu sót chúng tôi rất mong có sự đóng góp xây dựng chung để tập NGUYỄN TỘC PHẢ KÝ này hoàn thiện hơn.</p>
-    
-    <p>Một lần nữa xin chân thành cám ơn sự đóng góp chung của các quý vị gần xa!</p>
-    
-    <p style="text-align: right; margin-top: 30px;">
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<div style='text-align: center; font-weight: bold; margin: 15px 0;'>Thật vậy<br>Tổ tông công đức bao trùm hậu thế<br>Con cháu muôn đời không sao quên được</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "Vì thế theo nguyện vọng chung xây dựng và giữ vững tôn thống NGUYỄN TỘC là trách nhiệm và nghĩa vụ của mỗi thành viên trong dòng họ. Do đó ngày 25-02-1990 tức là ngày Xuân Kỵ ngày 01 tháng 02 năm Canh Ngọ các ông đầu chi và các cụ cao tuổi trong họ đã họp tại nhà ông Nguyễn Văn Chơn (nhà thờ của họ) dưới sự chủ trì của ông Nguyễn Văn Hiếu trưởng họ, đã họp bàn nhiều việc trong đó có việc viết gia phả và thành lập ban soạn dịch, tìm hiểu để viết lại gia phả, y sao lại bản chính của các cụ để lại là quan trọng. Phải nói đây là cuộc họp có nhiều ý nghĩa của cả họ."
+    )
+    st.markdown(
+        "Ngày 11-03-1990 tức ngày 15 tháng 02 năm Canh Ngọ ban viết gia phả gồm có các ông sau: <b>Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng</b>. và lên kế hoạch tiến hành dịch và viết phấn đấu đến Đông chí phải hoàn thành tập NGUYỄN TỘC PHẢ KÝ.",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "Tập NGUYỄN TỘC PHẢ KÝ này được viết căn cứ vào các tư liệu sau đây: Dịch từ chữ Hán cuốn phả ký của cố Nguyễn Hoàng Cừ sao chép trước lúc đi thi nhưng chỉ được đến đời thứ tám và các quyển viết tay bằng chữ Quốc ngữ của ông NGỌC MƠN (cố Vợi), NGỌC HIỆP, các ông trưởng chi một VĂN HIẾU, TRƯỜNG AN, và các ông cao tuổi trong họ cung cấp đồng thời có sự giúp đỡ của các ông ĐOÀN ĐỈNH, ÔNG TÂM, CỤ GIÁO CHINH, ÔNG PHÓ ĐIỀN Nam Giang và tra khảo các gia phả khác của các dòng họ có liên quan, đến tận các gia đình trong dòng họ để ghi chép lại."
+    )
+    st.markdown(
+        "Do những hạn chế trong việc sưu tầm, biên soạn cũng như sự hiểu biết nên việc biên soạn chắc chắn không tránh khỏi những thiếu sót, rất mong được sự đóng góp và bổ sung ý kiến của các Cụ, Ông, Bà, con cháu trong và ngoài dòng họ để các lần tái bản sau được đầy đủ rõ ràng hơn. Mãi tới Đông chí năm 2013 (Quý Tỵ) con cháu mới sao chép, biên soạn lại được tập NGUYỄN TỘC PHẢ KÝ này với đầy đủ ý nghĩa và hy vọng nó sẽ tiếp thêm sức mạnh cho dòng họ Nguyễn để có những thắng lợi mới, góp phần vào sự phát triển của dòng họ cũng như góp phần cho sự phát triển của cả dân tộc."
+    )
+    st.markdown(
+        "Trong quá trình sao viết lại không sao tránh khỏi những thiếu sót chúng tôi rất mong có sự đóng góp xây dựng chung để tập NGUYỄN TỘC PHẢ KÝ này hoàn thiện hơn."
+    )
+    st.markdown("Một lần nữa xin chân thành cám ơn sự đóng góp chung của các quý vị gần xa!")
+    st.markdown(
+        """
+    <div style="text-align: right; margin-top: 30px;">
         <b>Ngày 22 tháng 12 năm 2013</b><br>
         <b>Đông Chí 20 tháng 11 năm Quý Tỵ</b>
-    </p>
-"""
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 # ================= TAB 1: TỔNG QUAN =================
 with tab_tong_quan:
@@ -375,10 +420,9 @@ with tab_tong_quan:
             unsafe_allow_html=True,
         )
 
-    st.markdown(
-        f'<div class="intro-container">{loi_tua_html}</div>',
-        unsafe_allow_html=True,
-    )
+    st.markdown('<div class="intro-container">', unsafe_allow_html=True)
+    render_loi_tua()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ================= TAB 2: DANH SÁCH & QUẢN TRỊ TRỰC TIẾP =================
 with tab_danh_sach:
@@ -503,7 +547,7 @@ with tab_so_do_doi:
                     st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi} | Phối: {spouse}</span>", unsafe_allow_html=True)
             st.markdown("---")
 
-# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT - CÓ ẢNH & THÔNG TIN ĐẦY ĐỦ) =================
+# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
 with tab_so_do_cot:
     st.markdown("<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #555;'>Mỗi thẻ thành viên được hiển thị rộng rãi, tích hợp hình ảnh chân dung, thông tin phối ngẫu, phần mộ và tiểu sử trọn vẹn.</p>", unsafe_allow_html=True)
@@ -531,9 +575,7 @@ with tab_so_do_cot:
                             notes = str(row.get("notes", "")) if pd.notna(row.get("notes")) else ""
                             
                             card_style = "background: #fff8e1; border: 2px solid #f57c00;" if is_root_gen else "background: #ffffff; border: 2px solid #ffa726;"
-                            
                             img_html = f"<img src='{img_url}' style='width: 90px; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid #ccc;'>" if img_url and str(img_url).strip() != "" else "<div style='width: 90px; height: 110px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #888; border: 1px dashed #ccc;'>Chưa có ảnh</div>"
-                            
                             notes_html = f"<div style='font-size: 12px; color: #333; margin-top: 6px; font-style: italic; border-top: 1px dashed #e0e0e0; padding-top: 4px;'>📝 {notes}</div>" if notes.strip() != "" else ""
 
                             st.markdown(f"""
@@ -576,11 +618,10 @@ with tab_in_phu:
         </div>
     """, unsafe_allow_html=True)
 
-    # Trang Lời Tựa Trong Sách (Chuẩn văn bản bác vừa cung cấp)
-    st.markdown(
-        f'<div class="book-page">{loi_tua_html}</div>',
-        unsafe_allow_html=True,
-    )
+    # Trang Lời Tựa Trong Sách
+    st.markdown('<div class="book-page">', unsafe_allow_html=True)
+    render_loi_tua()
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # Các Trang Nội Dung Phả Hệ Theo Đời Trong Sách In
     if not df.empty and "generation" in df.columns:
