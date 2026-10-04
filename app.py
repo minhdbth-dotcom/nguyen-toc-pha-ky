@@ -328,7 +328,7 @@ with tab_tong_quan:
             </div>
 
             <h3 style="color: #4e342e; margin-top: 20px;">🌟 Quá Trình Phát Triển & 5 Chi Phái</h3>
-            <p>Từ buổi đầu dựng nghiệp còn nhiều gian khó, các cụ tổ đã tôi luyện ý chí kiên cường, tinh thần cần cù lao động và đùm bọc lẫn nhau. Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, cành lá sum suê. Để con cháu đời sau dễ dàng ghi nhớ thế thứ, tri ân cội nguồn và gắn kết tình thân, dòng họ đã quy tập thành <b>5 Chi lớn</b>:</p>
+            <p>From buổi đầu dựng nghiệp còn nhiều gian khó, các cụ tổ đã tôi luyện ý chí kiên cường, tinh thần cần cù lao động và đùm bọc lẫn nhau. Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, cành lá sum suê. Để con cháu đời sau dễ dàng ghi nhớ thế thứ, tri ân cội nguồn và gắn kết tình thân, dòng họ đã quy tập thành <b>5 Chi lớn</b>:</p>
             <ul>
                 <li><b>Chi 1:</b> Tiếp nối truyền thống hiếu học, đoàn kết và phát triển vững chắc.</li>
                 <li><b>Chi 2:</b> Giữ gìn nền nếp gia phong, vun đắp đạo đức và tinh thần tương thân tương ái.</li>
@@ -541,15 +541,31 @@ with tab_in_phu:
         </div>
     """, unsafe_allow_html=True)
 
-    # Trang Lời Tựa Trong Sách
+    # Trang Lời Tựa Trong Sách (Đã chuẩn hóa hiển thị HTML an toàn)
     st.markdown("""
         <div class="book-page">
-            <h2 style="text-align: center; color: #795548; margin-bottom: 25px;">LỜI TỰA GIA PHẢ</h2>
+            <h2 style="text-align: center; color: #795548; margin-bottom: 25px;">📜 LỜI TỰA & LỊCH SỬ DÒNG HỌ NGUYỄN TỘC</h2>
+            
             <p><b>Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên.</b></p>
             <p>Cổ nhân từng dạy: <i>"Nước có nguồn mới chảy thành sông, cây có gốc mới đơm hoa kết trái, con người sinh ra có tổ tông mới nên hình nên dạng"</i>. Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây là đạo lý ngàn đời thiêng liêng của dân tộc Việt Nam ta, cũng là nền tảng đạo đức cốt lõi để duy trì kỷ cương gia tộc, kết nối tình huyết thống keo sơn.</p>
-            <p>Xưa kia, dòng họ Nguyễn tộc ta gốc phát từ xứ Đông kinh yêu dấu: <b>Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</b>. Trải qua bao biến cố thăng trầm của lịch sử, các bậc tiền nhân đã mang theo chí lớn cùng bầu nhiệt huyết dời chân về phương Nam, khai cơ lập nghiệp tại vùng đất linh thiêng <b>thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</b>.</p>
-            <p>Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, chia thành <b>5 Chi lớn</b> cùng chung một cội rễ. Cuốn phả ký này được biên soạn cẩn trọng để con cháu đời sau đời đời khắc ghi công ơn tiên tổ.</p>
-            <p style="text-align: right; margin-top: 40px; font-style: italic;"><b>— Ban Biên Tập Gia Tộc —</b></p>
+            
+            <div class="han-nom-box">
+                <b>Nguyên quán Thủy Tổ:</b> Xưa kia, dòng họ Nguyễn tộc ta gốc phát từ xứ Đông kinh yêu dấu: <b>Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</b>. Trải qua bao biến cố thăng trầm của lịch sử, các bậc tiền nhân đã mang theo chí lớn cùng bầu nhiệt huyết dời chân về phương Nam, khai cơ lập nghiệp tại vùng đất linh thiêng <b>thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</b>.
+            </div>
+
+            <h3 style="color: #4e342e; margin-top: 20px;">🌟 Quá Trình Phát Triển & 5 Chi Phái</h3>
+            <p>Từ buổi đầu dựng nghiệp còn nhiều gian khó, các cụ tổ đã tôi luyện ý chí kiên cường, tinh thần cần cù lao động và đùm bọc lẫn nhau. Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, cành lá sum suê. Để con cháu đời sau dễ dàng ghi nhớ thế thứ, tri ân cội nguồn và gắn kết tình thân, dòng họ đã quy tập thành <b>5 Chi lớn</b>:</p>
+            <ul>
+                <li><b>Chi 1:</b> Tiếp nối truyền thống hiếu học, đoàn kết và phát triển vững chắc.</li>
+                <li><b>Chi 2:</b> Giữ gìn nền nếp gia phong, vun đắp đạo đức và tinh thần tương thân tương ái.</li>
+                <li><b>Chi 3:</b> Năng động, sáng tạo, vươn lên trong lao động sản xuất và xây dựng quê hương.</li>
+                <li><b>Chi 4:</b> Luôn khắc ghi công ơn tiên tổ, gìn giữ trọn vẹn gia đạo và truyền thống hiếu thảo.</li>
+                <li><b>Chi 5:</b> Chi út với sức sống trẻ trung, tiếp bước cha ông làm rạng danh dòng tộc.</li>
+            </ul>
+
+            <h3 style="color: #4e342e; margin-top: 20px;">🎯 Mục Đích Cuốn Phả Ký Điện Tử</h3>
+            <p>Hệ thống phả ký số này được xây dựng nhằm lưu giữ trọn vẹn danh tính, hình ảnh di ảnh, ngày giỗ, phần mộ và tiểu sử của toàn bộ các bậc tiền nhân cùng con cháu qua các đời. Đây không chỉ là cuốn sách gia phả trực tuyến để con cháu dù ở muôn phương, làm ăn xa quê vẫn có thể tra cứu, tưởng nhớ cội nguồn, mà còn là món quà tinh thần vô giá kính dâng lên anh linh các bậc tiên tổ.</p>
+            <p style="text-align: right; margin-top: 30px; font-style: italic;"><b>— Ban Biên Tập & Hội Đồng Gia Tộc Nguyễn Tộc —</b></p>
         </div>
     """, unsafe_allow_html=True)
 
