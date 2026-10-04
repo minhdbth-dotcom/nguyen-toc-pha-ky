@@ -81,7 +81,7 @@ st.markdown(
         @media print {
             body { background: white; }
             .stSidebar, .stTabs, .header-container, button { display: none !important; }
-            .book-page { border: none; padding: 0; box-shadow: none; margin: 0; width: 100%; max-width: 100%; }
+            .book-page { border: none; padding: 0; box-shadow: none; margin: 0; width: 100%; max-width: 100%; page-break-after: always; }
         }
     </style>
 """,
@@ -317,10 +317,30 @@ with tab_tong_quan:
 
     st.markdown(
         """
-<div class="intro-container">
-<h2 style="color: #795548; text-align: center; margin-bottom: 25px;">📜 LỜI TỰA & LỊCH SỬ DÒNG HỌ NGUYỄN TỘC</h2>
-Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Các cụ ngày xưa đã nói: Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên.
-</div>
+        <div class="intro-container">
+            <h2 style="color: #795548; text-align: center; margin-bottom: 25px;">📜 LỜI TỰA & LỊCH SỬ DÒNG HỌ NGUYỄN TỘC</h2>
+            
+            <p><b>Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên.</b></p>
+            <p>Cổ nhân từng dạy: <i>"Nước có nguồn mới chảy thành sông, cây có gốc mới đơm hoa kết trái, con người sinh ra có tổ tông mới nên hình nên dạng"</i>. Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây là đạo lý ngàn đời thiêng liêng của dân tộc Việt Nam ta, cũng là nền tảng đạo đức cốt lõi để duy trì kỷ cương gia tộc, kết nối tình huyết thống keo sơn.</p>
+            
+            <div class="han-nom-box">
+                <b>Nguyên quán Thủy Tổ:</b> Xưa kia, dòng họ Nguyễn tộc ta gốc phát từ xứ Đông kinh yêu dấu: <b>Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</b>. Trải qua bao biến cố thăng trầm của lịch sử, các bậc tiền nhân đã mang theo chí lớn cùng bầu nhiệt huyết dời chân về phương Nam, khai cơ lập nghiệp tại vùng đất linh thiêng <b>thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</b>.
+            </div>
+
+            <h3 style="color: #4e342e; margin-top: 20px;">🌟 Quá Trình Phát Triển & 5 Chi Phái</h3>
+            <p>Từ buổi đầu dựng nghiệp còn nhiều gian khó, các cụ tổ đã tôi luyện ý chí kiên cường, tinh thần cần cù lao động và đùm bọc lẫn nhau. Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, cành lá sum suê. Để con cháu đời sau dễ dàng ghi nhớ thế thứ, tri ân cội nguồn và gắn kết tình thân, dòng họ đã quy tập thành <b>5 Chi lớn</b>:</p>
+            <ul>
+                <li><b>Chi 1:</b> Tiếp nối truyền thống hiếu học, đoàn kết và phát triển vững chắc.</li>
+                <li><b>Chi 2:</b> Giữ gìn nền nếp gia phong, vun đắp đạo đức và tinh thần tương thân tương ái.</li>
+                <li><b>Chi 3:</b> Năng động, sáng tạo, vươn lên trong lao động sản xuất và xây dựng quê hương.</li>
+                <li><b>Chi 4:</b> Luôn khắc ghi công ơn tiên tổ, gìn giữ trọn vẹn gia đạo và truyền thống hiếu thảo.</li>
+                <li><b>Chi 5:</b> Chi út với sức sống trẻ trung, tiếp bước cha ông làm rạng danh dòng tộc.</li>
+            </ul>
+
+            <h3 style="color: #4e342e; margin-top: 20px;">🎯 Mục Đích Cuốn Phả Ký Điện Tử</h3>
+            <p>Hệ thống phả ký số này được xây dựng nhằm lưu giữ trọn vẹn danh tính, hình ảnh di ảnh, ngày giỗ, phần mộ và tiểu sử của toàn bộ các bậc tiền nhân cùng con cháu qua các đời. Đây không chỉ là cuốn sách gia phả trực tuyến để con cháu dù ở muôn phương, làm ăn xa quê vẫn có thể tra cứu, tưởng nhớ cội nguồn, mà còn là món quà tinh thần vô giá kính dâng lên anh linh các bậc tiên tổ.</p>
+            <p style="text-align: right; margin-top: 30px; font-style: italic;"><b>— Ban Biên Tập & Hội Đồng Gia Tộc Nguyễn Tộc —</b></p>
+        </div>
         """,
         unsafe_allow_html=True,
     )
@@ -463,7 +483,6 @@ with tab_so_do_cot:
             gen_members = df[df["generation"] == gen].sort_values(by="_original_index")
             if not gen_members.empty:
                 members_list = gen_members.to_dict(orient="records")
-                # Hiển thị mỗi hàng 2 thẻ để không gian rộng rãi, chi tiết
                 for i in range(0, len(members_list), 2):
                     batch = members_list[i : i + 2]
                     cols = st.columns(len(batch))
@@ -478,7 +497,6 @@ with tab_so_do_cot:
                             
                             card_style = "background: #fff8e1; border: 2px solid #f57c00;" if is_root_gen else "background: #ffffff; border: 2px solid #ffa726;"
                             
-                            # Cấu trúc hiển thị ảnh bên trái, thông tin chi tiết bên phải trong thẻ rộng
                             img_html = f"<img src='{img_url}' style='width: 90px; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid #ccc;'>" if img_url and str(img_url).strip() != "" else "<div style='width: 90px; height: 110px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #888; border: 1px dashed #ccc;'>Chưa có ảnh</div>"
                             
                             notes_html = f"<div style='font-size: 12px; color: #333; margin-top: 6px; font-style: italic; border-top: 1px dashed #e0e0e0; padding-top: 4px;'>📝 {notes}</div>" if notes.strip() != "" else ""
@@ -506,21 +524,65 @@ with tab_so_do_cot:
 # ================= TAB 5: IN CUỐN GIA PHẢ =================
 with tab_in_phu:
     st.subheader("📖 Bản In Sách Gia Phả Dòng Họ (Định dạng Trang Sách A4 Trang Trọng)")
-    st.info("💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac) để in thành tệp sách A4.")
+    st.info("💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac) để in thành tệp sách A4 hoàn chỉnh.")
 
-    if not df.empty:
-        st.markdown("""
-            <div class="book-page" style="text-align: center; padding: 60px 20px;">
-                <div style="font-size: 20px; font-weight: bold; color: #795548; margin-bottom: 15px;">ĐẠI TỘC GIA PHẢ</div>
-                <div style="font-size: 32px; font-weight: bold; color: #4e342e; text-transform: uppercase; margin-bottom: 10px;">NGUYỄN TỘC PHẢ KÝ</div>
-                <div style="font-size: 18px; font-weight: bold; color: #5d4037; margin-bottom: 30px;">TOÀN TỘC 5 CHI</div>
-                <hr style="width: 50%; margin: 20px auto; border-top: 2px solid #795548;">
-                <div style="font-size: 14px; color: #555; margin-top: 40px; line-height: 1.8;">
-                    <b>Địa chỉ dòng họ:</b> Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa<br>
-                    <b>Nguyên quán Thủy tổ:</b> Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã
-                </div>
+    # Trang Bìa Sách
+    st.markdown("""
+        <div class="book-page" style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 22px; font-weight: bold; color: #795548; margin-bottom: 15px;">ĐẠI TỘC GIA PHẢ</div>
+            <div style="font-size: 36px; font-weight: bold; color: #4e342e; text-transform: uppercase; margin-bottom: 15px;">NGUYỄN TỘC PHẢ KÝ</div>
+            <div style="font-size: 20px; font-weight: bold; color: #5d4037; margin-bottom: 30px;">TOÀN TỘC 5 CHI</div>
+            <hr style="width: 50%; margin: 30px auto; border-top: 2px solid #795548;">
+            <div style="font-size: 15px; color: #555; margin-top: 50px; line-height: 1.8;">
+                <b>Địa chỉ dòng họ:</b> Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa<br>
+                <b>Nguyên quán Thủy tổ:</b> Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã<br>
+                <i style="margin-top: 20px; display: block;">Lưu truyền đời đời cho con cháu muôn phương</i>
             </div>
-        """, unsafe_allow_html=True)
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Trang Lời Tựa Trong Sách
+    st.markdown("""
+        <div class="book-page">
+            <h2 style="text-align: center; color: #795548; margin-bottom: 25px;">LỜI TỰA GIA PHẢ</h2>
+            <p><b>Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên.</b></p>
+            <p>Cổ nhân từng dạy: <i>"Nước có nguồn mới chảy thành sông, cây có gốc mới đơm hoa kết trái, con người sinh ra có tổ tông mới nên hình nên dạng"</i>. Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây là đạo lý ngàn đời thiêng liêng của dân tộc Việt Nam ta, cũng là nền tảng đạo đức cốt lõi để duy trì kỷ cương gia tộc, kết nối tình huyết thống keo sơn.</p>
+            <p>Xưa kia, dòng họ Nguyễn tộc ta gốc phát từ xứ Đông kinh yêu dấu: <b>Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</b>. Trải qua bao biến cố thăng trầm của lịch sử, các bậc tiền nhân đã mang theo chí lớn cùng bầu nhiệt huyết dời chân về phương Nam, khai cơ lập nghiệp tại vùng đất linh thiêng <b>thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</b>.</p>
+            <p>Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, chia thành <b>5 Chi lớn</b> cùng chung một cội rễ. Cuốn phả ký này được biên soạn cẩn trọng để con cháu đời sau đời đời khắc ghi công ơn tiên tổ.</p>
+            <p style="text-align: right; margin-top: 40px; font-style: italic;"><b>— Ban Biên Tập Gia Tộc —</b></p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Các Trang Nội Dung Phả Hệ Theo Đời Trong Sách In
+    if not df.empty and "generation" in df.columns:
+        sorted_gens = sorted(df["generation"].dropna().unique(), key=get_gen_number)
+        for gen in sorted_gens:
+            gen_members = df[df["generation"] == gen].sort_values(by="_original_index")
+            members_html = ""
+            for _, r in gen_members.iterrows():
+                name = r.get("fullName", "Chưa rõ")
+                chi = r.get("chi", "Gốc")
+                father = r.get("father", "Chưa rõ")
+                spouse = r.get("spouse", "Chưa rõ")
+                notes = r.get("notes", "")
+                
+                father_str = f" | Cha: {father}" if father and str(father).strip() != "" else ""
+                spouse_str = f" | Phối: {spouse}" if spouse and str(spouse).strip() != "" else ""
+                notes_str = f"<br><span style='font-size: 13px; font-style: italic; color: #555;'>Tiểu sử / Phần mộ: {notes}</span>" if notes and str(notes).strip() != "" else ""
+                
+                members_html += f"<li style='margin-bottom: 12px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 14px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
+
+            st.markdown(f"""
+                <div class="book-page">
+                    <div style="text-align: center; border-bottom: 2px solid #795548; padding-bottom: 15px; margin-bottom: 25px;">
+                        <h3 style="color: #795548; margin: 0; text-transform: uppercase;">{gen}</h3>
+                        <p style="font-size: 13px; color: #666; margin: 5px 0 0 0;">(Ghi chép các bậc tiền nhân và hậu duệ)</p>
+                    </div>
+                    <ul style="line-height: 1.8; font-size: 15px; padding-left: 20px;">
+                        {members_html}
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
 
 # ================= TAB 6: XUẤT DỮ LIỆU =================
 with tab_xuat:
