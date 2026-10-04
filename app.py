@@ -173,21 +173,18 @@ def normalize_chi(chi_str):
 
 @st.cache_data
 def load_data():
-    # Tự động quét tìm file JSON thực tế trên kho chứa
-    possible_files = ["GiaPha_DongHoNguyen(5).json", "GiaPha_DongHoNguyen.json", "data.json"]
-    for filename in possible_files:
-        if os.path.exists(filename):
-            try:
-                with open(filename, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception:
-                pass
+    filename = "GiaPha_DongHoNguyen.json"
+    if os.path.exists(filename):
+        try:
+            with open(filename, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
     return []
 
 
 def save_data(data):
-    filename = "GiaPha_DongHoNguyen(5).json"
-    with open(filename, "w", encoding="utf-8") as f:
+    with open("GiaPha_DongHoNguyen.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     st.cache_data.clear()
 
@@ -438,9 +435,9 @@ Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã.
 </p>
 
 </div>
-    """,
-    unsafe_allow_html=True,
-)
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ================= TAB 2: DANH SÁCH & QUẢN TRỊ TRỰC TIẾP =================
 with tab_danh_sach:
@@ -641,7 +638,6 @@ with tab_so_do_doi:
             st.markdown(f"### 📌 {gen}")
             gen_members = df[df["generation"] == gen].sort_values(by="_original_index")
             
-            # Phân nhóm theo Cha
             fathers = gen_members["father"].dropna().unique()
             for f in fathers:
                 father_display = f if f and str(f).strip() != "" else "Tiên Tổ / Chưa rõ phụ thân"
@@ -734,9 +730,9 @@ with tab_so_do_cot:
 
                 st.markdown('<div class="arrow-down">⬇</div>', unsafe_allow_html=True)
 
-# ================= TAB 5: IN CUỐN GIA PHẢ (PHÂN CẤP CHA CON TRONG SÁCH IN) =================
+# ================= TAB 5: IN CUỐN GIA PHẢ =================
 with tab_in_phu:
-    st.subheader("📖 Bản In Sách Gia Phả Dòng Họ (Định dạng Trang Sách A4 Trang Trọng)")
+    st.subheader("📖 Bản In Sách Gia PHả Dòng Họ (Định dạng Trang Sách A4 Trang Trọng)")
     st.info("💡 Bác có thể xem trước bố cục trang sách bên dưới. Khi muốn in thành file PDF, hãy nhấn tổ hợp phím **Ctrl + P** (hoặc **Cmd + P** trên Mac), chọn khổ giấy **A4** và bật **Đồ họa nền (Background graphics)**.")
 
     if not df.empty:
@@ -758,158 +754,127 @@ with tab_in_phu:
             unsafe_allow_html=True,
         )
 
+        # Các chương theo đời
         sorted_gens = sorted(df["generation"].dropna().unique(), key=get_gen_number)
         for gen in sorted_gens:
-            is_root = get_gen_number(gen) == 0
-            chapter_name = "PHẦN MỞ ĐẦU: TIÊN TỔ KHẢO" if is_root else f"CHƯƠNG: {gen.upper()}"
-            
             gen_members = df[df["generation"] == gen].sort_values(by="_original_index")
-            
-            members_html = ""
+            if gen_members.empty:
+                continue
+
+            content_html = f"""
+            <div class="book-page">
+                <div class="chapter-title">CHƯƠNG: {gen.upper()}</div>
+                <div style="text-align: center; font-style: italic; color: #666; margin-bottom: 25px;">
+                    Danh sách các bậc tiền bối và hậu duệ thuộc đời {gen} trong dòng họ Nguyễn tộc.
+                </div>
+            """
+
             for _, row in gen_members.iterrows():
-                m_name = row.get("fullName", "Chưa rõ")
-                m_chi = row.get("chi", "Gốc")
-                m_spouse = row.get("spouse", "")
-                m_father = row.get("father", "")
-                m_notes = row.get("notes", "")
+                name = row.get("fullName", "Chưa rõ")
+                chi = row.get("chi", "Gốc")
+                spouse = row.get("spouse", "")
+                spouse_text = f"Phối: {spouse}" if pd.notna(spouse) and str(spouse).strip() != "" else "Phối: Chưa rõ"
+                father = row.get("father", "")
+                father_text = f"Cha: {father}" if pd.notna(father) and str(father).strip() != "" else "Cha: Chưa rõ"
+                notes = row.get("notes", "")
+                notes_text = f"<br><i>Ghi chú: {notes}</i>" if pd.notna(notes) and str(notes).strip() != "" else ""
 
-                spouse_str = f"<b>Phối:</b> {m_spouse}" if pd.notna(m_spouse) and str(m_spouse).strip() != "" else ""
-                father_str = f"<b>Phụ thân:</b> {m_father}" if pd.notna(m_father) and str(m_father).strip() != "" else ""
-                notes_str = f"<br><i>Ghi chú: {m_notes}</i>" if pd.notna(m_notes) and str(m_notes).strip() != "" else ""
-
-                meta_parts = [p for p in [f"<b>Thuộc Chi:</b> {m_chi}", father_str, spouse_str] if p]
-                meta_combined = " &nbsp;|&nbsp; ".join(meta_parts)
-
-                members_html += f"""
+                content_html += f"""
                 <div class="member-print-box">
-                    <div style="font-size: 17px; font-weight: bold; color: #4e342e; margin-bottom: 4px;">• {m_name}</div>
-                    <div style="font-size: 14px; color: #444; margin-bottom: 2px;">{meta_combined}</div>
-                    <div style="font-size: 13px; color: #555;">{notes_str}</div>
+                    <div style="font-size: 17px; font-weight: bold; color: #4e342e; margin-bottom: 4px;">👤 {name}</div>
+                    <div style="font-size: 14px; color: #444; margin-bottom: 2px;"><b>Thuộc Chi:</b> {chi} &nbsp;|&nbsp; <b>{spouse_text}</b> &nbsp;|&nbsp; <b>{father_text}</b></div>
+                    <div style="font-size: 13px; color: #555;">{notes_text}</div>
                 </div>
                 """
 
-            st.markdown(
-                f"""
-                <div class="book-page">
-                    <div class="chapter-title">{chapter_name}</div>
-                    <p style="text-align: center; font-style: italic; color: #666; margin-bottom: 30px;">
-                        Danh sách các bậc tiền bối và hậu duệ thuộc đời {gen} trong dòng họ Nguyễn tộc.
-                    </p>
-                    {members_html}
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            content_html += "</div>"
+            st.markdown(content_html, unsafe_allow_html=True)
 
 # ================= TAB 6: XUẤT DỮ LIỆU =================
 with tab_xuat:
-    st.subheader("💾 Xuất Dữ Liệu Phả Hệ (JSON)")
-    st.markdown("Bạn có thể tải xuống toàn bộ dữ liệu dòng họ hiện tại để sao lưu dự phòng.")
-
+    st.subheader("💾 Xuất Dữ Liệu Gia Phả (Backup)")
     if not df.empty:
-        export_data = df.drop(columns=["_original_index"], errors="ignore").to_dict(orient="records")
-        json_str = json.dumps(export_data, ensure_ascii=False, indent=4)
-        
+        json_str = df.drop(columns=["_original_index"], errors="ignore").to_json(orient="records", force_ascii=False)
         st.download_button(
-            label="📥 Tải xuống tệp JSON Gia Phả",
-            data=json_str,
+            label="📥 Tải xuống tệp JSON gia phả",
+            data=json_str.encode("utf-8"),
             file_name="GiaPha_DongHoNguyen.json",
             mime="application/json",
         )
     else:
-        st.info("Không có dữ liệu để xuất.")
+        st.warning("Không có dữ liệu để xuất.")
 
 # ================= TAB 7: NHẬP DỮ LIỆU =================
 with tab_nhap:
-    st.subheader("📥 Nhập Dữ Liệu Phả Hệ Mới")
-    st.markdown("Tải lên tệp JSON chứa dữ liệu gia phả để cập nhật hệ thống trực tuyến.")
-
+    st.subheader("📥 Nhập Dữ Liệu Gia Phả Mới")
     uploaded_file = st.file_uploader("Chọn tệp JSON gia phả:", type=["json"])
     if uploaded_file is not None:
         try:
             imported_data = json.load(uploaded_file)
             if isinstance(imported_data, list):
-                if st.button("⚡ Xác nhận ghi đè dữ liệu mới"):
-                    save_data(imported_data)
-                    st.success("Đã nhập và cập nhật dữ liệu thành công! Hãy tải lại trang.")
-                    st.rerun()
+                save_data(imported_data)
+                st.success("Nhập dữ liệu thành công! Hãy tải lại trang để cập nhật.")
+                st.rerun()
             else:
-                st.error("Cấu trúc tệp JSON không hợp lệ (phải là một danh sách các thành viên).")
+                st.error("Định dạng tệp JSON không hợp lệ.")
         except Exception as e:
             st.error(f"Lỗi khi đọc tệp: {e}")
 
-# ================= TAB 8: QUẢN TRỊ (THÊM MỚI THÀNH VIÊN) =================
+# ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
 with tab_quan_tri:
     st.subheader("⚙️ Thêm Thành Viên Mới Vào Dòng Họ")
-
-    if not st.session_state.logged_in:
-        st.warning("⚠️ Bạn cần đăng nhập ở thanh bên trái (Sidebar) với quyền **Admin** hoặc **Đầu Chi** để thêm thành viên mới.")
-    else:
-        st.info(f"Đang thao tác với tư cách: **{st.session_state.username}** ({st.session_state.role} - Chi: {st.session_state.chi})")
-
-        danh_sach_thanh_vien_chi_tiet_add = ["-- Không có / Chưa rõ --"]
-        mapping_display_to_real_add = {}
-        if not df.empty:
-            df_temp_add = df.copy()
-            df_temp_add["_gen_num"] = df_temp_add["generation"].apply(get_gen_number)
-            df_temp_add = df_temp_add.sort_values(by=["_gen_num", "_original_index"])
-            for _, r in df_temp_add.iterrows():
-                fname = str(r.get("fullName", "")).strip()
-                fgen = str(r.get("generation", "")).strip()
-                fchi = str(r.get("chi", "")).strip()
-                if fname:
-                    disp = f"{fname} ({fgen} - {fchi})"
-                    danh_sach_thanh_vien_chi_tiet_add.append(disp)
-                    mapping_display_to_real_add[disp] = fname
-
+    if st.session_state.logged_in:
         with st.form("add_member_form"):
-            new_name = st.text_input("Họ và tên thành viên mới *:")
+            new_name = st.text_input("Họ và tên thành viên mới:")
             
             danh_sach_doi = ["Tiên Tổ Khảo"] + [f"Đời thứ {i}" for i in range(1, 21)]
-            new_gen = st.selectbox("Đời thứ:", danh_sach_doi, index=1)
+            new_gen = st.selectbox("Đời thứ:", danh_sach_doi)
             
-            if st.session_state.role == "Admin":
-                chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
-                new_chi = st.selectbox("Thuộc Chi:", chi_options)
-            else:
-                new_chi = st.session_state.chi
-                st.text(f"Thuộc Chi (Theo quyền quản trị): {new_chi}")
-
-            new_father_select = st.selectbox(
-                "Chọn Phụ thân (Cha) từ danh sách dòng họ:",
-                danh_sach_thanh_vien_chi_tiet_add
-            )
+            chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
+            new_chi = st.selectbox("Thuộc Chi:", chi_options)
             
+            # Danh sách chọn cha
+            danh_sach_cha = ["-- Không có / Chưa rõ --"]
+            if not df.empty:
+                for _, r in df.iterrows():
+                    danh_sach_cha.append(f"{r.get('fullName', '')} ({r.get('generation', '')} - {r.get('chi', '')})")
+            
+            new_father_select = st.selectbox("Chọn Phụ Thân (Cha):", danh_sach_cha)
             new_spouse = st.text_input("Vợ/Chồng (Phối):")
-            new_notes = st.text_area("Ghi chú / Tiểu sử / Thành tích:")
-
-            submit_add = st.form_submit_button("➕ Thêm Thành Viên Mới")
-
+            new_notes = st.text_area("Ghi chú / Thân thế sự nghiệp:")
+            
+            submit_add = st.form_submit_button("➕ Thêm Thành Viên")
+            
             if submit_add:
                 if not new_name.strip():
-                    st.error("Vui lòng nhập họ tên thành viên!")
+                    st.error("Vui lòng nhập họ và tên thành viên!")
                 else:
-                    final_father_add = ""
+                    final_new_father = ""
                     if new_father_select != "-- Không có / Chưa rõ --":
-                        final_father_add = mapping_display_to_real_add.get(new_father_select, "")
-
-                    new_id = str(int(df["id"].astype(int).max() + 1) if not df.empty and "id" in df.columns and df["id"].astype(str).str.isdigit().any() else 1001)
-
-                    new_row = {
-                        "id": new_id,
+                        final_new_father = new_father_select.split(" (")[0]
+                    
+                    new_member = {
+                        "id": str(int(pd.Timestamp.now().timestamp())),
                         "fullName": new_name.strip(),
                         "generation": new_gen,
                         "chi": new_chi,
-                        "father": final_father_add,
+                        "birthYear": "",
+                        "deathAnniversary": "",
+                        "location": "",
+                        "profession": "",
                         "spouse": new_spouse.strip(),
+                        "father": final_new_father,
                         "notes": new_notes.strip(),
                     }
-
-                    if isinstance(raw_data, list):
-                        raw_data.append(new_row)
+                    
+                    if not df.empty:
+                        current_list = df.drop(columns=["_original_index"], errors="ignore").to_dict(orient="records")
                     else:
-                        raw_data = [new_row]
-
-                    save_data(raw_data)
-                    st.success(f"Đã thêm thành công thành viên: **{new_name.strip()}** vào hệ thống!")
+                        current_list = []
+                    
+                    current_list.append(new_member)
+                    save_data(current_list)
+                    st.success(f"Đã thêm thành công thành viên: {new_name}!")
                     st.rerun()
+    else:
+        st.warning("🔒 Vui lòng đăng nhập bằng tài khoản Quản trị (Admin) hoặc Đầu Chi ở thanh bên trái để thêm thành viên mới.")
