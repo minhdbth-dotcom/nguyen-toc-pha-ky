@@ -732,7 +732,7 @@ with tab_so_do_cot:
 
 # ================= TAB 5: IN CUỐN GIA PHẢ =================
 with tab_in_phu:
-    st.subheader("📖 Bản In Sách Gia PHả Dòng Họ (Định dạng Trang Sách A4 Trang Trọng)")
+    st.subheader("📖 Bản In Sách Gia Phả Dòng Họ (Định dạng Trang Sách A4 Trang Trọng)")
     st.info("💡 Bác có thể xem trước bố cục trang sách bên dưới. Khi muốn in thành file PDF, hãy nhấn tổ hợp phím **Ctrl + P** (hoặc **Cmd + P** trên Mac), chọn khổ giấy **A4** và bật **Đồ họa nền (Background graphics)**.")
 
     if not df.empty:
@@ -770,14 +770,14 @@ with tab_in_phu:
             """
 
             for _, row in gen_members.iterrows():
-                name = row.get("fullName", "Chưa rõ")
-                chi = row.get("chi", "Gốc")
-                spouse = row.get("spouse", "")
-                spouse_text = f"Phối: {spouse}" if pd.notna(spouse) and str(spouse).strip() != "" else "Phối: Chưa rõ"
-                father = row.get("father", "")
-                father_text = f"Cha: {father}" if pd.notna(father) and str(father).strip() != "" else "Cha: Chưa rõ"
-                notes = row.get("notes", "")
-                notes_text = f"<br><i>Ghi chú: {notes}</i>" if pd.notna(notes) and str(notes).strip() != "" else ""
+                name = str(row.get("fullName", "Chưa rõ"))
+                chi = str(row.get("chi", "Gốc"))
+                spouse = str(row.get("spouse", ""))
+                spouse_text = f"Phối: {spouse}" if spouse.strip() != "" else "Phối: Chưa rõ"
+                father = str(row.get("father", ""))
+                father_text = f"Cha: {father}" if father.strip() != "" else "Cha: Chưa rõ"
+                notes = str(row.get("notes", ""))
+                notes_text = f"<br><i>Ghi chú: {notes}</i>" if notes.strip() != "" else ""
 
                 content_html += f"""
                 <div class="member-print-box">
@@ -822,7 +822,7 @@ with tab_nhap:
 
 # ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
 with tab_quan_tri:
-    st.subheader("⚙️ Thêm Thành Viên Mới Vào Dòng Họ")
+    st.subheader("⚙️️ Thêm Thành Viên Mới Vào Dòng Họ")
     if st.session_state.logged_in:
         with st.form("add_member_form"):
             new_name = st.text_input("Họ và tên thành viên mới:")
@@ -833,7 +833,6 @@ with tab_quan_tri:
             chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
             new_chi = st.selectbox("Thuộc Chi:", chi_options)
             
-            # Danh sách chọn cha
             danh_sach_cha = ["-- Không có / Chưa rõ --"]
             if not df.empty:
                 for _, r in df.iterrows():
