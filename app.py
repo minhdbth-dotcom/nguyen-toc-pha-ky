@@ -54,19 +54,14 @@ st.markdown(
         .intro-container {
             background-color: #fffdf9;
             border: 1px solid #e0d0c0;
-            padding: 30px;
+            padding: 40px;
             border-radius: 10px;
             margin-top: 25px;
             line-height: 1.8;
-            font-family: serif;
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
             color: #2c2c2c;
-        }
-        .han-nom-box {
-            background-color: #f5f5f5;
-            border-left: 4px solid #795548;
-            padding: 15px;
-            margin: 15px 0;
-            font-style: italic;
+            text-align: justify;
         }
         .book-page {
             background-color: #ffffff;
@@ -76,7 +71,10 @@ st.markdown(
             max-width: 850px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             font-family: "Times New Roman", serif;
+            font-size: 16px;
             color: #222222;
+            text-align: justify;
+            line-height: 1.8;
         }
         @media print {
             body { background: white; }
@@ -282,6 +280,68 @@ tab_xuat = tabs[5]
 tab_nhap = tabs[6]
 tab_quan_tri = tabs[7]
 
+# --- NỘI DUNG LỜI TỰA CHUẨN XÁC CỦA DÒNG HỌ ---
+loi_tua_html = """
+    <h2 style="color: #795548; text-align: center; margin-bottom: 25px;">📜 NGUYỄN TỘC PHẢ KÝ</h2>
+    <p>Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Các cụ ngày xưa đã nói:</p>
+    <p style="text-align: center; font-weight: bold; margin: 15px 0;">
+        Nhân do hồ tổ<br>
+        Mộc do hồ bản<br>
+        Thủy do hồ nguyên.
+    </p>
+    <p><b>Đại ý như sau:</b></p>
+    <ul style="list-style-type: none; padding-left: 20px;">
+        <li>• Người phải có tổ</li>
+        <li>• Cây phải có gốc</li>
+        <li>• Nước phải có nguồn</li>
+    </ul>
+    <p>Hoặc cũng có câu thơ như sau:</p>
+    <p style="text-align: center; font-style: italic; margin: 15px 0;">
+        Cây có gốc mới nở cành sinh ngọn<br>
+        Nước có nguồn mới bể rộng sông sâu<br>
+        Người ta có nguồn gốc từ đâu<br>
+        Có tổ tiên trước rồi sau có mình.
+    </p>
+    <p>Như vậy việc biên soạn, sao chép lại quá trình hình thành và phát triển của họ NGUYỄN ở thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là một việc rất cần thiết và quan trọng. Để tỏ lòng thành kính tưởng nhớ tới công ơn của các bậc tổ tiên dòng họ Nguyễn, những người đã có công sinh thành và phát triển dòng họ.</p>
+    
+    <p>Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương Tỉnh, Nam Sách Phủ, Tuyên Minh huyện, An Đô Hạ xã. Ban đầu đi di cư vào tại bản tỉnh Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn, sinh cơ lập nghiệp (Thiết tương triệu cơ) nghĩa là làm nghề thợ rèn. Sau đó chuyển lên Hội Hiền Thôn, Phúc Trạch xã, vào thời cố Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm, đã có 15 đời nối tiếp, hình thành 5 chi, có trên 100 hộ, là một trong những họ đông nhất của làng.</p>
+    
+    <p>Do thời cuộc nhất là sau Cách mạng Tháng Tám năm 1945 đến nay có nhiều hộ, nhiều cá nhân trong dòng họ đã thoát ly đi xây dựng vùng kinh tế mới, đi công tác, học tập và chiến đấu ở nhiều vùng trên mọi miền đất nước. Các thế hệ có những anh dũng hy sinh cho sự nghiệp giải phóng dân tộc và bảo vệ Tổ quốc, nhất là thời kỳ đế quốc phong kiến ông cha ta đã tham gia các phong trào, Hội Ái Nghĩa, Hội Tương Tế, hướng nghiệp, Thanh niên Cách Mạng Đồng Chí Hội.....</p>
+    
+    <p>Có nhiều gia đình được Nhà nước tặng Bằng Khen Gia đình có công với nước, Bảng Vàng Danh Dự, Gia đình vẻ vang, có nhiều cá nhân được tặng huân huy chương và các phần thưởng cao quý khác.</p>
+    
+    <p>Càng nghiên cứu tìm hiểu về cội nguồn gốc tích tôn thống Nguyễn tộc, thân thế và sự nghiệp của ông cha ta chúng ta càng tự hào về quá khứ và hiện tại như bức đại tự ở nhà thờ đã nêu:</p>
+    <p style="text-align: center; font-weight: bold; color: #b71c1c; margin: 15px 0;">KÍNH NHƯ TẠI</p>
+    <p>Và hai câu đối:</p>
+    <p style="text-align: center; font-style: italic; margin: 10px 0;">
+        Cương thường chi trậu ngất trung thiên<br>
+        Bản thế vi niên tử tôn sinh.
+    </p>
+    <p>Hoặc hai câu đối ở cột cạnh bức bình phong ở sân cũng ghi:</p>
+    <p style="text-align: center; font-style: italic; margin: 10px 0;">
+        Nhân nghĩa căn cơ tùy vĩnh thế<br>
+        Cương thường đề trậu ngất trung thiên
+    </p>
+    <p style="text-align: center; font-weight: bold; margin: 15px 0;">Thật vậy<br>Tổ tông công đức bao trùm hậu thế<br>Con cháu muôn đời không sao quên được</p>
+    
+    <p>Vì thế theo nguyện vọng chung xây dựng và giữ vững tôn thống NGUYỄN TỘC là trách nhiệm và nghĩa vụ của mỗi thành viên trong dòng họ. Do đó ngày 25-02-1990 tức là ngày Xuân Kỵ ngày 01 tháng 02 năm Canh Ngọ các ông đầu chi và các cụ cao tuổi trong họ đã họp tại nhà ông Nguyễn Văn Chơn (nhà thờ của họ) dưới sự chủ trì của ông Nguyễn Văn Hiếu trưởng họ, đã họp bàn nhiều việc trong đó có việc viết gia phả và thành lập ban soạn dịch, tìm hiểu để viết lại gia phả, y sao lại bản chính của các cụ để lại là quan trọng. Phải nói đây là cuộc họp có nhiều ý nghĩa của cả họ.</p>
+    
+    <p>Ngày 11-03-1990 tức ngày 15 tháng 02 năm Canh Ngọ ban viết gia phả gồm có các ông sau: <b>Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng</b>, và lên kế hoạch tiến hành dịch và viết phấn đấu đến Đông chí phải hoàn thành tập NGUYỄN TỘC PHẢ KÝ.</p>
+    
+    <p>Tập NGUYỄN TỘC PHẢ KÝ này được viết căn cứ vào các tư liệu sau đây: Dịch từ chữ Hán cuốn phả ký của cố Nguyễn Hoàng Cừ sao chép trước lúc đi thi nhưng chỉ được đến đời thứ tám và các quyển viết tay bằng chữ Quốc ngữ của ông NGỌC MƠN (cố Vợi), NGỌC HIỆP, các ông trưởng chi một VĂN HIẾU, TRƯỜNG AN, và các ông cao tuổi trong họ cung cấp đồng thời có sự giúp đỡ của các ông ĐOÀN ĐỈNH, ÔNG TÂM, CỤ GIÁO CHINH, ÔNG PHÓ ĐIỀN Nam Giang và tra khảo các gia phả khác của các dòng họ có liên quan, đến tận các gia đình trong dòng họ để ghi chép lại.</p>
+    
+    <p>Do những hạn chế trong việc sưu tầm, biên soạn cũng như sự hiểu biết nên việc biên soạn chắc chắn không tránh khỏi những thiếu sót, rất mong được sự đóng góp và bổ sung ý kiến của các Cụ, Ông, Bà, con cháu trong và ngoài dòng họ để các lần tái bản sau được đầy đủ rõ ràng hơn. Mãi tới Đông chí năm 2013 (Quý Tỵ) con cháu mới sao chép, biên soạn lại được tập NGUYỄN TỘC PHẢ KÝ này với đầy đủ ý nghĩa và hy vọng nó sẽ tiếp thêm sức mạnh cho dòng họ Nguyễn để có những thắng lợi mới, góp phần vào sự phát triển của dòng họ cũng như góp phần cho sự phát triển của cả dân tộc.</p>
+    
+    <p>Trong quá trình sao viết lại không sao tránh khỏi những thiếu sót chúng tôi rất mong có sự đóng góp xây dựng chung để tập NGUYỄN TỘC PHẢ KÝ này hoàn thiện hơn.</p>
+    
+    <p>Một lần nữa xin chân thành cám ơn sự đóng góp chung của các quý vị gần xa!</p>
+    
+    <p style="text-align: right; margin-top: 30px;">
+        <b>Ngày 22 tháng 12 năm 2013</b><br>
+        <b>Đông Chí 20 tháng 11 năm Quý Tỵ</b>
+    </p>
+"""
+
 # ================= TAB 1: TỔNG QUAN =================
 with tab_tong_quan:
     col1, col2, col3 = st.columns(3)
@@ -316,32 +376,7 @@ with tab_tong_quan:
         )
 
     st.markdown(
-        """
-        <div class="intro-container">
-            <h2 style="color: #795548; text-align: center; margin-bottom: 25px;">📜 LỜI TỰA & LỊCH SỬ DÒNG HỌ NGUYỄN TỘC</h2>
-            
-            <p><b>Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên.</b></p>
-            <p>Cổ nhân từng dạy: <i>"Nước có nguồn mới chảy thành sông, cây có gốc mới đơm hoa kết trái, con người sinh ra có tổ tông mới nên hình nên dạng"</i>. Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây là đạo lý ngàn đời thiêng liêng của dân tộc Việt Nam ta, cũng là nền tảng đạo đức cốt lõi để duy trì kỷ cương gia tộc, kết nối tình huyết thống keo sơn.</p>
-            
-            <div class="han-nom-box">
-                <b>Nguyên quán Thủy Tổ:</b> Xưa kia, dòng họ Nguyễn tộc ta gốc phát từ xứ Đông kinh yêu dấu: <b>Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</b>. Trải qua bao biến cố thăng trầm của lịch sử, các bậc tiền nhân đã mang theo chí lớn cùng bầu nhiệt huyết dời chân về phương Nam, khai cơ lập nghiệp tại vùng đất linh thiêng <b>thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</b>.
-            </div>
-
-            <h3 style="color: #4e342e; margin-top: 20px;">🌟 Quá Trình Phát Triển & 5 Chi Phái</h3>
-            <p>From buổi đầu dựng nghiệp còn nhiều gian khó, các cụ tổ đã tôi luyện ý chí kiên cường, tinh thần cần cù lao động và đùm bọc lẫn nhau. Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, cành lá sum suê. Để con cháu đời sau dễ dàng ghi nhớ thế thứ, tri ân cội nguồn và gắn kết tình thân, dòng họ đã quy tập thành <b>5 Chi lớn</b>:</p>
-            <ul>
-                <li><b>Chi 1:</b> Tiếp nối truyền thống hiếu học, đoàn kết và phát triển vững chắc.</li>
-                <li><b>Chi 2:</b> Giữ gìn nền nếp gia phong, vun đắp đạo đức và tinh thần tương thân tương ái.</li>
-                <li><b>Chi 3:</b> Năng động, sáng tạo, vươn lên trong lao động sản xuất và xây dựng quê hương.</li>
-                <li><b>Chi 4:</b> Luôn khắc ghi công ơn tiên tổ, gìn giữ trọn vẹn gia đạo và truyền thống hiếu thảo.</li>
-                <li><b>Chi 5:</b> Chi út với sức sống trẻ trung, tiếp bước cha ông làm rạng danh dòng tộc.</li>
-            </ul>
-
-            <h3 style="color: #4e342e; margin-top: 20px;">🎯 Mục Đích Cuốn Phả Ký Điện Tử</h3>
-            <p>Hệ thống phả ký số này được xây dựng nhằm lưu giữ trọn vẹn danh tính, hình ảnh di ảnh, ngày giỗ, phần mộ và tiểu sử của toàn bộ các bậc tiền nhân cùng con cháu qua các đời. Đây không chỉ là cuốn sách gia phả trực tuyến để con cháu dù ở muôn phương, làm ăn xa quê vẫn có thể tra cứu, tưởng nhớ cội nguồn, mà còn là món quà tinh thần vô giá kính dâng lên anh linh các bậc tiên tổ.</p>
-            <p style="text-align: right; margin-top: 30px; font-style: italic;"><b>— Ban Biên Tập & Hội Đồng Gia Tộc Nguyễn Tộc —</b></p>
-        </div>
-        """,
+        f'<div class="intro-container">{loi_tua_html}</div>',
         unsafe_allow_html=True,
     )
 
@@ -541,33 +576,11 @@ with tab_in_phu:
         </div>
     """, unsafe_allow_html=True)
 
-    # Trang Lời Tựa Trong Sách (Đã chuẩn hóa hiển thị HTML an toàn)
-    st.markdown("""
-        <div class="book-page">
-            <h2 style="text-align: center; color: #795548; margin-bottom: 25px;">📜 LỜI TỰA & LỊCH SỬ DÒNG HỌ NGUYỄN TỘC</h2>
-            
-            <p><b>Nhân do hồ tổ, Mộc do hồ bản, Thủy do hồ nguyên.</b></p>
-            <p>Cổ nhân từng dạy: <i>"Nước có nguồn mới chảy thành sông, cây có gốc mới đơm hoa kết trái, con người sinh ra có tổ tông mới nên hình nên dạng"</i>. Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây là đạo lý ngàn đời thiêng liêng của dân tộc Việt Nam ta, cũng là nền tảng đạo đức cốt lõi để duy trì kỷ cương gia tộc, kết nối tình huyết thống keo sơn.</p>
-            
-            <div class="han-nom-box">
-                <b>Nguyên quán Thủy Tổ:</b> Xưa kia, dòng họ Nguyễn tộc ta gốc phát từ xứ Đông kinh yêu dấu: <b>Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</b>. Trải qua bao biến cố thăng trầm của lịch sử, các bậc tiền nhân đã mang theo chí lớn cùng bầu nhiệt huyết dời chân về phương Nam, khai cơ lập nghiệp tại vùng đất linh thiêng <b>thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</b>.
-            </div>
-
-            <h3 style="color: #4e342e; margin-top: 20px;">🌟 Quá Trình Phát Triển & 5 Chi Phái</h3>
-            <p>Từ buổi đầu dựng nghiệp còn nhiều gian khó, các cụ tổ đã tôi luyện ý chí kiên cường, tinh thần cần cù lao động và đùm bọc lẫn nhau. Trải qua nhiều thế hệ vun đắp, dòng họ ngày càng hưng thịnh, cành lá sum suê. Để con cháu đời sau dễ dàng ghi nhớ thế thứ, tri ân cội nguồn và gắn kết tình thân, dòng họ đã quy tập thành <b>5 Chi lớn</b>:</p>
-            <ul>
-                <li><b>Chi 1:</b> Tiếp nối truyền thống hiếu học, đoàn kết và phát triển vững chắc.</li>
-                <li><b>Chi 2:</b> Giữ gìn nền nếp gia phong, vun đắp đạo đức và tinh thần tương thân tương ái.</li>
-                <li><b>Chi 3:</b> Năng động, sáng tạo, vươn lên trong lao động sản xuất và xây dựng quê hương.</li>
-                <li><b>Chi 4:</b> Luôn khắc ghi công ơn tiên tổ, gìn giữ trọn vẹn gia đạo và truyền thống hiếu thảo.</li>
-                <li><b>Chi 5:</b> Chi út với sức sống trẻ trung, tiếp bước cha ông làm rạng danh dòng tộc.</li>
-            </ul>
-
-            <h3 style="color: #4e342e; margin-top: 20px;">🎯 Mục Đích Cuốn Phả Ký Điện Tử</h3>
-            <p>Hệ thống phả ký số này được xây dựng nhằm lưu giữ trọn vẹn danh tính, hình ảnh di ảnh, ngày giỗ, phần mộ và tiểu sử của toàn bộ các bậc tiền nhân cùng con cháu qua các đời. Đây không chỉ là cuốn sách gia phả trực tuyến để con cháu dù ở muôn phương, làm ăn xa quê vẫn có thể tra cứu, tưởng nhớ cội nguồn, mà còn là món quà tinh thần vô giá kính dâng lên anh linh các bậc tiên tổ.</p>
-            <p style="text-align: right; margin-top: 30px; font-style: italic;"><b>— Ban Biên Tập & Hội Đồng Gia Tộc Nguyễn Tộc —</b></p>
-        </div>
-    """, unsafe_allow_html=True)
+    # Trang Lời Tựa Trong Sách (Chuẩn văn bản bác vừa cung cấp)
+    st.markdown(
+        f'<div class="book-page">{loi_tua_html}</div>',
+        unsafe_allow_html=True,
+    )
 
     # Các Trang Nội Dung Phả Hệ Theo Đời Trong Sách In
     if not df.empty and "generation" in df.columns:
