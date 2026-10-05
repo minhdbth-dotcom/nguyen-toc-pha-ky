@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="NGUYỄN TỘC PHẢ KÝ - TOÀN TỘC 5 CHI", page_icon="🌳", layout="wide"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN & KHUNG SÁCH IN A4 CHUẨN XÁC ---
+# --- CSS TÙY CHỈNH GIAO DIỆN & KHUNG SÁCH IN A4 ĐỨNG (TIẾT KIỆM GIẤY, DẠY DẶM) ---
 st.markdown(
     """
     <style>
@@ -63,34 +63,36 @@ st.markdown(
             color: #2c2c2c;
             text-align: justify;
         }
-        /* ĐỊNH DẠNG TRANG SÁCH A4 CHUẨN */
+        /* ĐỊNH DẠNG TRANG SÁCH A4 ĐỨNG - TIẾT KIỆM GIẤY, DÀY DẶM */
         .book-page {
             background-color: #ffffff;
-            border: 3px double #795548;
-            padding: 50px 60px;
-            margin: 30px auto;
-            max-width: 800px;
-            min-height: 1050px;
+            border: 2px solid #795548;
+            padding: 35px 40px;
+            margin: 20px auto;
+            max-width: 750px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             font-family: "Times New Roman", serif;
-            font-size: 16px;
+            font-size: 15px;
             color: #222222;
             text-align: justify;
-            line-height: 1.8;
+            line-height: 1.45; /* Dày dòng hơn, tiết kiệm diện tích */
             box-sizing: border-box;
             page-break-after: always;
             position: relative;
         }
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
             body { background: white; margin: 0; }
             .stSidebar, .stTabs, .header-container, button, header, footer { display: none !important; }
             .book-page { 
-                border: 3px double #795548 !important; 
-                padding: 40px 50px !important; 
+                border: none !important; 
+                padding: 0 !important; 
                 margin: 0 !important; 
                 width: 100% !important; 
                 max-width: 100% !important; 
-                min-height: 100vh !important;
                 box-shadow: none !important; 
                 page-break-after: always;
                 page-break-inside: avoid;
@@ -299,7 +301,7 @@ tab_quan_tri = tabs[7]
 # --- HÀM HIỂN THỊ NỘI DUNG LỜI TỰA ---
 def render_loi_tua():
     st.markdown(
-        "<h2 style='color: #795548; text-align: center; margin-top: 0;'>📜 NGUYỄN TỘC PHẢ KÝ</h2>",
+        "<h3 style='color: #795548; text-align: center; margin-top: 0;'>📜 NGUYỄN TỘC PHẢ KÝ</h3>",
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -307,95 +309,28 @@ def render_loi_tua():
     )
     st.markdown(
         """
-    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
-        Nhân do hồ tổ<br>
-        Mộc do hồ bản<br>
-        Thủy do hồ nguyên.
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-    st.markdown("**Đại ý như sau:**")
-    st.markdown(
-        "- Người phải có tổ\n- Cây phải có gốc\n- Nước phải có nguồn\n- Người phải có hàng xóm láng giềng...."
-    )
-    st.markdown("Hoặc cũng có câu thơ như sau:")
-    st.markdown(
-        """
-    <div style="text-align: center; font-style: italic; margin: 10px 0;">
-        Cây có gốc mới nở cành sinh ngọn<br>
-        Nước có nguồn mới bể rộng sông sâu<br>
-        Người ta có nguồn gốc từ đâu<br>
-        Có tổ tiên trước rồi sau có mình.
+    <div style="text-align: center; font-weight: bold; margin: 6px 0;">
+        Nhân do hồ tổ — Mộc do hồ bản — Thủy do hồ nguyên.
     </div>
     """,
         unsafe_allow_html=True,
     )
     st.markdown(
-        "Như vậy việc biên soạn, sao chép lại quá trình hình thành và phát triển của họ NGUYỄN ở thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là một việc rất cần thiết và quan trọng. Để tỏ lòng thành kính tưởng nhớ tới công ơn của các bậc tổ tiên dòng họ Nguyễn, những người đã có công sinh thành và phát triển dòng họ."
+        "**Đại ý:** Người phải có tổ, cây phải có gốc, nước phải có nguồn. Cây có gốc mới nở cành sinh ngọn, nước có nguồn mới bể rộng sông sâu."
     )
     st.markdown(
-        "Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương Tỉnh, Nam Sách Phủ, Tuyên Minh huyện, An Đô Hạ xã. Ban đầu đi di cư vào tại bản tỉnh Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn. Sinh cơ lập nghiệp (Thiết tương triệu cơ) Nghĩa là làm nghề thợ rèn. Sau đó chuyển lên Hội Hiền Thôn, Phúc Trạch xã, vào thời cố Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm. Đã có 15 đời nối tiếp, hình thành 5 chi, có trên 100 hộ, là một trong những họ đông nhất của làng."
+        "Việc biên soạn lại lịch sử họ Nguyễn tại thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là vô cùng cần thiết. Cố Thủy tổ từ Tiên tổ Hải Dương di cư qua Hà Trung, Hoàng Hóa rồi chuyển lên Hội Hiền vào thời cố Chính Hòa (1680–1704). Đến nay đã gần 300 năm, qua 15 đời, phát triển thành 5 chi với trên 100 hộ."
     )
     st.markdown(
-        "Do thời cuộc nhất là sau cách mạng tháng tám năm 1945 đến nay có nhiều hộ, nhiều cá nhân trong dòng họ đã thoát ly đi xây dựng vùng kinh tế mới, đi công tác, học tập và chiến đấu ở nhiều vùng trên mọi miền đất nước. Các thế hệ có những anh dũng hy sinh cho sự nghiệp giải phóng dân tộc và bảo vệ Tổ quốc, nhất là thời kỳ đế quốc phong kiến ông cha ta đã tham gia các phong trào, Hội Ái Nghĩa, Hội Tương Tế, hướng nghiệp, Thanh niên Cách Mạng Đồng Chí Hội....."
+        "Nhiều thế hệ con cháu đã tham gia các phong trào cách mạng, kháng chiến bảo vệ Tổ quốc, được tặng nhiều Bằng khen, Huân huy chương cao quý. Kế thừa truyền thống *Kính như tại*, ngày 25-02-1990 (Xuân Kỷ Mão) Ban soạn thảo gia phả đã được thành lập để tra cứu, chép lại từ các bản phả cổ bằng chữ Hán và chữ Quốc ngữ."
     )
     st.markdown(
-        "Có nhiều gia đình được Nhà nước tặng Bằng Khen Gia đình có công với nước. Bảng Vàng Danh Dự. Gia đình vẻ vang, có nhiều cá nhân được tặng huân huy chương và các phần thưởng cao quý khác."
+        "Mặc dù đã rất cố gắng, tập phả ký khó tránh khỏi thiếu sót, rất mong nhận được sự đóng góp của con cháu để các lần tái bản hoàn thiện hơn."
     )
-    st.markdown(
-        "Càng nghiên cứu tìm hiểu về cội nguồn gốc tích tôn thống Nguyễn tộc, thân thế và sự nghiệp của ông cha ta chúng ta càng tự hào về quá khứ và hiện tại như bức đại tự ở nhà thờ đã nêu:"
-    )
-    st.markdown(
-        "<div style='text-align: center; font-weight: bold; color: #b71c1c; margin: 10px 0;'>KÍNH NHƯ TẠI</div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown("Và hai câu đối:")
     st.markdown(
         """
-    <div style="text-align: center; font-style: italic; margin: 8px 0;">
-        Cương thường chi trậu ngất trung thiên<br>
-        Bản thế vi niên tử tôn sinh.
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-    st.markdown("Hoặc hai câu đối ở cột cạnh bức bình phong ở sân cũng ghi")
-    st.markdown(
-        """
-    <div style="text-align: center; font-style: italic; margin: 8px 0;">
-        Nhân nghĩa căn cơ tùy vĩnh thế<br>
-        Cương thường đề trậu ngất trung thiên
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<div style='text-align: center; font-weight: bold; margin: 10px 0;'>Thật vậy<br>Tổ tông công đức bao trùm hậu thế<br>Con cháu muôn đời không sao quên được</div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "Vì thế theo nguyện vọng chung xây dựng và giữ vững tôn thống NGUYỄN TỘC là trách nhiệm và nghĩa vụ của mỗi thành viên trong dòng họ. Do đó ngày 25-02-1990 tức là ngày Xuân Kỵ ngày 01 tháng 02 năm Canh Ngọ các ông đầu chi và các cụ cao tuổi trong họ đã họp tại nhà ông Nguyễn Văn Chơn (nhà thờ của họ) dưới sự chủ trì của ông Nguyễn Văn Hiếu trưởng họ, đã họp bàn nhiều việc trong đó có việc viết gia phả và thành lập ban soạn dịch, tìm hiểu để viết lại gia phả, y sao lại bản chính của các cụ để lại là quan trọng. Phải nói đây là cuộc họp có nhiều ý nghĩa của cả họ."
-    )
-    st.markdown(
-        "Ngày 11-03-1990 tức ngày 15 tháng 02 năm Canh Ngọ ban viết gia phả gồm có các ông sau: <b>Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng</b>. và lên kế hoạch tiến hành dịch và viết phấn đấu đến Đông chí phải hoàn thành tập NGUYỄN TỘC PHẢ KÝ.",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "Tập NGUYỄN TỘC PHẢ KÝ này được viết căn cứ vào các tư liệu sau đây: Dịch từ chữ Hán cuốn phả ký của cố Nguyễn Hoàng Cừ sao chép trước lúc đi thi nhưng chỉ được đến đời thứ tám và các quyển viết tay bằng chữ Quốc ngữ của ông NGỌC MƠN (cố Vợi), NGỌC HIỆP, các ông trưởng chi một VĂN HIẾU, TRƯỜNG AN, và các ông cao tuổi trong họ cung cấp đồng thời có sự giúp đỡ của các ông ĐOÀN ĐỈNH, ÔNG TÂM, CỤ GIÁO CHINH, ÔNG PHÓ ĐIỀN Nam Giang và tra khảo các gia phả khác của các dòng họ có liên quan, đến tận các gia đình trong dòng họ để ghi chép lại."
-    )
-    st.markdown(
-        "Do những hạn chế trong việc sưu tầm, biên soạn cũng như sự hiểu biết nên việc biên soạn chắc chắn không tránh khỏi những thiếu sót, rất mong được sự đóng góp và bổ sung ý kiến của các Cụ, Ông, Bà, con cháu trong và ngoài dòng họ để các lần tái bản sau được đầy đủ rõ ràng hơn. Mãi tới Đông chí năm 2013 (Quý Tỵ) con cháu mới sao chép, biên soạn lại được tập NGUYỄN TỘC PHẢ KÝ này với đầy đủ ý nghĩa và hy vọng nó sẽ tiếp thêm sức mạnh cho dòng họ Nguyễn để có những thắng lợi mới, góp phần vào sự phát triển của dòng họ cũng như góp phần cho sự phát triển của cả dân tộc."
-    )
-    st.markdown(
-        "Trong quá trình sao viết lại không sao tránh khỏi những thiếu sót chúng tôi rất mong có sự đóng góp xây dựng chung để tập NGUYỄN TỘC PHẢ KÝ này hoàn thiện hơn."
-    )
-    st.markdown("Một lần nữa xin chân thành cám ơn sự đóng góp chung của các quý vị gần xa!")
-    st.markdown(
-        """
-    <div style="text-align: right; margin-top: 20px;">
-        <b>Ngày 22 tháng 12 năm 2013</b><br>
-        <b>Đông Chí 20 tháng 11 năm Quý Tỵ</b>
+    <div style="text-align: right; margin-top: 15px;">
+        <b>Ngày 22 tháng 12 năm 2013 (Đông Chí năm Quý Tỵ)</b>
     </div>
     """,
         unsafe_allow_html=True,
@@ -723,36 +658,36 @@ with tab_so_do_cot:
 # ================= TAB 5: IN CUỐN GIA PHẢ =================
 with tab_in_phu:
     st.subheader(
-        "📖 Bản In Sách Gia Phả Dòng Họ (Định dạng Trang Sách A4 Trang Trọng)"
+        "📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Tiết Kiệm Giấy)"
     )
     st.info(
-        "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac) để in thành tệp sách A4 hoàn chỉnh."
+        "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), ở bảng cài đặt máy in chọn khổ giấy **Portrait (Đứng)** và để lề tối thiểu để tiết kiệm giấy."
     )
 
-    # Trang Bìa Sách A4 Cân Đối
+    # 1. Trang Bìa Sách Khổ Đứng
     st.markdown(
         """
-        <div class="book-page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-            <div style="font-size: 24px; font-weight: bold; color: #795548; margin-bottom: 20px; letter-spacing: 2px;">ĐẠI TỘC GIA PHẢ</div>
-            <div style="font-size: 40px; font-weight: bold; color: #4e342e; text-transform: uppercase; margin-bottom: 20px; line-height: 1.2;">NGUYỄN TỘC PHẢ KÝ</div>
-            <div style="font-size: 22px; font-weight: bold; color: #5d4037; margin-bottom: 40px;">TOÀN TỘC 5 CHI</div>
-            <hr style="width: 40%; margin: 20px auto; border-top: 2px solid #795548;">
-            <div style="font-size: 16px; color: #444; margin-top: 60px; line-height: 2;">
+        <div class="book-page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 900px;">
+            <div style="font-size: 20px; font-weight: bold; color: #795548; margin-bottom: 15px; letter-spacing: 2px;">ĐẠI TỘC GIA PHẢ</div>
+            <div style="font-size: 34px; font-weight: bold; color: #4e342e; text-transform: uppercase; margin-bottom: 15px; line-height: 1.2;">NGUYỄN TỘC PHẢ KÝ</div>
+            <div style="font-size: 18px; font-weight: bold; color: #5d4037; margin-bottom: 30px;">TOÀN TỘC 5 CHI</div>
+            <hr style="width: 40%; margin: 15px auto; border-top: 2px solid #795548;">
+            <div style="font-size: 15px; color: #444; margin-top: 40px; line-height: 1.8;">
                 <b>Địa chỉ dòng họ:</b> Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa<br>
                 <b>Nguyên quán Thủy tổ:</b> Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã<br>
-                <i style="margin-top: 30px; display: block; font-size: 17px; color: #795548;">Lưu truyền đời đời cho con cháu muôn phương</i>
+                <i style="margin-top: 25px; display: block; font-size: 16px; color: #795548;">Lưu truyền đời đời cho con cháu muôn phương</i>
             </div>
         </div>
     """,
         unsafe_allow_html=True,
     )
 
-    # Trang Lời Tựa Trong Sách
+    # 2. Trang Lời Tựa Khổ Đứng (Chữ dày dặn, không trống)
     st.markdown('<div class="book-page">', unsafe_allow_html=True)
     render_loi_tua()
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Các Trang Nội Dung Phả Hệ Theo Đời Trong Sách In
+    # 3. Các Đời Phả Hệ (Gộp dòng dày dặn, liên tục, không bị ngắt quãng khoảng trắng lớn)
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -765,36 +700,23 @@ with tab_in_phu:
             for _, r in gen_members.iterrows():
                 name = r.get("fullName", "Chưa rõ")
                 chi = r.get("chi", "Gốc")
-                father = r.get("father", "Chưa rõ")
-                spouse = r.get("spouse", "Chưa rõ")
+                father = r.get("father", "")
+                spouse = r.get("spouse", "")
                 notes = r.get("notes", "")
 
-                father_str = (
-                    f" | Cha: {father}"
-                    if father and str(father).strip() != ""
-                    else ""
-                )
-                spouse_str = (
-                    f" | Phối: {spouse}"
-                    if spouse and str(spouse).strip() != ""
-                    else ""
-                )
-                notes_str = (
-                    f"<br><span style='font-size: 14px; font-style: italic; color: #555;'>Tiểu sử / Phần mộ: {notes}</span>"
-                    if notes and str(notes).strip() != ""
-                    else ""
-                )
+                father_str = f" | Cha: {father}" if father and str(father).strip() != "" else ""
+                spouse_str = f" | Phối: {spouse}" if spouse and str(spouse).strip() != "" else ""
+                notes_str = f" <i>({notes})</i>" if notes and str(notes).strip() != "" else ""
 
-                members_html += f"<li style='margin-bottom: 14px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 14px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
+                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 13px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
 
             st.markdown(
                 f"""
                 <div class="book-page">
-                    <div style="text-align: center; border-bottom: 2px solid #795548; padding-bottom: 15px; margin-bottom: 30px;">
-                        <h2 style="color: #795548; margin: 0; text-transform: uppercase;">{gen}</h2>
-                        <p style="font-size: 14px; color: #666; margin: 5px 0 0 0;">(Ghi chép các bậc tiền nhân và hậu duệ)</p>
+                    <div style="text-align: center; border-bottom: 1px solid #795548; padding-bottom: 8px; margin-bottom: 15px;">
+                        <h3 style="color: #795548; margin: 0; text-transform: uppercase;">{gen}</h3>
                     </div>
-                    <ul style="line-height: 1.9; font-size: 16px; padding-left: 20px;">
+                    <ul style="line-height: 1.45; font-size: 14px; padding-left: 18px; margin: 0;">
                         {members_html}
                     </ul>
                 </div>
