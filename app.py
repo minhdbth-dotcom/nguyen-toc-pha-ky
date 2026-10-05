@@ -567,9 +567,13 @@ with tab_danh_sach:
                 unsafe_allow_html=True,
             )
 
-# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - CHUẨN XÁC THEO THỨ TỰ TỪ TRÊN XUỐNG DƯỚI) =================
+# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ TỪ TRÊN XUỐNG DƯỚI) =================
 with tab_so_do_doi:
     st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
+    st.info(
+        "💡 **Mẹo:** Các cụ phụ thân trong từng đời sẽ được hiển thị hoàn toàn chính xác theo đúng thứ tự sắp xếp chuẩn từ trên xuống dưới trong tệp dữ liệu gốc (Tab Danh Sách). "
+        "Nếu cần điều chỉnh vị trí của cụ nào, bác có thể sang **Tab Danh Sách** để sắp xếp lại thứ tự dòng cho khớp hoàn hảo."
+    )
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -627,14 +631,14 @@ with tab_so_do_doi:
 
             st.markdown("---")
 
-# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT - ĐỒNG BỘ 100% VỚI CÁC TAB KHÁC) =================
+# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
 with tab_so_do_cot:
     st.markdown(
         "<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>",
         unsafe_allow_html=True,
     )
     st.markdown(
-        "<p style='text-align: center; color: #555;'>Hiển thị đồng bộ tuyệt đối theo đúng thứ tự chuẩn xác của danh sách và phả hệ đứng.</p>",
+        "<p style='text-align: center; color: #555;'>Mỗi thẻ thành viên hiển thị hình ảnh chân dung, thông tin phối ngẫu và tiểu sử trọn vẹn.</p>",
         unsafe_allow_html=True,
     )
 
@@ -650,11 +654,9 @@ with tab_so_do_cot:
                 unsafe_allow_html=True,
             )
 
-            # Sắp xếp thành viên bám sát hoàn toàn theo _original_index (thứ tự gốc chuẩn)
             gen_members = df[df["generation"] == gen].sort_values(
                 by="_original_index"
             )
-            
             if not gen_members.empty:
                 members_list = gen_members.to_dict(orient="records")
                 for i in range(0, len(members_list), 2):
@@ -822,7 +824,7 @@ with tab_nhap:
 
 # ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
 with tab_quan_tri:
-    st.subheader("⚙️️ Thêm Thành Viên Mới Vào Dòng Họ")
+    st.subheader("⚙️ Thêm Thành Viên Mới Vào Dòng Họ")
     if st.session_state.logged_in:
         with st.form("add_member_form"):
             new_name = st.text_input("Họ và tên thành viên mới:")
