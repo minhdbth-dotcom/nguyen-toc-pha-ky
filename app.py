@@ -153,7 +153,7 @@ else:
 
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "💡 **Hướng dẫn:** Các thành viên trong họ nay đã được gom nhóm quy tụ hoàn toàn theo từng Phụ thân (Cha) rất trực quan."
+    "💡 **Hướng dẫn:** Tab Cây Phả Hệ và Sổ Tay Chi Tiết nay đã gom nhóm hoàn toàn theo từng ông Phụ thân (Cha)."
 )
 
 # --- TIÊU ĐỀ CHÍNH ---
@@ -187,12 +187,12 @@ tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, 
 # ================= TAB 1: TRANG CHỦ =================
 with tab_trang_chu:
     st.markdown(
-        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng học Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
+        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng họ Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
         unsafe_allow_html=True,
     )
 
 
-# ================= TAB 2: CÂY PHẢ HỆ (QUY TỤ THEO PHỤ THÂN) =================
+# ================= TAB 2: CÂY PHẢ HỆ (GOM NHÓM HOÀN TOÀN THEO CHA) =================
 with tab_cay_pha_he:
     st.subheader(
         "🌳 Sơ Đồ Phả Hệ (Quy tụ hoàn toàn các con theo từng Phụ thân / Cha)"
@@ -207,11 +207,13 @@ with tab_cay_pha_he:
     if selected_chi_filter != "Tất cả các Chi":
         filtered_df = df[df["chi"] == selected_chi_filter]
 
+    # Chuẩn hóa tên phụ thân
     filtered_df["normalized_father"] = (
         filtered_df["father"].fillna("Chưa rõ").astype(str).str.strip()
     )
     sorted_fathers = sorted(filtered_df["normalized_father"].unique())
 
+    # Đưa các giá trị trống hoặc chưa rõ xuống cuối cùng cho gọn
     if "Chưa rõ" in sorted_fathers:
         sorted_fathers.remove("Chưa rõ")
         sorted_fathers.append("Chưa rõ")
@@ -219,6 +221,7 @@ with tab_cay_pha_he:
         sorted_fathers.remove("")
         sorted_fathers.append("")
 
+    # Duyệt qua từng Phụ thân để gom nhóm các con
     for father_name in sorted_fathers:
         father_members = filtered_df[
             filtered_df["normalized_father"] == father_name
@@ -237,6 +240,7 @@ with tab_cay_pha_he:
                 return 9999
 
 
+        # Sắp xếp các con theo đúng thứ tự sinh (Con thứ 1, 2, 3...)
         father_members_sorted = sorted(
             father_members.to_dict("records"),
             key=lambda x: (sort_key(x), x.get("_original_index", 0)),
@@ -247,11 +251,14 @@ with tab_cay_pha_he:
             if father_name and father_name != ""
             else "Chưa rõ / Tiên tổ"
         )
+
+        # Hiển thị Tiêu đề Nhóm Phụ Thân
         st.markdown(
-            f"<h3 style='color: #b71c1c; border-bottom: 2px solid #b71c1c; padding-bottom: 5px; margin-top: 30px;'>👨 Phụ thân: <b>{display_f_name}</b> ({len(father_members_sorted)} người con)</h3>",
+            f"<h3 style='color: #b71c1c; border-bottom: 2px solid #b71c1c; padding-bottom: 5px; margin-top: 35px;'>👨 Phụ thân: <b>{display_f_name}</b> ({len(father_members_sorted)} người con)</h3>",
             unsafe_allow_html=True,
         )
 
+        # Hiển thị danh sách các con của ông cha này theo dạng lưới 3 cột
         cols = st.columns(3)
         for idx, member in enumerate(father_members_sorted):
             col = cols[idx % 3]
