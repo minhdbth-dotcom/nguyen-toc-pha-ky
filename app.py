@@ -153,7 +153,7 @@ else:
 
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "💡 **Hướng dẫn:** Sử dụng các thẻ (Tab) phía màn hình chính để tra cứu phả đồ, in sách theo nhóm phụ thân, hoặc quản lý dữ liệu."
+    "💡 **Hướng dẫn:** Các thành viên trong họ nay đã được gom nhóm quy tụ hoàn toàn theo từng Phụ thân (Cha) rất trực quan."
 )
 
 # --- TIÊU ĐỀ CHÍNH ---
@@ -184,48 +184,47 @@ tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, 
     ]
 )
 
-
-def get_gen_number(gen_str):
-    if not isinstance(gen_str, str):
-        return 999
-    if "Tiên Tổ" in gen_str:
-        return 0
-    import re
-
-    nums = re.findall(r"\d+", gen_str)
-    return int(nums[0]) if nums else 999
-
-
 # ================= TAB 1: TRANG CHỦ =================
 with tab_trang_chu:
     st.markdown(
-        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng họ Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
+        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng học Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
         unsafe_allow_html=True,
     )
 
 
-# ================= TAB 2: CÂY PHẢ HỆ =================
+# ================= TAB 2: CÂY PHẢ HỆ (QUY TỤ THEO PHỤ THÂN) =================
 with tab_cay_pha_he:
-    st.subheader("🌳 Sơ Đồ Cây Phả Hệ Toàn Tộc 5 Chi")
+    st.subheader(
+        "🌳 Sơ Đồ Phả Hệ (Quy tụ hoàn toàn các con theo từng Phụ thân / Cha)"
+    )
     selected_chi_filter = st.selectbox(
         "Lọc hiển thị theo Chi:",
         ["Tất cả các Chi", "Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"],
+        key="chi_filter_tab2",
     )
 
     filtered_df = df
     if selected_chi_filter != "Tất cả các Chi":
         filtered_df = df[df["chi"] == selected_chi_filter]
 
-    sorted_gens = sorted(
-        filtered_df["generation"].dropna().unique(), key=get_gen_number
+    filtered_df["normalized_father"] = (
+        filtered_df["father"].fillna("Chưa rõ").astype(str).str.strip()
     )
+    sorted_fathers = sorted(filtered_df["normalized_father"].unique())
 
-    for gen in sorted_gens:
-        st.markdown(
-            f"<h3 style='color: #b71c1c; border-bottom: 2px solid #b71c1c; padding-bottom: 5px;'>📌 {gen.upper()}</h3>",
-            unsafe_allow_html=True,
-        )
-        gen_members = filtered_df[filtered_df["generation"] == gen]
+    if "Chưa rõ" in sorted_fathers:
+        sorted_fathers.remove("Chưa rõ")
+        sorted_fathers.append("Chưa rõ")
+    if "" in sorted_fathers:
+        sorted_fathers.remove("")
+        sorted_fathers.append("")
+
+    for father_name in sorted_fathers:
+        father_members = filtered_df[
+            filtered_df["normalized_father"] == father_name
+        ]
+        if father_members.empty:
+            continue
 
 
         def sort_key(row):
@@ -238,17 +237,28 @@ with tab_cay_pha_he:
                 return 9999
 
 
-        gen_members_sorted = sorted(
-            gen_members.to_dict("records"),
+        father_members_sorted = sorted(
+            father_members.to_dict("records"),
             key=lambda x: (sort_key(x), x.get("_original_index", 0)),
         )
 
+        display_f_name = (
+            father_name
+            if father_name and father_name != ""
+            else "Chưa rõ / Tiên tổ"
+        )
+        st.markdown(
+            f"<h3 style='color: #b71c1c; border-bottom: 2px solid #b71c1c; padding-bottom: 5px; margin-top: 30px;'>👨 Phụ thân: <b>{display_f_name}</b> ({len(father_members_sorted)} người con)</h3>",
+            unsafe_allow_html=True,
+        )
+
         cols = st.columns(3)
-        for idx, member in enumerate(gen_members_sorted):
+        for idx, member in enumerate(father_members_sorted):
             col = cols[idx % 3]
             with col:
                 name = member.get("fullName", "Chưa rõ")
                 chi = member.get("chi", "Chưa rõ")
+                gen = member.get("generation", "Chưa rõ")
                 thutu_val = member.get("thuTu")
                 thutu_str = (
                     f"Con thứ {int(thutu_val)}"
@@ -258,14 +268,13 @@ with tab_cay_pha_he:
                     else "Thứ tự: Chưa rõ"
                 )
                 spouse = member.get("spouse", "Chưa rõ")
-                father = member.get("father", "Chưa rõ")
 
                 st.markdown(
                     f"""
                 <div class="member-card">
                     <b>{name}</b><br>
-                    <span style="font-size: 12px; color: #555;">🏷️ Chi: {chi} | {thutu_str}</span><br>
-                    <span style="font-size: 12px; color: #555;">👨 Phụ thân: {father if father else 'Chưa rõ'}</span><br>
+                    <span style="font-size: 12px; color: #555;">🏷️ {gen} | Chi: {chi}</span><br>
+                    <span style="font-size: 12px; color: #555;">🔢 {thutu_str}</span><br>
                     <span style="font-size: 12px; color: #555;">👥 Phối: {spouse if spouse else 'Chưa rõ'}</span>
                 </div>
                 """,
@@ -316,10 +325,10 @@ with tab_tra_cuu:
             )
 
 
-# ================= TAB 4: SỔ TAY CHI TIẾT (NHÓM THEO CHA LÀM GỐC) =================
+# ================= TAB 4: SỔ TAY CHI TIẾT =================
 with tab_chi_tiet:
     st.subheader(
-        "📋 Sổ Tay Chi Tiết (Quy tụ các con theo từng Phụ thân & Sắp xếp theo Thứ tự sinh)"
+        "📋 Sổ Tay Chi Tiết (Quy tụ hoàn toàn các con theo từng Phụ thân)"
     )
 
     if not df.empty:
@@ -426,9 +435,9 @@ with tab_chi_tiet:
             )
 
 
-# ================= TAB 5: IN CUỐN GIA PHẢ (GOM NHÓM THEO PHỤ THÂN LÀM GỐC) =================
+# ================= TAB 5: IN CUỐN GIA PHẢ =================
 with tab_in_phu:
-    st.subheader("📖 In Cuốn Gia Phả Toàn Tộc (Theo Nhóm Phụ Thân)")
+    st.subheader("📖 In Cuốn Gia Phả Toàn Tộc (Nhóm Theo Phụ Thân)")
     if st.button("🖨 Mở Giao Diện In Sách"):
         st.markdown(
             "<script>window.print();</script>", unsafe_allow_html=True
@@ -438,7 +447,7 @@ with tab_in_phu:
         """
         <div class="book-page">
             <h1 style="text-align: center; color: #b71c1c; margin-top: 100px;">NGUYỄN TỘC PHẢ KÝ</h1>
-            <h3 style="text-align: center; color: #555; margin-bottom: 150px;">GIA PHẢ TOÀN TỘC 5 CHI (SẮP XẾP THEO PHỤ THÂN)</h3>
+            <h3 style="text-align: center; color: #555; margin-bottom: 150px;">GIA PHẢ TOÀN TỘC 5 CHI (GOM NHÓM THEO TỪNG PHỤ THÂN)</h3>
         </div>
     """,
         unsafe_allow_html=True,
@@ -572,7 +581,7 @@ with tab_nhap:
                 st.error(f"Lỗi khi đọc file: {e}")
 
 
-# ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
+# ================= TAB 8: QUẢN TRỊ =================
 with tab_quan_tri:
     st.subheader("⚙ Thêm Mới Thành Viên Vào Dòng Họ")
 
