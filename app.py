@@ -171,30 +171,11 @@ def load_data():
             "profession": "",
             "spouse": "Bà chính thất",
             "father": "",
+            "thuTu": 1,
             "notes": "Thủy tổ di cư về lập ấp tại thôn Hội Hiền thời cố Chính Hòa.",
             "imageUrl": "",
         }
     ]
-    for i in range(1, 16):
-        for j in range(1, 16):
-            default_data.append({
-                "id": f"{i}_{j}",
-                "fullName": f"Nguyễn Văn Cành {i}-{j}",
-                "generation": f"Đời thứ {i}",
-                "chi": f"Chi {(i % 5) + 1}",
-                "birthYear": "",
-                "deathAnniversary": "",
-                "location": "Thanh Hóa",
-                "profession": "",
-                "spouse": f"Vợ {i}-{j}",
-                "father": (
-                    "Nguyễn Văn Thủy Tổ"
-                    if i == 1
-                    else f"Nguyễn Văn Cành {i-1}-1"
-                ),
-                "notes": f"Thành viên đời thứ {i}.",
-                "imageUrl": "",
-            })
     return default_data
 
 
@@ -227,6 +208,7 @@ else:
             "profession",
             "spouse",
             "father",
+            "thuTu",
             "notes",
             "imageUrl",
         ]
@@ -246,6 +228,10 @@ if not df.empty:
         df["father"] = ""
     if "imageUrl" not in df.columns:
         df["imageUrl"] = ""
+    if "thuTu" not in df.columns:
+        df["thuTu"] = 1
+    else:
+        df["thuTu"] = pd.to_numeric(df["thuTu"], errors="fillna").fillna(1).astype(int)
 
     if "id" not in df.columns:
         df["id"] = [str(k + 1000) for k in range(len(df))]
@@ -409,19 +395,20 @@ with tab_danh_sach:
 
         df_temp = df.copy()
         df_temp["_gen_num"] = df_temp["generation"].apply(get_gen_number)
-        df_temp = df_temp.sort_values(by=["_gen_num", "_original_index"])
+        df_temp = df_temp.sort_values(by=["_gen_num", "thuTu", "_original_index"])
         for _, r in df_temp.iterrows():
             fname = str(r.get("fullName", "")).strip()
             fgen = str(r.get("generation", "")).strip()
             fchi = str(r.get("chi", "")).strip()
+            ftt = int(r.get("thuTu", 1))
             if fname:
-                display_str = f"{fname} ({fgen} - {fchi})"
+                display_str = f"{fname} ({fgen} - {fchi} - Con thứ: {ftt})"
                 danh_sach_thanh_vien_chi_tiet.append(display_str)
                 mapping_display_to_real[display_str] = fname
 
         df_sorted = df.copy()
         df_sorted["_gen_num"] = df_sorted["generation"].apply(get_gen_number)
-        df_sorted = df_sorted.sort_values(by=["_gen_num", "_original_index"]).drop(
+        df_sorted = df_sorted.sort_values(by=["_gen_num", "thuTu", "_original_index"]).drop(
             columns=["_gen_num"]
         )
 
@@ -442,6 +429,7 @@ with tab_danh_sach:
             name = row.get("fullName", "Chưa rõ")
             gen = row.get("generation", "")
             chi = row.get("chi", "")
+            thu_tu = int(row.get("thuTu", 1))
             father = (
                 row.get("father", "")
                 if pd.notna(row.get("father")) and row.get("father") != ""
@@ -464,7 +452,7 @@ with tab_danh_sach:
                 else:
                     st.markdown("👤 *Chưa có ảnh*")
             with col_i2:
-                st.markdown(f"**👤 {name}** (`{gen}` - **{chi}**)")
+                st.markdown(f"**👤 {name}** (Con thứ: **{thu_tu}** | `{gen}` - **{chi}**)")
                 st.caption(f"Cha: {father} | Phối: {spouse}")
             with col_i3:
                 if st.session_state.logged_in:
@@ -478,18 +466,24 @@ with tab_danh_sach:
                 with st.form(key=f"form_inline_{m_id}"):
                     st.markdown(f"#### ✏️ Cập nhật chi tiết cho: **{name}**")
                     e_name = st.text_input("Họ và tên:", value=name)
-                    danh_sach_doi = ["Tiên Tổ Khảo"] + [
-                        f"Đời thứ {i}" for i in range(1, 21)
-                    ]
-                    e_idx = (
-                        danh_sach_doi.index(gen) if gen in danh_sach_doi else 0
-                    )
-                    e_gen = st.selectbox("Đời thứ:", danh_sach_doi, index=e_idx)
-                    chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
-                    c_idx = (
-                        chi_options.index(chi) if chi in chi_options else 5
-                    )
-                    e_chi = st.selectbox("Thuộc Chi:", chi_options, index=c_idx)
+                    
+                    e_col1, e_col2, e_col3 = st.columns(3)
+                    with e_col1:
+                        danh_sach_doi = ["Tiên Tổ Khảo"] + [
+                            f"Đời thứ {i}" for i in range(1, 21)
+                        ]
+                        e_idx = (
+                            danh_sach_doi.index(gen) if gen in danh_sach_doi else 0
+                        )
+                        e_gen = st.selectbox("Đời thứ:", danh_sach_doi, index=e_idx)
+                    with e_col2:
+                        chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
+                        c_idx = (
+                            chi_options.index(chi) if chi in chi_options else 5
+                        )
+                        e_chi = st.selectbox("Thuộc Chi:", chi_options, index=c_idx)
+                    with e_col3:
+                        e_thutu = st.number_input("Thứ tự ra đời (Con thứ):", min_value=1, max_value=50, value=thu_tu)
 
                     current_father = str(father if father != "Chưa rõ" else "")
                     f_idx = 0
@@ -544,6 +538,7 @@ with tab_danh_sach:
                         df.loc[df["id"] == m_id, "fullName"] = e_name.strip()
                         df.loc[df["id"] == m_id, "generation"] = e_gen
                         df.loc[df["id"] == m_id, "chi"] = e_chi
+                        df.loc[df["id"] == m_id, "thuTu"] = int(e_thutu)
                         df.loc[df["id"] == m_id, "father"] = final_father
                         df.loc[df["id"] == m_id, "spouse"] = e_spouse.strip()
                         df.loc[df["id"] == m_id, "imageUrl"] = final_img_url
@@ -567,13 +562,9 @@ with tab_danh_sach:
                 unsafe_allow_html=True,
             )
 
-# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ TỪ TRÊN XUỐNG DƯỚI) =================
+# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP THEO THỨ TỰ RA ĐỜI) =================
 with tab_so_do_doi:
     st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
-    st.info(
-        "💡 **Mẹo:** Các cụ phụ thân trong từng đời sẽ được hiển thị hoàn toàn chính xác theo đúng thứ tự sắp xếp chuẩn từ trên xuống dưới trong tệp dữ liệu gốc (Tab Danh Sách). "
-        "Nếu cần điều chỉnh vị trí của cụ nào, bác có thể sang **Tab Danh Sách** để sắp xếp lại thứ tự dòng cho khớp hoàn hảo."
-    )
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -581,7 +572,7 @@ with tab_so_do_doi:
         for gen in sorted_gens:
             st.markdown(f"### 📌 {gen}")
             gen_members = df[df["generation"] == gen].sort_values(
-                by="_original_index"
+                by=["thuTu", "_original_index"]
             )
             
             raw_fathers = [
@@ -603,14 +594,15 @@ with tab_so_do_doi:
                     f"&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: {f}</b>",
                     unsafe_allow_html=True,
                 )
-                children = gen_members[gen_members["father"] == f].sort_values(by="_original_index")
+                children = gen_members[gen_members["father"] == f].sort_values(by=["thuTu", "_original_index"])
                 for _, row in children.iterrows():
                     name = row.get("fullName", "Chưa rõ")
                     chi = row.get("chi", "Chưa rõ")
+                    thu_tu = int(row.get("thuTu", 1))
                     spouse = row.get("spouse", "")
                     spouse_str = f" | Phối: {spouse}" if spouse and str(spouse).strip() != "" else ""
                     st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• [Con thứ {thu_tu}] <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
                         unsafe_allow_html=True,
                     )
 
@@ -619,26 +611,27 @@ with tab_so_do_doi:
                     "&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: Chưa rõ / Khác</b>",
                     unsafe_allow_html=True,
                 )
-                for _, row in unassigned.sort_values(by="_original_index").iterrows():
+                for _, row in unassigned.sort_values(by=["thuTu", "_original_index"]).iterrows():
                     name = row.get("fullName", "Chưa rõ")
                     chi = row.get("chi", "Chưa rõ")
+                    thu_tu = int(row.get("thuTu", 1))
                     spouse = row.get("spouse", "")
                     spouse_str = f" | Phối: {spouse}" if spouse and str(spouse).strip() != "" else ""
                     st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• [Con thứ {thu_tu}] <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
                         unsafe_allow_html=True,
                     )
 
             st.markdown("---")
 
-# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
+# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT - ĐỒNG BỘ 100%) =================
 with tab_so_do_cot:
     st.markdown(
         "<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>",
         unsafe_allow_html=True,
     )
     st.markdown(
-        "<p style='text-align: center; color: #555;'>Mỗi thẻ thành viên hiển thị hình ảnh chân dung, thông tin phối ngẫu và tiểu sử trọn vẹn.</p>",
+        "<p style='text-align: center; color: #555;'>Hiển thị đồng bộ tuyệt đối theo đúng thứ tự ra đời và phả hệ đứng.</p>",
         unsafe_allow_html=True,
     )
 
@@ -655,7 +648,7 @@ with tab_so_do_cot:
             )
 
             gen_members = df[df["generation"] == gen].sort_values(
-                by="_original_index"
+                by=["thuTu", "_original_index"]
             )
             if not gen_members.empty:
                 members_list = gen_members.to_dict(orient="records")
@@ -666,6 +659,7 @@ with tab_so_do_cot:
                         with cols[col_idx]:
                             name = row.get("fullName", "Chưa rõ")
                             chi = row.get("chi", "Gốc")
+                            thu_tu = int(row.get("thuTu", 1))
                             spouse_text = (
                                 f"Phối: {row.get('spouse')}"
                                 if pd.notna(row.get("spouse"))
@@ -711,7 +705,7 @@ with tab_so_do_cot:
                                                 {img_html}
                                             </td>
                                             <td style="vertical-align: top; padding-left: 12px; border: none;">
-                                                <div style="font-weight: bold; color: #b71c1c; font-size: 17px; margin-bottom: 3px;">{name}</div>
+                                                <div style="font-weight: bold; color: #b71c1c; font-size: 17px; margin-bottom: 3px;">{name} <span style="font-size: 12px; color: #555;">(Con thứ {thu_tu})</span></div>
                                                 <div style="font-size: 13px; color: #e65100; font-weight: bold; margin-bottom: 3px;">Chi: {chi}</div>
                                                 <div style="font-size: 12px; color: #444; margin-bottom: 3px;">💍 {spouse_text}</div>
                                                 <div style="font-size: 11px; background-color: #fff3e0; color: #d84315; padding: 3px 6px; border-radius: 4px; border: 1px dashed #ffa726; display: inline-block; margin-top: 2px;">⬆ Cha: {father_text}</div>
@@ -765,12 +759,13 @@ with tab_in_phu:
         )
         for gen in sorted_gens:
             gen_members = df[df["generation"] == gen].sort_values(
-                by="_original_index"
+                by=["thuTu", "_original_index"]
             )
             members_html = ""
             for _, r in gen_members.iterrows():
                 name = r.get("fullName", "Chưa rõ")
                 chi = r.get("chi", "Gốc")
+                thu_tu = int(r.get("thuTu", 1))
                 father = r.get("father", "")
                 spouse = r.get("spouse", "")
                 notes = r.get("notes", "")
@@ -779,7 +774,7 @@ with tab_in_phu:
                 spouse_str = f" | Phối: {spouse}" if spouse and str(spouse).strip() != "" else ""
                 notes_str = f" <i>({notes})</i>" if notes and str(notes).strip() != "" else ""
 
-                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 13.5px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
+                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b> <span style='color: #d84315; font-size: 13px;'>[Con thứ {thu_tu}]</span> <span style='color: #b71c1c; font-size: 13.5px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
 
             gen_page_html = f"""
                 <div class="book-page">
@@ -828,12 +823,18 @@ with tab_quan_tri:
     if st.session_state.logged_in:
         with st.form("add_member_form"):
             new_name = st.text_input("Họ và tên thành viên mới:")
-            danh_sach_doi = ["Tiên Tổ Khảo"] + [
-                f"Đời thứ {i}" for i in range(1, 21)
-            ]
-            new_gen = st.selectbox("Đời thứ:", danh_sach_doi)
-            chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
-            new_chi = st.selectbox("Thuộc Chi:", chi_options)
+            
+            c_add1, c_add2, c_add3 = st.columns(3)
+            with c_add1:
+                danh_sach_doi = ["Tiên Tổ Khảo"] + [
+                    f"Đời thứ {i}" for i in range(1, 21)
+                ]
+                new_gen = st.selectbox("Đời thứ:", danh_sach_doi)
+            with c_add2:
+                chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
+                new_chi = st.selectbox("Thuộc Chi:", chi_options)
+            with c_add3:
+                new_thutu = st.number_input("Thứ tự ra đời (Con thứ):", min_value=1, max_value=50, value=1)
 
             danh_sach_cha = ["-- Không có / Chưa rõ --"]
             if not df.empty:
@@ -879,6 +880,7 @@ with tab_quan_tri:
                         "fullName": new_name.strip(),
                         "generation": new_gen,
                         "chi": new_chi,
+                        "thuTu": int(new_thutu),
                         "birthYear": "",
                         "deathAnniversary": "",
                         "location": "",
