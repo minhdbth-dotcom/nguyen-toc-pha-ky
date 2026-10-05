@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="NGUYỄN TỘC PHẢ KÝ - TOÀN TỘC 5 CHI", page_icon="🌳", layout="wide"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN & KHUNG SÁCH IN A4 ---
+# --- CSS TÙY CHỈNH GIAO DIỆN & KHUNG SÁCH IN A4 CHUẨN XÁC ---
 st.markdown(
     """
     <style>
@@ -63,23 +63,38 @@ st.markdown(
             color: #2c2c2c;
             text-align: justify;
         }
+        /* ĐỊNH DẠNG TRANG SÁCH A4 CHUẨN */
         .book-page {
             background-color: #ffffff;
             border: 3px double #795548;
-            padding: 40px 50px;
-            margin: 20px auto;
-            max-width: 850px;
+            padding: 50px 60px;
+            margin: 30px auto;
+            max-width: 800px;
+            min-height: 1050px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             font-family: "Times New Roman", serif;
             font-size: 16px;
             color: #222222;
             text-align: justify;
             line-height: 1.8;
+            box-sizing: border-box;
+            page-break-after: always;
+            position: relative;
         }
         @media print {
-            body { background: white; }
-            .stSidebar, .stTabs, .header-container, button { display: none !important; }
-            .book-page { border: none; padding: 0; box-shadow: none; margin: 0; width: 100%; max-width: 100%; page-break-after: always; }
+            body { background: white; margin: 0; }
+            .stSidebar, .stTabs, .header-container, button, header, footer { display: none !important; }
+            .book-page { 
+                border: 3px double #795548 !important; 
+                padding: 40px 50px !important; 
+                margin: 0 !important; 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                min-height: 100vh !important;
+                box-shadow: none !important; 
+                page-break-after: always;
+                page-break-inside: avoid;
+            }
         }
     </style>
 """,
@@ -281,10 +296,10 @@ tab_nhap = tabs[6]
 tab_quan_tri = tabs[7]
 
 
-# --- HÀM HIỂN THỊ NỘI DUNG LỜI TỰA BẰNG STREAMLIT NATIVE ---
+# --- HÀM HIỂN THỊ NỘI DUNG LỜI TỰA ---
 def render_loi_tua():
     st.markdown(
-        "<h2 style='color: #795548; text-align: center;'>📜 NGUYỄN TỘC PHẢ KÝ</h2>",
+        "<h2 style='color: #795548; text-align: center; margin-top: 0;'>📜 NGUYỄN TỘC PHẢ KÝ</h2>",
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -292,7 +307,7 @@ def render_loi_tua():
     )
     st.markdown(
         """
-    <div style="text-align: center; font-weight: bold; margin: 15px 0;">
+    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
         Nhân do hồ tổ<br>
         Mộc do hồ bản<br>
         Thủy do hồ nguyên.
@@ -307,7 +322,7 @@ def render_loi_tua():
     st.markdown("Hoặc cũng có câu thơ như sau:")
     st.markdown(
         """
-    <div style="text-align: center; font-style: italic; margin: 15px 0;">
+    <div style="text-align: center; font-style: italic; margin: 10px 0;">
         Cây có gốc mới nở cành sinh ngọn<br>
         Nước có nguồn mới bể rộng sông sâu<br>
         Người ta có nguồn gốc từ đâu<br>
@@ -332,13 +347,13 @@ def render_loi_tua():
         "Càng nghiên cứu tìm hiểu về cội nguồn gốc tích tôn thống Nguyễn tộc, thân thế và sự nghiệp của ông cha ta chúng ta càng tự hào về quá khứ và hiện tại như bức đại tự ở nhà thờ đã nêu:"
     )
     st.markdown(
-        "<div style='text-align: center; font-weight: bold; color: #b71c1c; margin: 15px 0;'>KÍNH NHƯ TẠI</div>",
+        "<div style='text-align: center; font-weight: bold; color: #b71c1c; margin: 10px 0;'>KÍNH NHƯ TẠI</div>",
         unsafe_allow_html=True,
     )
     st.markdown("Và hai câu đối:")
     st.markdown(
         """
-    <div style="text-align: center; font-style: italic; margin: 10px 0;">
+    <div style="text-align: center; font-style: italic; margin: 8px 0;">
         Cương thường chi trậu ngất trung thiên<br>
         Bản thế vi niên tử tôn sinh.
     </div>
@@ -348,7 +363,7 @@ def render_loi_tua():
     st.markdown("Hoặc hai câu đối ở cột cạnh bức bình phong ở sân cũng ghi")
     st.markdown(
         """
-    <div style="text-align: center; font-style: italic; margin: 10px 0;">
+    <div style="text-align: center; font-style: italic; margin: 8px 0;">
         Nhân nghĩa căn cơ tùy vĩnh thế<br>
         Cương thường đề trậu ngất trung thiên
     </div>
@@ -356,7 +371,7 @@ def render_loi_tua():
         unsafe_allow_html=True,
     )
     st.markdown(
-        "<div style='text-align: center; font-weight: bold; margin: 15px 0;'>Thật vậy<br>Tổ tông công đức bao trùm hậu thế<br>Con cháu muôn đời không sao quên được</div>",
+        "<div style='text-align: center; font-weight: bold; margin: 10px 0;'>Thật vậy<br>Tổ tông công đức bao trùm hậu thế<br>Con cháu muôn đời không sao quên được</div>",
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -378,7 +393,7 @@ def render_loi_tua():
     st.markdown("Một lần nữa xin chân thành cám ơn sự đóng góp chung của các quý vị gần xa!")
     st.markdown(
         """
-    <div style="text-align: right; margin-top: 30px;">
+    <div style="text-align: right; margin-top: 20px;">
         <b>Ngày 22 tháng 12 năm 2013</b><br>
         <b>Đông Chí 20 tháng 11 năm Quý Tỵ</b>
     </div>
@@ -478,7 +493,6 @@ with tab_danh_sach:
             col_i1, col_i2, col_i3 = st.columns([1, 4, 2])
             with col_i1:
                 img_url = str(row.get("imageUrl", "")).strip()
-                # Kiểm tra an toàn: Chỉ hiển thị ảnh nếu là URL hợp lệ bắt đầu bằng http hoặc data
                 if img_url.startswith(("http://", "https://", "data:image/")):
                     try:
                         st.image(img_url, width=70)
@@ -669,7 +683,6 @@ with tab_so_do_cot:
                                 else "background: #ffffff; border: 2px solid #ffa726;"
                             )
                             
-                            # Hiển thị ảnh an toàn bằng HTML trong card
                             if img_url.startswith(("http://", "https://", "data:image/")):
                                 img_html = f"<img src='{img_url}' style='width: 90px; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid #ccc;'>"
                             else:
@@ -716,18 +729,18 @@ with tab_in_phu:
         "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac) để in thành tệp sách A4 hoàn chỉnh."
     )
 
-    # Trang Bìa Sách
+    # Trang Bìa Sách A4 Cân Đối
     st.markdown(
         """
-        <div class="book-page" style="text-align: center; padding: 60px 20px;">
-            <div style="font-size: 22px; font-weight: bold; color: #795548; margin-bottom: 15px;">ĐẠI TỘC GIA PHẢ</div>
-            <div style="font-size: 36px; font-weight: bold; color: #4e342e; text-transform: uppercase; margin-bottom: 15px;">NGUYỄN TỘC PHẢ KÝ</div>
-            <div style="font-size: 20px; font-weight: bold; color: #5d4037; margin-bottom: 30px;">TOÀN TỘC 5 CHI</div>
-            <hr style="width: 50%; margin: 30px auto; border-top: 2px solid #795548;">
-            <div style="font-size: 15px; color: #555; margin-top: 50px; line-height: 1.8;">
+        <div class="book-page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold; color: #795548; margin-bottom: 20px; letter-spacing: 2px;">ĐẠI TỘC GIA PHẢ</div>
+            <div style="font-size: 40px; font-weight: bold; color: #4e342e; text-transform: uppercase; margin-bottom: 20px; line-height: 1.2;">NGUYỄN TỘC PHẢ KÝ</div>
+            <div style="font-size: 22px; font-weight: bold; color: #5d4037; margin-bottom: 40px;">TOÀN TỘC 5 CHI</div>
+            <hr style="width: 40%; margin: 20px auto; border-top: 2px solid #795548;">
+            <div style="font-size: 16px; color: #444; margin-top: 60px; line-height: 2;">
                 <b>Địa chỉ dòng họ:</b> Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa<br>
                 <b>Nguyên quán Thủy tổ:</b> Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã<br>
-                <i style="margin-top: 20px; display: block;">Lưu truyền đời đời cho con cháu muôn phương</i>
+                <i style="margin-top: 30px; display: block; font-size: 17px; color: #795548;">Lưu truyền đời đời cho con cháu muôn phương</i>
             </div>
         </div>
     """,
@@ -767,21 +780,21 @@ with tab_in_phu:
                     else ""
                 )
                 notes_str = (
-                    f"<br><span style='font-size: 13px; font-style: italic; color: #555;'>Tiểu sử / Phần mộ: {notes}</span>"
+                    f"<br><span style='font-size: 14px; font-style: italic; color: #555;'>Tiểu sử / Phần mộ: {notes}</span>"
                     if notes and str(notes).strip() != ""
                     else ""
                 )
 
-                members_html += f"<li style='margin-bottom: 12px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 14px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
+                members_html += f"<li style='margin-bottom: 14px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 14px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
 
             st.markdown(
                 f"""
                 <div class="book-page">
-                    <div style="text-align: center; border-bottom: 2px solid #795548; padding-bottom: 15px; margin-bottom: 25px;">
-                        <h3 style="color: #795548; margin: 0; text-transform: uppercase;">{gen}</h3>
-                        <p style="font-size: 13px; color: #666; margin: 5px 0 0 0;">(Ghi chép các bậc tiền nhân và hậu duệ)</p>
+                    <div style="text-align: center; border-bottom: 2px solid #795548; padding-bottom: 15px; margin-bottom: 30px;">
+                        <h2 style="color: #795548; margin: 0; text-transform: uppercase;">{gen}</h2>
+                        <p style="font-size: 14px; color: #666; margin: 5px 0 0 0;">(Ghi chép các bậc tiền nhân và hậu duệ)</p>
                     </div>
-                    <ul style="line-height: 1.8; font-size: 15px; padding-left: 20px;">
+                    <ul style="line-height: 1.9; font-size: 16px; padding-left: 20px;">
                         {members_html}
                     </ul>
                 </div>
