@@ -153,7 +153,7 @@ else:
 
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "💡 **Hướng dẫn:** Tab Cây Phả Hệ và Sổ Tay Chi Tiết nay đã gom nhóm hoàn toàn theo từng ông Phụ thân (Cha)."
+    "💡 **Hướng dẫn:** Các con nay đã được gom thành từng khối riêng biệt theo từng ông Phụ thân (Cha) rất rõ ràng."
 )
 
 # --- TIÊU ĐỀ CHÍNH ---
@@ -187,15 +187,15 @@ tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, 
 # ================= TAB 1: TRANG CHỦ =================
 with tab_trang_chu:
     st.markdown(
-        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng họ Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
+        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng học Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
         unsafe_allow_html=True,
     )
 
 
-# ================= TAB 2: CÂY PHẢ HỆ (GOM NHÓM HOÀN TOÀN THEO CHA) =================
+# ================= TAB 2: CÂY PHẢ HỆ (GOM KHỐI RIÊNG BIỆT THEO TỪNG PHỤ THÂN) =================
 with tab_cay_pha_he:
     st.subheader(
-        "🌳 Sơ Đồ Phả Hệ (Quy tụ hoàn toàn các con theo từng Phụ thân / Cha)"
+        "🌳 Sơ Đồ Phả Hệ (Gom nhóm thành các khối riêng biệt theo từng Phụ thân)"
     )
     selected_chi_filter = st.selectbox(
         "Lọc hiển thị theo Chi:",
@@ -213,7 +213,6 @@ with tab_cay_pha_he:
     )
     sorted_fathers = sorted(filtered_df["normalized_father"].unique())
 
-    # Đưa các giá trị trống hoặc chưa rõ xuống cuối cùng cho gọn
     if "Chưa rõ" in sorted_fathers:
         sorted_fathers.remove("Chưa rõ")
         sorted_fathers.append("Chưa rõ")
@@ -221,7 +220,7 @@ with tab_cay_pha_he:
         sorted_fathers.remove("")
         sorted_fathers.append("")
 
-    # Duyệt qua từng Phụ thân để gom nhóm các con
+    # Duyệt qua từng Phụ thân để hiển thị trọn vẹn nhóm con của ông đó
     for father_name in sorted_fathers:
         father_members = filtered_df[
             filtered_df["normalized_father"] == father_name
@@ -240,7 +239,7 @@ with tab_cay_pha_he:
                 return 9999
 
 
-        # Sắp xếp các con theo đúng thứ tự sinh (Con thứ 1, 2, 3...)
+        # Sắp xếp các con của ông này theo thứ tự sinh tăng dần (1, 2, 3, 4...)
         father_members_sorted = sorted(
             father_members.to_dict("records"),
             key=lambda x: (sort_key(x), x.get("_original_index", 0)),
@@ -252,13 +251,18 @@ with tab_cay_pha_he:
             else "Chưa rõ / Tiên tổ"
         )
 
-        # Hiển thị Tiêu đề Nhóm Phụ Thân
+        # Tiêu đề khối Phụ thân
         st.markdown(
-            f"<h3 style='color: #b71c1c; border-bottom: 2px solid #b71c1c; padding-bottom: 5px; margin-top: 35px;'>👨 Phụ thân: <b>{display_f_name}</b> ({len(father_members_sorted)} người con)</h3>",
+            f"""
+            <div style="background-color: #fcf8f2; border-left: 6px solid #b71c1c; padding: 10px 15px; margin-top: 40px; margin-bottom: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <h3 style='color: #b71c1c; margin: 0; font-size: 20px;'>👨 PHỤ THÂN: {display_f_name.upper()}</h3>
+                <p style='margin: 3px 0 0 0; font-size: 13px; color: #555;'>Gồm có {len(father_members_sorted)} người con (đã sắp xếp theo thứ tự sinh)</p>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
-        # Hiển thị danh sách các con của ông cha này theo dạng lưới 3 cột
+        # Hiển thị danh sách các con của ông này theo lưới 3 cột
         cols = st.columns(3)
         for idx, member in enumerate(father_members_sorted):
             col = cols[idx % 3]
@@ -281,7 +285,7 @@ with tab_cay_pha_he:
                 <div class="member-card">
                     <b>{name}</b><br>
                     <span style="font-size: 12px; color: #555;">🏷️ {gen} | Chi: {chi}</span><br>
-                    <span style="font-size: 12px; color: #555;">🔢 {thutu_str}</span><br>
+                    <span style="font-size: 12px; color: #d32f2f; font-weight: bold;">🔢 {thutu_str}</span><br>
                     <span style="font-size: 12px; color: #555;">👥 Phối: {spouse if spouse else 'Chưa rõ'}</span>
                 </div>
                 """,
@@ -563,7 +567,7 @@ with tab_xuat:
 
 # ================= TAB 7: NHẬP DỮ LIỆU =================
 with tab_nhap:
-    st.subheader("📥 Nhập Dữ Liệu Gia Phả Từ File")
+    st.subheader("📥 Nhập DỮ Liệu Gia Phả Từ File")
     uploaded_file = st.file_uploader(
         "Chọn file dữ liệu (JSON hoặc XLSX)", type=["json", "xlsx"]
     )
