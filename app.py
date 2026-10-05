@@ -404,7 +404,10 @@ with tab_danh_sach:
             fchi = str(r.get("chi", "")).strip()
             ftt = int(r.get("thuTu", 1))
             if fname:
-                display_str = f"{fname} ({fgen} - {fchi} - Con thứ: {ftt})"
+                if fgen == "Tiên Tổ Khảo":
+                    display_str = f"{fname} ({fgen} - {fchi})"
+                else:
+                    display_str = f"{fname} ({fgen} - {fchi} - Con thứ: {ftt})"
                 danh_sach_thanh_vien_chi_tiet.append(display_str)
                 mapping_display_to_real[display_str] = fname
 
@@ -454,13 +457,16 @@ with tab_danh_sach:
                 else:
                     st.markdown("👤 *Chưa có ảnh*")
             with col_i2:
-                st.markdown(
-                    f"**👤 {name}** (Con thứ: **{thu_tu}** | `{gen}` - **{chi}**)"
-                )
+                if gen == "Tiên Tổ Khảo":
+                    st.markdown(f"**👤 {name}** (`{gen}` - **{chi}**)")
+                else:
+                    st.markdown(
+                        f"**👤 {name}** (Con thứ: **{thu_tu}** | `{gen}` - **{chi}**)"
+                    )
                 st.caption(f"Cha: {father} | Phối: {spouse}")
             with col_i3:
                 if st.session_state.logged_in:
-                    if st.button("✏️️ Sửa / Chọn Ảnh", key=f"edit_{m_id}"):
+                    if st.button("✏ Sửa / Chọn Ảnh", key=f"edit_{m_id}"):
                         st.session_state.editing_id = m_id
                         st.rerun()
                 else:
@@ -590,6 +596,7 @@ with tab_so_do_doi:
             df["generation"].dropna().unique(), key=get_gen_number
         )
         for gen in sorted_gens:
+            is_root_gen = gen == "Tiên Tổ Khảo"
             st.markdown(f"### 📌 {gen}")
             gen_members = df[df["generation"] == gen].sort_values(
                 by=["thuTu", "_original_index"]
@@ -630,8 +637,12 @@ with tab_so_do_doi:
                         if spouse and str(spouse).strip() != ""
                         else ""
                     )
+                    if is_root_gen:
+                        prefix_str = "• "
+                    else:
+                        prefix_str = f"• [Con thứ {thu_tu}] "
                     st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• [Con thứ {thu_tu}] <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{prefix_str}<b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
                         unsafe_allow_html=True,
                     )
 
@@ -652,8 +663,12 @@ with tab_so_do_doi:
                         if spouse and str(spouse).strip() != ""
                         else ""
                     )
+                    if is_root_gen:
+                        prefix_str = "• "
+                    else:
+                        prefix_str = f"• [Con thứ {thu_tu}] "
                     st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• [Con thứ {thu_tu}] <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{prefix_str}<b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
                         unsafe_allow_html=True,
                     )
 
@@ -675,7 +690,7 @@ with tab_so_do_cot:
             df["generation"].dropna().unique(), key=get_gen_number
         )
         for gen in sorted_gens:
-            is_root_gen = get_gen_number(gen) == 0
+            is_root_gen = gen == "Tiên Tổ Khảo"
             badge_label = "TIÊN TỔ KHẢO" if is_root_gen else gen.upper()
             st.markdown(
                 f"<div style='text-align: center;'><span class='gen-badge'>{badge_label}</span></div>",
@@ -733,6 +748,12 @@ with tab_so_do_cot:
                                 else ""
                             )
 
+                            thutu_html = (
+                                ""
+                                if is_root_gen
+                                else f'<span style="font-size: 12px; color: #555;">(Con thứ {thu_tu})</span>'
+                            )
+
                             st.markdown(
                                 f"""
                                 <div style="{card_style} padding: 15px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); margin-bottom: 15px;">
@@ -742,7 +763,7 @@ with tab_so_do_cot:
                                                 {img_html}
                                             </td>
                                             <td style="vertical-align: top; padding-left: 12px; border: none;">
-                                                <div style="font-weight: bold; color: #b71c1c; font-size: 17px; margin-bottom: 3px;">{name} <span style="font-size: 12px; color: #555;">(Con thứ {thu_tu})</span></div>
+                                                <div style="font-weight: bold; color: #b71c1c; font-size: 17px; margin-bottom: 3px;">{name} {thutu_html}</div>
                                                 <div style="font-size: 13px; color: #e65100; font-weight: bold; margin-bottom: 3px;">Chi: {chi}</div>
                                                 <div style="font-size: 12px; color: #444; margin-bottom: 3px;">💍 {spouse_text}</div>
                                                 <div style="font-size: 11px; background-color: #fff3e0; color: #d84315; padding: 3px 6px; border-radius: 4px; border: 1px dashed #ffa726; display: inline-block; margin-top: 2px;">⬆ Cha: {father_text}</div>
@@ -795,6 +816,7 @@ with tab_in_phu:
             df["generation"].dropna().unique(), key=get_gen_number
         )
         for gen in sorted_gens:
+            is_root_gen = gen == "Tiên Tổ Khảo"
             gen_members = df[df["generation"] == gen].sort_values(
                 by=["thuTu", "_original_index"]
             )
@@ -823,7 +845,12 @@ with tab_in_phu:
                     else ""
                 )
 
-                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b> <span style='color: #d84315; font-size: 13px;'>[Con thứ {thu_tu}]</span> <span style='color: #b71c1c; font-size: 13.5px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
+                if is_root_gen:
+                    thutu_str = ""
+                else:
+                    thutu_str = f" <span style='color: #d84315; font-size: 13px;'>[Con thứ {thu_tu}]</span>"
+
+                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b>{thutu_str} <span style='color: #b71c1c; font-size: 13.5px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
 
             gen_page_html = f"""
                 <div class="book-page">
