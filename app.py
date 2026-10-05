@@ -567,7 +567,7 @@ with tab_danh_sach:
                 unsafe_allow_html=True,
             )
 
-# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ GỐC CỦA CHA) =================
+# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ XUẤT HIỆN TRONG FILE JSON) =================
 with tab_so_do_doi:
     st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
     if not df.empty and "generation" in df.columns:
@@ -580,12 +580,13 @@ with tab_so_do_doi:
                 by="_original_index"
             )
             
-            # Lấy danh sách các người cha có con ở đời này và sắp xếp theo đúng thứ tự xuất hiện của chính người cha đó trong bảng dữ liệu
+            # Lấy danh sách các người cha có con ở đời này
             raw_fathers = [
                 f for f in gen_members["father"].dropna().unique() 
                 if f and str(f).strip() != ""
             ]
             
+            # Sắp xếp các người cha theo đúng thứ tự xuất hiện của chính người cha đó trong tệp JSON gốc (hoặc Tab Danh sách)
             def get_father_sort_index(fname):
                 matched = df[df["fullName"] == fname]
                 if not matched.empty:
@@ -595,7 +596,7 @@ with tab_so_do_doi:
             fathers = sorted(raw_fathers, key=get_father_sort_index)
             unassigned = gen_members[gen_members["father"].isna() | (gen_members["father"] == "")]
 
-            # Hiển thị nhóm theo từng người cha đã được sắp xếp chuẩn
+            # Hiển thị nhóm theo từng người cha
             for f in fathers:
                 st.markdown(
                     f"&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: {f}</b>",
