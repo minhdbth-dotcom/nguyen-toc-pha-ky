@@ -148,7 +148,6 @@ def normalize_chi(chi_str):
     return mapping.get(s, s)
 
 
-@st.cache_data
 def load_data():
     filename = "GiaPha_DongHoNguyen.json"
     if os.path.exists(filename):
@@ -200,9 +199,9 @@ def load_data():
 
 
 def save_data(data):
-    with open("GiaPha_DongHoNguyen.json", "w", encoding="utf-8") as f:
+    filename = "GiaPha_DongHoNguyen.json"
+    with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
-    st.cache_data.clear()
 
 
 raw_data = load_data()
@@ -568,9 +567,9 @@ with tab_danh_sach:
                 unsafe_allow_html=True,
             )
 
-# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG) =================
+# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ GỐC CỦA CHA) =================
 with tab_so_do_doi:
-    st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng")
+    st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -580,24 +579,54 @@ with tab_so_do_doi:
             gen_members = df[df["generation"] == gen].sort_values(
                 by="_original_index"
             )
-            fathers = gen_members["father"].dropna().unique()
+            
+            # Lấy danh sách các người cha có con ở đời này và sắp xếp theo đúng thứ tự xuất hiện của chính người cha đó trong bảng dữ liệu
+            raw_fathers = [
+                f for f in gen_members["father"].dropna().unique() 
+                if f and str(f).strip() != ""
+            ]
+            
+            def get_father_sort_index(fname):
+                matched = df[df["fullName"] == fname]
+                if not matched.empty:
+                    return matched["_original_index"].min()
+                return 999999
+
+            fathers = sorted(raw_fathers, key=get_father_sort_index)
+            unassigned = gen_members[gen_members["father"].isna() | (gen_members["father"] == "")]
+
+            # Hiển thị nhóm theo từng người cha đã được sắp xếp chuẩn
             for f in fathers:
-                father_display = (
-                    f if f and str(f).strip() != "" else "Tiên Tổ / Chưa rõ phụ thân"
-                )
                 st.markdown(
-                    f"&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: {father_display}</b>",
+                    f"&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: {f}</b>",
                     unsafe_allow_html=True,
                 )
-                children = gen_members[gen_members["father"] == f]
+                children = gen_members[gen_members["father"] == f].sort_values(by="_original_index")
                 for _, row in children.iterrows():
                     name = row.get("fullName", "Chưa rõ")
                     chi = row.get("chi", "Chưa rõ")
-                    spouse = row.get("spouse", "Chưa rõ")
+                    spouse = row.get("spouse", "")
+                    spouse_str = f" | Phối: {spouse}" if spouse and str(spouse).strip() != "" else ""
                     st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi} | Phối: {spouse}</span>",
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
                         unsafe_allow_html=True,
                     )
+
+            if not unassigned.empty:
+                st.markdown(
+                    "&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: Chưa rõ / Khác</b>",
+                    unsafe_allow_html=True,
+                )
+                for _, row in unassigned.sort_values(by="_original_index").iterrows():
+                    name = row.get("fullName", "Chưa rõ")
+                    chi = row.get("chi", "Chưa rõ")
+                    spouse = row.get("spouse", "")
+                    spouse_str = f" | Phối: {spouse}" if spouse and str(spouse).strip() != "" else ""
+                    st.markdown(
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
+                        unsafe_allow_html=True,
+                    )
+
             st.markdown("---")
 
 # ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
