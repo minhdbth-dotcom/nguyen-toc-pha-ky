@@ -104,7 +104,6 @@ def load_data():
             with open(DATA_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 if isinstance(data, list) and len(data) > 0:
-                    # Chuẩn hóa dữ liệu để đảm bảo luôn có các trường cần thiết
                     for item in data:
                         if "father" not in item:
                             item["father"] = ""
@@ -165,7 +164,7 @@ else:
 
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "💡 **Hướng dẫn:** Hệ thống đã tự động bảo vệ an toàn dữ liệu. Bác cứ thoải mái nhập liệu và sử dụng."
+    "💡 **Hướng dẫn:** Các con nay đã được gom nhóm thành các khối riêng biệt theo từng ông Phụ thân (Cha) rất rõ ràng."
 )
 
 # --- TIÊU ĐỀ CHÍNH ---
@@ -182,13 +181,21 @@ raw_data = load_data()
 df = pd.DataFrame(raw_data)
 df["_original_index"] = range(len(df))
 
-# Đảm bảo các cột quan trọng luôn tồn tại trong DataFrame tránh lỗi KeyError
 for col in ["father", "thuTu", "spouse", "notes", "imageUrl", "generation", "chi", "fullName"]:
     if col not in df.columns:
         df[col] = ""
 
 # --- KHỞI TẠO CÁC TABS ---
-tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, tab_nhap, tab_quan_tri = st.tabs(
+(
+    tab_trang_chu,
+    tab_cay_pha_he,
+    tab_tra_cuu,
+    tab_chi_tiet,
+    tab_in_phu,
+    tab_xuat,
+    tab_nhap,
+    tab_quan_tri,
+) = st.tabs(
     [
         "🏠 Trang Chủ",
         "🌳 Cây Phả Hệ",
@@ -224,7 +231,6 @@ with tab_cay_pha_he:
     if selected_chi_filter != "Tất cả các Chi":
         filtered_df = df[df["chi"] == selected_chi_filter]
 
-    # Chuẩn hóa tên phụ thân an toàn
     filtered_df["normalized_father"] = (
         filtered_df["father"].fillna("Chưa rõ").astype(str).str.strip()
     )
@@ -297,7 +303,7 @@ with tab_cay_pha_he:
                     f"""
                 <div class="member-card">
                     <b>{name}</b><br>
-                    <span style="font-size: 12px; color: #555;">🏷️ {gen} | Chi: {chi}</span><br>
+                    <span style="font-size: 12px; color: #555;">🏷️️ {gen} | Chi: {chi}</span><br>
                     <span style="font-size: 12px; color: #d32f2f; font-weight: bold;">🔢 {thutu_str}</span><br>
                     <span style="font-size: 12px; color: #555;">👥 Phối: {spouse if spouse else 'Chưa rõ'}</span>
                 </div>
