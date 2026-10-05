@@ -74,7 +74,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- QUẢN LÝ DỮ LIỆU JSON (Trỏ trực tiếp tới data.json) ---
+# --- QUẢN LÝ DỮ LIỆU JSON ---
 DATA_FILE = "data.json"
 
 
@@ -153,7 +153,7 @@ else:
 
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "💡 **Hướng dẫn:** Sử dụng các thẻ (Tab) phía màn hình chính để tra cứu phả đồ, in sách, thêm mới hoặc xuất/nhập dữ liệu dòng họ."
+    "💡 **Hướng dẫn:** Sử dụng các thẻ (Tab) phía màn hình chính để tra cứu phả đồ, in sách theo nhóm phụ thân, hoặc quản lý dữ liệu."
 )
 
 # --- TIÊU ĐỀ CHÍNH ---
@@ -180,7 +180,7 @@ tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, 
         "📖 In Cuốn Gia Phả",
         "💾 Xuất Dữ Liệu",
         "📥 Nhập Dữ Liệu",
-        "⚙️️ Quản Trị & Thêm Mới",
+        "⚙ Quản Trị & Thêm Mới",
     ]
 )
 
@@ -316,10 +316,10 @@ with tab_tra_cuu:
             )
 
 
-# ================= TAB 4: SỔ TAY CHI TIẾT (NHÓM THEO CHA VÀ SẮP XẾP THỨ TỰ SINH) =================
+# ================= TAB 4: SỔ TAY CHI TIẾT (NHÓM THEO CHA LÀM GỐC) =================
 with tab_chi_tiet:
     st.subheader(
-        "📋 Sổ Tay Chi Tiết (Nhóm theo Phụ thân & Sắp xếp theo Thứ tự sinh)"
+        "📋 Sổ Tay Chi Tiết (Quy tụ các con theo từng Phụ thân & Sắp xếp theo Thứ tự sinh)"
     )
 
     if not df.empty:
@@ -336,7 +336,7 @@ with tab_chi_tiet:
             fathers_list.append("")
 
         selected_father = st.selectbox(
-            "Chọn Phụ thân (Cha) để xem danh sách các con:",
+            "Chọn Phụ thân (Cha) để xem danh sách các con quy tụ:",
             fathers_list,
             key="father_detail_box",
         )
@@ -368,7 +368,7 @@ with tab_chi_tiet:
             else "Chưa rõ / Tiên tổ"
         )
         st.markdown(
-            f"<h4 style='color: #795548; margin-top: 15px;'>👨 Phụ thân: <b>{display_father_name}</b> ({len(father_records)} người con)</h4>",
+            f"<h3 style='color: #b71c1c; margin-top: 15px; border-bottom: 2px solid #b71c1c; padding-bottom: 5px;'>👨 Phụ thân: <b>{display_father_name}</b> ({len(father_records)} người con)</h3>",
             unsafe_allow_html=True,
         )
 
@@ -426,9 +426,9 @@ with tab_chi_tiet:
             )
 
 
-# ================= TAB 5: IN CUỐN GIA PHẢ =================
+# ================= TAB 5: IN CUỐN GIA PHẢ (GOM NHÓM THEO PHỤ THÂN LÀM GỐC) =================
 with tab_in_phu:
-    st.subheader("📖 In Cuốn Gia Phả Toàn Tộc (Định Dạng Sách A4 Đứng)")
+    st.subheader("📖 In Cuốn Gia Phả Toàn Tộc (Theo Nhóm Phụ Thân)")
     if st.button("🖨 Mở Giao Diện In Sách"):
         st.markdown(
             "<script>window.print();</script>", unsafe_allow_html=True
@@ -438,7 +438,7 @@ with tab_in_phu:
         """
         <div class="book-page">
             <h1 style="text-align: center; color: #b71c1c; margin-top: 100px;">NGUYỄN TỘC PHẢ KÝ</h1>
-            <h3 style="text-align: center; color: #555; margin-bottom: 150px;">GIA PHẢ TOÀN TỘC 5 CHI</h3>
+            <h3 style="text-align: center; color: #555; margin-bottom: 150px;">GIA PHẢ TOÀN TỘC 5 CHI (SẮP XẾP THEO PHỤ THÂN)</h3>
         </div>
     """,
         unsafe_allow_html=True,
@@ -477,7 +477,7 @@ with tab_in_phu:
                 if father_name and father_name != ""
                 else "Chưa rõ / Tiên tổ"
             )
-            page_content = f"<h2 style='text-align: center; color: #795548;'>PHỤ THÂN: {display_f_name.upper()}</h2><hr style='border: 1px solid #795548; margin-bottom: 20px;'>"
+            page_content = f"<h2 style='text-align: center; color: #795548; margin-top: 20px;'>PHỤ THÂN: {display_f_name.upper()}</h2><hr style='border: 1px solid #795548; margin-bottom: 20px;'>"
 
             for member in father_members_sorted:
                 name = member.get("fullName", "Chưa rõ")
@@ -574,7 +574,7 @@ with tab_nhap:
 
 # ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
 with tab_quan_tri:
-    st.subheader("⚙️️ Thêm Mới Thành Viên Vào Dòng Họ")
+    st.subheader("⚙ Thêm Mới Thành Viên Vào Dòng Họ")
 
     if not st.session_state.logged_in:
         st.warning(
