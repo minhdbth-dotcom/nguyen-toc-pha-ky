@@ -567,7 +567,7 @@ with tab_danh_sach:
                 unsafe_allow_html=True,
             )
 
-# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ GỐC CỦA CHA) =================
+# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - CHUẨN XÁC THEO THỨ TỰ TỪ TRÊN XUỐNG DƯỚI) =================
 with tab_so_do_doi:
     st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
     if not df.empty and "generation" in df.columns:
@@ -580,7 +580,6 @@ with tab_so_do_doi:
                 by="_original_index"
             )
             
-            # Lấy danh sách các người cha có con ở đời này và sắp xếp theo đúng thứ tự xuất hiện của chính người cha đó trong bảng dữ liệu
             raw_fathers = [
                 f for f in gen_members["father"].dropna().unique() 
                 if f and str(f).strip() != ""
@@ -595,7 +594,6 @@ with tab_so_do_doi:
             fathers = sorted(raw_fathers, key=get_father_sort_index)
             unassigned = gen_members[gen_members["father"].isna() | (gen_members["father"] == "")]
 
-            # Hiển thị nhóm theo từng người cha đã được sắp xếp chuẩn
             for f in fathers:
                 st.markdown(
                     f"&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: {f}</b>",
@@ -629,14 +627,14 @@ with tab_so_do_doi:
 
             st.markdown("---")
 
-# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
+# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT - ĐỒNG BỘ 100% VỚI CÁC TAB KHÁC) =================
 with tab_so_do_cot:
     st.markdown(
         "<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>",
         unsafe_allow_html=True,
     )
     st.markdown(
-        "<p style='text-align: center; color: #555;'>Mỗi thẻ thành viên hiển thị hình ảnh chân dung, thông tin phối ngẫu và tiểu sử trọn vẹn.</p>",
+        "<p style='text-align: center; color: #555;'>Hiển thị đồng bộ tuyệt đối theo đúng thứ tự chuẩn xác của danh sách và phả hệ đứng.</p>",
         unsafe_allow_html=True,
     )
 
@@ -652,9 +650,11 @@ with tab_so_do_cot:
                 unsafe_allow_html=True,
             )
 
+            # Sắp xếp thành viên bám sát hoàn toàn theo _original_index (thứ tự gốc chuẩn)
             gen_members = df[df["generation"] == gen].sort_values(
                 by="_original_index"
             )
+            
             if not gen_members.empty:
                 members_list = gen_members.to_dict(orient="records")
                 for i in range(0, len(members_list), 2):
@@ -822,7 +822,7 @@ with tab_nhap:
 
 # ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
 with tab_quan_tri:
-    st.subheader("⚙️ Thêm Thành Viên Mới Vào Dòng Họ")
+    st.subheader("⚙️️ Thêm Thành Viên Mới Vào Dòng Họ")
     if st.session_state.logged_in:
         with st.form("add_member_form"):
             new_name = st.text_input("Họ và tên thành viên mới:")
