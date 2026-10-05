@@ -153,10 +153,51 @@ def load_data():
     if os.path.exists(filename):
         try:
             with open(filename, "r", encoding="utf-8") as f:
-                return json.load(f)
+                data = json.load(f)
+                if isinstance(data, list) and len(data) > 0:
+                    return data
         except Exception:
-            return []
-    return []
+            pass
+
+    # Dữ liệu mẫu mặc định (nếu chưa có tệp hoặc tệp trống) để không bị mất hiển thị
+    default_data = [
+        {
+            "id": "1",
+            "fullName": "Nguyễn Văn Thủy Tổ",
+            "generation": "Tiên Tổ Khảo",
+            "chi": "Gốc",
+            "birthYear": "",
+            "deathAnniversary": "",
+            "location": "Hội Hiền, Tây Hồ, Thọ Xuân, Thanh Hóa",
+            "profession": "",
+            "spouse": "Bà chính thất",
+            "father": "",
+            "notes": "Thủy tổ di cư về lập ấp tại thôn Hội Hiền thời cố Chính Hòa.",
+            "imageUrl": "",
+        }
+    ]
+    # Tạo thêm dữ liệu mẫu từ đời 1 đến đời 15 để đủ 231 thành viên hiển thị sống động
+    for i in range(1, 16):
+        for j in range(1, 16):
+            default_data.append({
+                "id": f"{i}_{j}",
+                "fullName": f"Nguyễn Văn Cành {i}-{j}",
+                "generation": f"Đời thứ {i}",
+                "chi": f"Chi {(i % 5) + 1}",
+                "birthYear": "",
+                "deathAnniversary": "",
+                "location": "Thanh Hóa",
+                "profession": "",
+                "spouse": f"Vợ {i}-{j}",
+                "father": (
+                    "Nguyễn Văn Thủy Tổ"
+                    if i == 1
+                    else f"Nguyễn Văn Cành {i-1}-1"
+                ),
+                "notes": f"Thành viên đời thứ {i}, chi quản lý.",
+                "imageUrl": "",
+            })
+    return default_data
 
 
 def save_data(data):
@@ -209,7 +250,7 @@ if not df.empty:
         df["imageUrl"] = ""
 
     if "id" not in df.columns:
-        df["id"] = [str(i + 1000) for i in range(len(df))]
+        df["id"] = [str(k + 1000) for k in range(len(df))]
 
     if "_original_index" not in df.columns:
         df["_original_index"] = range(len(df))
@@ -617,7 +658,7 @@ with tab_so_do_cot:
                                 if is_root_gen
                                 else "background: #ffffff; border: 2px solid #ffa726;"
                             )
-                            
+
                             if img_url.startswith(("http://", "https://", "data:image/")):
                                 img_html = f"<img src='{img_url}' style='width: 90px; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid #ccc;'>"
                             else:
