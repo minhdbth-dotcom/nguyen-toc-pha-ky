@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import re
@@ -159,7 +160,6 @@ def load_data():
         except Exception:
             pass
 
-    # Dữ liệu mẫu mặc định đầy đủ
     default_data = [
         {
             "id": "1",
@@ -253,6 +253,7 @@ if not df.empty:
 
     if "_original_index" not in df.columns:
         df["_original_index"] = range(len(df))
+
 
 # --- HÀM NỘI DUNG LỜI TỰA ĐẦY ĐỦ CHUẨN XÁC ---
 def get_loi_tua_html():
@@ -393,7 +394,6 @@ with tab_tong_quan:
             unsafe_allow_html=True,
         )
 
-    # Hiển thị đầy đủ nội dung tổng quan với bố cục trang trọng
     st.markdown(
         f'<div class="intro-container">{get_loi_tua_html()}</div>',
         unsafe_allow_html=True,
@@ -401,7 +401,9 @@ with tab_tong_quan:
 
 # ================= TAB 2: DANH SÁCH & QUẢN TRỊ TRỰC TIẾP =================
 with tab_danh_sach:
-    st.subheader("📋 Danh Sách Thành Viên & Quản Trị Hình Ảnh/Thông Tin")
+    st.subheader(
+        "📋 Danh Sách Thành Viên & Quản Trị Hình Ảnh/Thông Tin (Hỗ trợ chọn ảnh từ thiết bị)"
+    )
     if not df.empty:
         danh_sach_thanh_vien_chi_tiet = ["-- Không có / Chưa rõ --"]
         mapping_display_to_real = {}
@@ -424,7 +426,9 @@ with tab_danh_sach:
             columns=["_gen_num"]
         )
 
-        search_key = st.text_input("🔍 Tìm kiếm theo tên thành viên:", key="search_list_v4")
+        search_key = st.text_input(
+            "🔍 Tìm kiếm theo tên thành viên:", key="search_list_v4"
+        )
         filtered_df = df_sorted.copy()
         if search_key and "fullName" in filtered_df.columns:
             filtered_df = filtered_df[
@@ -465,7 +469,7 @@ with tab_danh_sach:
                 st.caption(f"Cha: {father} | Phối: {spouse}")
             with col_i3:
                 if st.session_state.logged_in:
-                    if st.button("✏️ Sửa / Cập Nhật Ảnh", key=f"edit_{m_id}"):
+                    if st.button("✏️ Sửa / Chọn Ảnh", key=f"edit_{m_id}"):
                         st.session_state.editing_id = m_id
                         st.rerun()
                 else:
@@ -473,7 +477,7 @@ with tab_danh_sach:
 
             if st.session_state.editing_id == m_id:
                 with st.form(key=f"form_inline_{m_id}"):
-                    st.markdown(f"#### ✏️ Cập nhật chi tiết & Ảnh cho: **{name}**")
+                    st.markdown(f"#### ✏️ Cập nhật chi tiết cho: **{name}**")
                     e_name = st.text_input("Họ và tên:", value=name)
                     danh_sach_doi = ["Tiên Tổ Khảo"] + [
                         f"Đời thứ {i}" for i in range(1, 21)
@@ -501,10 +505,16 @@ with tab_danh_sach:
                         "Vợ/Chồng (Phối):",
                         value=str(spouse if spouse != "Chưa rõ" else ""),
                     )
-                    e_image = st.text_input(
-                        "Đường dẫn hình ảnh (URL ảnh chân dung/di ảnh):",
-                        value=str(row.get("imageUrl", "")),
+
+                    st.markdown(
+                        "**📷 Chọn ảnh chân dung từ thư viện điện thoại / máy tính:**"
                     )
+                    uploaded_edit_img = st.file_uploader(
+                        "Tải ảnh lên (JPEG, PNG)",
+                        type=["jpg", "jpeg", "png"],
+                        key=f"upl_{m_id}",
+                    )
+
                     e_notes = st.text_area(
                         "Tiểu sử / Nơi an táng / Ghi chú thêm:",
                         value=str(
@@ -526,13 +536,20 @@ with tab_danh_sach:
                             if e_father_select == "-- Không có / Chưa rõ --"
                             else mapping_display_to_real.get(e_father_select, "")
                         )
+                        final_img_url = row.get("imageUrl", "")
+                        if uploaded_edit_img is not None:
+                            bytes_data = uploaded_edit_img.getvalue()
+                            b64_str = base64.b64encode(bytes_data).decode("utf-8")
+                            final_img_url = f"data:image/jpeg;base64,{b64_str}"
+
                         df.loc[df["id"] == m_id, "fullName"] = e_name.strip()
                         df.loc[df["id"] == m_id, "generation"] = e_gen
                         df.loc[df["id"] == m_id, "chi"] = e_chi
                         df.loc[df["id"] == m_id, "father"] = final_father
                         df.loc[df["id"] == m_id, "spouse"] = e_spouse.strip()
-                        df.loc[df["id"] == m_id, "imageUrl"] = e_image.strip()
+                        df.loc[df["id"] == m_id, "imageUrl"] = final_img_url
                         df.loc[df["id"] == m_id, "notes"] = e_notes.strip()
+
                         save_data(
                             df.drop(
                                 columns=["_original_index"], errors="ignore"
@@ -590,7 +607,7 @@ with tab_so_do_cot:
         unsafe_allow_html=True,
     )
     st.markdown(
-        "<p style='text-align: center; color: #555;'>Mỗi thẻ thành viên được hiển thị rộng rãi, tích hợp hình ảnh chân dung, thông tin phối ngẫu, phần mộ và tiểu sử trọn vẹn.</p>",
+        "<p style='text-align: center; color: #555;'>Mỗi thẻ thành viên hiển thị hình ảnh chân dung, thông tin phối ngẫu và tiểu sử trọn vẹn.</p>",
         unsafe_allow_html=True,
     )
 
@@ -686,10 +703,9 @@ with tab_in_phu:
         "📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Chuẩn Trang Trọng)"
     )
     st.info(
-        "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)**, đặt lề (Margins) là **Default** hoặc **Minimum** để in ra các trang sách đẹp tuyệt đối."
+        "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách đẹp tuyệt đối."
     )
 
-    # 1. Trang Bìa Sách Khổ Đứng (Duy nhất một khối HTML, không bị ô thừa)
     cover_html = """
         <div class="book-page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 85vh;">
             <div style="font-size: 22px; font-weight: bold; color: #795548; margin-bottom: 20px; letter-spacing: 2px;">ĐẠI TỘC GIA PHẢ</div>
@@ -705,7 +721,6 @@ with tab_in_phu:
     """
     st.markdown(cover_html, unsafe_allow_html=True)
 
-    # 2. Trang Lời Tựa Khổ Đứng (Duy nhất một khối HTML)
     intro_page_html = f"""
         <div class="book-page">
             {get_loi_tua_html()}
@@ -713,7 +728,6 @@ with tab_in_phu:
     """
     st.markdown(intro_page_html, unsafe_allow_html=True)
 
-    # 3. Các Trang Phả Hệ Từng Đời (Gộp chung khối để không sinh ô thừa)
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -779,7 +793,7 @@ with tab_nhap:
 
 # ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
 with tab_quan_tri:
-    st.subheader("⚙️️ Thêm Thành Viên Mới Vào Dòng Họ")
+    st.subheader("⚙️ Thêm Thành Viên Mới Vào Dòng Họ")
     if st.session_state.logged_in:
         with st.form("add_member_form"):
             new_name = st.text_input("Họ và tên thành viên mới:")
@@ -801,9 +815,16 @@ with tab_quan_tri:
                 "Chọn Phụ Thân (Cha):", danh_sach_cha
             )
             new_spouse = st.text_input("Vợ/Chồng (Phối):")
-            new_image = st.text_input(
-                "Đường dẫn hình ảnh (URL ảnh chân dung/di ảnh):"
+
+            st.markdown(
+                "**📷 Chọn ảnh chân dung từ thư viện điện thoại / máy tính:**"
             )
+            uploaded_new_img = st.file_uploader(
+                "Tải ảnh lên (JPEG, PNG)",
+                type=["jpg", "jpeg", "png"],
+                key="upl_new",
+            )
+
             new_notes = st.text_area("Tiểu sử / Nơi an táng / Ghi chú thêm:")
             submit_add = st.form_submit_button("➕ Thêm Thành Viên")
 
@@ -816,6 +837,12 @@ with tab_quan_tri:
                         if new_father_select == "-- Không có / Chưa rõ --"
                         else new_father_select.split(" (")[0]
                     )
+                    final_new_img_url = ""
+                    if uploaded_new_img is not None:
+                        bytes_data = uploaded_new_img.getvalue()
+                        b64_str = base64.b64encode(bytes_data).decode("utf-8")
+                        final_new_img_url = f"data:image/jpeg;base64,{b64_str}"
+
                     new_member = {
                         "id": str(int(pd.Timestamp.now().timestamp())),
                         "fullName": new_name.strip(),
@@ -828,7 +855,7 @@ with tab_quan_tri:
                         "spouse": new_spouse.strip(),
                         "father": final_new_father,
                         "notes": new_notes.strip(),
-                        "imageUrl": new_image.strip(),
+                        "imageUrl": final_new_img_url,
                     }
                     current_list = (
                         df.drop(
