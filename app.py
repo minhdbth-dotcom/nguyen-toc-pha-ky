@@ -13,7 +13,6 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        /* Định dạng chung cho giao diện in ấn / xem sách A4 đứng */
         @media print {
             body { background-color: white; }
             .book-page {
@@ -92,7 +91,7 @@ def get_default_data():
             "profession": "Tiên tổ",
             "spouse": "Nguyễn Thị Tổ Khảo",
             "father": "",
-            "thuTu": None,  # Để trống nếu không rõ
+            "thuTu": None,
             "notes": "Bậc tiền hiền khai sáng dòng họ.",
             "imageUrl": "",
         }
@@ -116,7 +115,6 @@ def save_data(data):
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
-# Khởi tạo session state cho phân quyền
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "role" not in st.session_state:
@@ -135,7 +133,6 @@ if not st.session_state.logged_in:
         u_pass = st.text_input("Mật khẩu bảo mật:", type="password")
         login_btn = st.form_submit_button("Đăng Nhập")
         if login_btn:
-            # Mật khẩu mẫu tùy chỉnh (có thể thay đổi linh hoạt)
             if u_pass == "admin123" or u_pass == "chi123":
                 st.session_state.logged_in = True
                 st.session_state.role = u_role
@@ -169,10 +166,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Đọc dữ liệu
 raw_data = load_data()
 df = pd.DataFrame(raw_data)
-# Đảm bảo có cột _original_index để giữ nguyên trật tự gốc nếu cần
 df["_original_index"] = range(len(df))
 
 # --- KHỞI TẠO CÁC TABS ---
@@ -190,7 +185,6 @@ tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, 
 )
 
 
-# Hàm hỗ trợ phân loại số đời để sắp xếp chuẩn xác
 def get_gen_number(gen_str):
     if not isinstance(gen_str, str):
         return 999
@@ -205,7 +199,7 @@ def get_gen_number(gen_str):
 # ================= TAB 1: TRANG CHỦ =================
 with tab_trang_chu:
     st.markdown(
-        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng họ Nguyễn. Ứng dụng được thiết kế nhằm số hóa toàn bộ hệ thống gia phả, kết nối huyết thống giữa các Chi, giúp các thế hệ mai sau dễ dàng tra cứu nguồn cội, tri ân công đức tổ tiên.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
+        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng họ Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
         unsafe_allow_html=True,
     )
 
@@ -213,78 +207,70 @@ with tab_trang_chu:
 # ================= TAB 2: CÂY PHẢ HỆ =================
 with tab_cay_pha_he:
     st.subheader("🌳 Sơ Đồ Cây Phả Hệ Toàn Tộc 5 Chi")
-    st.info(
-        "Sơ đồ phân cấp theo đời và các chi, hỗ trợ theo dõi huyết thống mạch lạc."
+    selected_chi_filter = st.selectbox(
+        "Lọc hiển thị theo Chi:",
+        ["Tất cả các Chi", "Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"],
     )
 
-    if not df.empty and "generation" in df.columns:
-        # Lọc theo Chi nếu muốn
-        selected_chi_filter = st.selectbox(
-            "Lọc hiển thị theo Chi:",
-            ["Tất cả các Chi", "Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"],
+    filtered_df = df
+    if selected_chi_filter != "Tất cả các Chi":
+        filtered_df = df[df["chi"] == selected_chi_filter]
+
+    sorted_gens = sorted(
+        filtered_df["generation"].dropna().unique(), key=get_gen_number
+    )
+
+    for gen in sorted_gens:
+        st.markdown(
+            f"<h3 style='color: #b71c1c; border-bottom: 2px solid #b71c1c; padding-bottom: 5px;'>📌 {gen.upper()}</h3>",
+            unsafe_allow_html=True,
+        )
+        gen_members = filtered_df[filtered_df["generation"] == gen]
+
+
+        def sort_key(row):
+            t = row.get("thuTu")
+            if pd.isna(t) or t == "" or t is None:
+                return 9999
+            try:
+                return int(t)
+            except:
+                return 9999
+
+
+        gen_members_sorted = sorted(
+            gen_members.to_dict("records"),
+            key=lambda x: (sort_key(x), x.get("_original_index", 0)),
         )
 
-        filtered_df = df
-        if selected_chi_filter != "Tất cả các Chi":
-            filtered_df = df[df["chi"] == selected_chi_filter]
+        cols = st.columns(3)
+        for idx, member in enumerate(gen_members_sorted):
+            col = cols[idx % 3]
+            with col:
+                name = member.get("fullName", "Chưa rõ")
+                chi = member.get("chi", "Chưa rõ")
+                thutu_val = member.get("thuTu")
+                thutu_str = (
+                    f"Con thứ {int(thutu_val)}"
+                    if pd.notna(thutu_val)
+                    and str(thutu_val).strip() != ""
+                    and str(thutu_val) != "None"
+                    else "Thứ tự: Chưa rõ"
+                )
+                spouse = member.get("spouse", "Chưa rõ")
+                father = member.get("father", "Chưa rõ")
 
-        sorted_gens = sorted(
-            filtered_df["generation"].dropna().unique(), key=get_gen_number
-        )
-
-        for gen in sorted_gens:
-            st.markdown(
-                f"<h3 style='color: #b71c1c; border-bottom: 2px solid #b71c1c; padding-bottom: 5px;'>📌 {gen.upper()}</h3>",
-                unsafe_allow_html=True,
-            )
-            gen_members = filtered_df[filtered_df["generation"] == gen]
-
-            # Xử lý sắp xếp: Thành viên có thứ tự xếp trước (tăng dần), chưa rõ thứ tự xếp xuống cuối
-            def sort_key(row):
-                t = row.get("thuTu")
-                if pd.isna(t) or t == "" or t is None:
-                    return 9999
-                try:
-                    return int(t)
-                except:
-                    return 9999
-
-            gen_members_sorted = sorted(
-                gen_members.to_dict("records"),
-                key=lambda x: (
-                    sort_key(x),
-                    x.get("_original_index", 0),
-                ),
-            )
-
-            cols = st.columns(3)
-            for idx, member in enumerate(gen_members_sorted):
-                col = cols[idx % 3]
-                with col:
-                    name = member.get("fullName", "Chưa rõ")
-                    chi = member.get("chi", "Chưa rõ")
-                    thutu_val = member.get("thuTu")
-                    thutu_str = (
-                        f"Con thứ {int(thutu_val)}"
-                        if pd.notna(thutu_val)
-                        and str(thutu_val).strip() != ""
-                        and str(thutu_val) != "None"
-                        else "Thứ tự: Chưa rõ"
-                    )
-                    spouse = member.get("spouse", "Chưa rõ")
-                    father = member.get("father", "Chưa rõ")
-
-                    st.markdown(
-                        f"""
-                    <div class="member-card">
-                        <b>{name}</b><br>
-                        <span style="font-size: 12px; color: #555;">🏷️ Chi: {chi} | {thutu_str}</span><br>
-                        <span style="font-size: 12px; color: #555;">👨 Phụ thân: {father if father else 'Chưa rõ'}</span><br>
-                        <span style="font-size: 12px; color: #555;">👥 Phối: {spouse if spouse else 'Chưa rõ'}</span>
-                    </div>
-                    """,
-                        unsafe_allow_html=True,
-                    )
+                st.markdown(
+                    f"""
+                <div class="member-card">
+                    <b>{name}</b><br>
+                    <span style="font-size: 12px; color: #555;">🏷️ Chi: {chi} | {thutu_str}</span><br>
+                    <span style="font-size: 12px; color: #555;">👨 Phụ thân: {father if father else 'Chưa rõ'}</span><br>
+                    <span style="font-size: 12px; color: #555;">👥 Phối: {spouse if spouse else 'Chưa rõ'}</span>
+                </div>
+                """,
+                    unsafe_allow_html=True,
+                )
 
 
 # ================= TAB 3: TRA CỨU =================
@@ -328,14 +314,10 @@ with tab_tra_cuu:
             """,
                 unsafe_allow_html=True,
             )
-    else:
-        st.info(
-            "Vui lòng nhập từ khóa vào ô tìm kiếm ở trên để tra cứu thông tin nhanh chóng."
-        )
 
 
 # ================= TAB 4: SỔ TAY CHI TIẾT =================
-with tab_tra_cuu if False else tab_chi_tiet:
+with tab_chi_tiet:
     st.subheader("📋 Sổ Tay Chi Tiết Thành Viên Dòng Họ")
 
     if not df.empty and "generation" in df.columns:
@@ -349,7 +331,6 @@ with tab_tra_cuu if False else tab_chi_tiet:
         gen_df = df[df["generation"] == selected_gen_detail]
 
 
-        # Sắp xếp hiển thị: có thứ tự lên trước, chưa rõ xuống sau
         def sort_key_detail(row):
             t = row.get("thuTu")
             if pd.isna(t) or t == "" or t is None:
@@ -424,33 +405,21 @@ with tab_tra_cuu if False else tab_chi_tiet:
 # ================= TAB 5: IN CUỐN GIA PHẢ =================
 with tab_in_phu:
     st.subheader("📖 In Cuốn Gia Phả Toàn Tộc (Định Dạng Sách A4 Đứng)")
-    st.info(
-        "💡 **Mẹo in ấn:** Bấm nút dưới đây để mở giao diện in. Sau đó sử dụng tổ hợp phím `Ctrl + P` (hoặc `Cmd + P` trên Mac) và chọn máy in hoặc lưu thành file PDF chuẩn A4."
-    )
-
     if st.button("🖨 Mở Giao Diện In Sách"):
         st.markdown(
             "<script>window.print();</script>", unsafe_allow_html=True
         )
 
-    # Hiển thị trang bìa / lời tựa
     st.markdown(
         """
         <div class="book-page">
             <h1 style="text-align: center; color: #b71c1c; margin-top: 100px;">NGUYỄN TỘC PHẢ KÝ</h1>
             <h3 style="text-align: center; color: #555; margin-bottom: 150px;">GIA PHẢ TOÀN TỘC 5 CHI</h3>
-            <p style="text-align: center; font-size: 16px; line-height: 1.8;">
-                <i>“Cây có gốc mới nở cành xanh ngọn<br>
-                Nước có nguồn mới bể rộng sông sâu<br>
-                Người ta gốc ở ông cha<br>
-                Họ hàng vạn đại nở hoa một cành”</i>
-            </p>
         </div>
     """,
         unsafe_allow_html=True,
     )
 
-    # Hiển thị các trang chi tiết thành viên theo đời
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -471,10 +440,7 @@ with tab_in_phu:
 
             gen_members_sorted = sorted(
                 gen_members.to_dict("records"),
-                key=lambda x: (
-                    sort_key_print(x),
-                    x.get("_original_index", 0),
-                ),
+                key=lambda x: (sort_key_print(x), x.get("_original_index", 0)),
             )
 
             page_content = f"<h2 style='text-align: center; color: #795548;'>CHI TIẾT: {gen.upper()}</h2><hr style='border: 1px solid #795548; margin-bottom: 20px;'>"
@@ -512,10 +478,6 @@ with tab_in_phu:
 # ================= TAB 6: XUẤT DỮ LIỆU =================
 with tab_xuat:
     st.subheader("💾 Xuất Dữ Liệu Gia Phả")
-    st.markdown(
-        "Tải xuống toàn bộ cơ sở dữ liệu phả ký dưới dạng file JSON hoặc file Excel để sao lưu dự phòng."
-    )
-
     if not df.empty:
         json_str = df.drop(columns=["_original_index"], errors="ignore").to_json(
             force_ascii=False, orient="records", indent=4
@@ -527,30 +489,30 @@ with tab_xuat:
             mime="application/json",
         )
 
-        from io import BytesIO
+        try:
+            from io import BytesIO
 
-        output = BytesIO()
-        with pd.ExcelWriter(output, engine="openpyxl") as writer:
-            df.drop(columns=["_original_index"], errors="ignore").to_excel(
-                writer, index=False, sheet_name="GiaPha"
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine="openpyxl") as writer:
+                df.drop(columns=["_original_index"], errors="ignore").to_excel(
+                    writer, index=False, sheet_name="GiaPha"
+                )
+            excel_data = output.getvalue()
+            st.download_button(
+                label="📊 Tải xuống file Excel",
+                data=excel_data,
+                file_name="GiaPha_DongHoNguyen.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             )
-        excel_data = output.getvalue()
-
-        st.download_button(
-            label="📊 Tải xuống file Excel",
-            data=excel_data,
-            file_name="GiaPha_DongHoNguyen.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        )
+        except Exception:
+            st.info(
+                "💡 Định dạng Excel đang tạm ẩn do chưa cài đặt thư viện `openpyxl`. Bạn vẫn có thể tải xuống file JSON hoàn toàn bình thường."
+            )
 
 
 # ================= TAB 7: NHẬP DỮ LIỆU =================
 with tab_nhap:
     st.subheader("📥 Nhập Dữ Liệu Gia Phả Từ File")
-    st.markdown(
-        "Tải lên file JSON hoặc Excel đã sao lưu trước đó để cập nhật cơ sở dữ liệu hệ thống."
-    )
-
     uploaded_file = st.file_uploader(
         "Chọn file dữ liệu (JSON hoặc XLSX)", type=["json", "xlsx"]
     )
@@ -597,7 +559,6 @@ with tab_quan_tri:
                 chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
                 new_chi = st.selectbox("Thuộc Chi:", chi_options)
             with col_a3:
-                # SỬ DỤNG CHECKBOX/HOẶC SELECTBOX ĐỂ KHÔNG MẶC ĐỊNH LÀ THỨ 1
                 has_thutu = st.checkbox(
                     "Đã rõ thứ tự sinh?",
                     value=False,
@@ -643,8 +604,6 @@ with tab_quan_tri:
                     import time
 
                     new_id = str(int(time.time()))
-
-                    # Nếu người dùng không tick chọn thứ tự thì lưu giá trị là None (để trống)
                     final_thutu = int(new_thutu) if has_thutu else None
 
                     new_record = {
