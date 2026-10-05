@@ -103,7 +103,19 @@ def load_data():
         try:
             with open(DATA_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                if isinstance(data, list):
+                if isinstance(data, list) and len(data) > 0:
+                    # Chuẩn hóa dữ liệu để đảm bảo luôn có các trường cần thiết
+                    for item in data:
+                        if "father" not in item:
+                            item["father"] = ""
+                        if "thuTu" not in item:
+                            item["thuTu"] = None
+                        if "spouse" not in item:
+                            item["spouse"] = ""
+                        if "notes" not in item:
+                            item["notes"] = ""
+                        if "imageUrl" not in item:
+                            item["imageUrl"] = ""
                     return data
         except Exception:
             pass
@@ -153,7 +165,7 @@ else:
 
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "💡 **Hướng dẫn:** Các con nay đã được gom thành từng khối riêng biệt theo từng ông Phụ thân (Cha) rất rõ ràng."
+    "💡 **Hướng dẫn:** Hệ thống đã tự động bảo vệ an toàn dữ liệu. Bác cứ thoải mái nhập liệu và sử dụng."
 )
 
 # --- TIÊU ĐỀ CHÍNH ---
@@ -169,6 +181,11 @@ st.markdown(
 raw_data = load_data()
 df = pd.DataFrame(raw_data)
 df["_original_index"] = range(len(df))
+
+# Đảm bảo các cột quan trọng luôn tồn tại trong DataFrame tránh lỗi KeyError
+for col in ["father", "thuTu", "spouse", "notes", "imageUrl", "generation", "chi", "fullName"]:
+    if col not in df.columns:
+        df[col] = ""
 
 # --- KHỞI TẠO CÁC TABS ---
 tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, tab_nhap, tab_quan_tri = st.tabs(
@@ -187,7 +204,7 @@ tab_trang_chu, tab_cay_pha_he, tab_tra_cuu, tab_chi_tiet, tab_in_phu, tab_xuat, 
 # ================= TAB 1: TRANG CHỦ =================
 with tab_trang_chu:
     st.markdown(
-        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng học Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
+        f'<div class="book-page"><div class="cover-title">NGUYỄN TỘC PHẢ KÝ</div><div class="cover-subtitle">GIA PHẢ TOÀN TỘC 5 CHI</div><hr><p style="text-align: justify; line-height: 1.6;">Chào mừng con cháu nội ngoại toàn tộc đến với Không gian lưu trữ Phả ký số của dòng họ Nguyễn.</p><p style="text-align: center; margin-top: 50px;"><b>Tổng số thành viên trong phả ký hiện tại:</b> <span style="color: #b71c1c; font-size: 24px;">{len(df)}</span></p></div>',
         unsafe_allow_html=True,
     )
 
@@ -207,7 +224,7 @@ with tab_cay_pha_he:
     if selected_chi_filter != "Tất cả các Chi":
         filtered_df = df[df["chi"] == selected_chi_filter]
 
-    # Chuẩn hóa tên phụ thân
+    # Chuẩn hóa tên phụ thân an toàn
     filtered_df["normalized_father"] = (
         filtered_df["father"].fillna("Chưa rõ").astype(str).str.strip()
     )
@@ -220,7 +237,6 @@ with tab_cay_pha_he:
         sorted_fathers.remove("")
         sorted_fathers.append("")
 
-    # Duyệt qua từng Phụ thân để hiển thị trọn vẹn nhóm con của ông đó
     for father_name in sorted_fathers:
         father_members = filtered_df[
             filtered_df["normalized_father"] == father_name
@@ -239,7 +255,6 @@ with tab_cay_pha_he:
                 return 9999
 
 
-        # Sắp xếp các con của ông này theo thứ tự sinh tăng dần (1, 2, 3, 4...)
         father_members_sorted = sorted(
             father_members.to_dict("records"),
             key=lambda x: (sort_key(x), x.get("_original_index", 0)),
@@ -251,7 +266,6 @@ with tab_cay_pha_he:
             else "Chưa rõ / Tiên tổ"
         )
 
-        # Tiêu đề khối Phụ thân
         st.markdown(
             f"""
             <div style="background-color: #fcf8f2; border-left: 6px solid #b71c1c; padding: 10px 15px; margin-top: 40px; margin-bottom: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
@@ -262,7 +276,6 @@ with tab_cay_pha_he:
             unsafe_allow_html=True,
         )
 
-        # Hiển thị danh sách các con của ông này theo lưới 3 cột
         cols = st.columns(3)
         for idx, member in enumerate(father_members_sorted):
             col = cols[idx % 3]
@@ -567,7 +580,7 @@ with tab_xuat:
 
 # ================= TAB 7: NHẬP DỮ LIỆU =================
 with tab_nhap:
-    st.subheader("📥 Nhập DỮ Liệu Gia Phả Từ File")
+    st.subheader("📥 Nhập Dữ Liệu Gia Phả Từ File")
     uploaded_file = st.file_uploader(
         "Chọn file dữ liệu (JSON hoặc XLSX)", type=["json", "xlsx"]
     )
