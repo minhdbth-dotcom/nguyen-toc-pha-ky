@@ -567,9 +567,13 @@ with tab_danh_sach:
                 unsafe_allow_html=True,
             )
 
-# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ XUẤT HIỆN TRONG FILE JSON) =================
+# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP CHUẨN XÁC THEO THỨ TỰ TRONG TAB DANH SÁCH / JSON) =================
 with tab_so_do_doi:
     st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
+    st.info(
+        "💡 **Mẹo:** Các cụ phụ thân trong từng đời sẽ được hiển thị hoàn toàn chính xác theo đúng thứ tự sắp xếp trong tệp dữ liệu gốc (Tab Danh Sách). "
+        "Nếu muốn đưa cụ nào lên trước hay xuống sau, bác chỉ cần sang **Tab Danh Sách** để sắp xếp lại vị trí hoặc chỉnh sửa thành viên cho khớp với gia phả gốc."
+    )
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -586,7 +590,7 @@ with tab_so_do_doi:
                 if f and str(f).strip() != ""
             ]
             
-            # Sắp xếp các người cha theo đúng thứ tự xuất hiện của chính người cha đó trong tệp JSON gốc (hoặc Tab Danh sách)
+            # Sắp xếp các người cha bám sát tuyệt đối theo thứ tự xuất hiện ban đầu trong file dữ liệu gốc (_original_index)
             def get_father_sort_index(fname):
                 matched = df[df["fullName"] == fname]
                 if not matched.empty:
