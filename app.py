@@ -10,7 +10,7 @@ st.set_page_config(
     page_title="NGUYỄN TỘC PHẢ KÝ - TOÀN TỘC 5 CHI", page_icon="🌳", layout="wide"
 )
 
-# --- CSS TÙY CHỈNH GIAO DIỆN & KHUNG SÁCH IN A4 ĐỨNG (CHUẨN XÁC, KHÔNG Ô THỪA) ---
+# --- CSS TÙY CHỈNH GIAO DIỆN & KHUNG SÁCH IN A4 ĐỨNG ---
 st.markdown(
     """
     <style>
@@ -53,7 +53,7 @@ st.markdown(
             margin: 15px 0 10px 0;
         }
         
-        /* ĐỊNH DẠNG TRANG SÁCH A4 ĐỨNG - KHÔNG Ô THỪA, TIẾT KIỆM GIẤY */
+        /* ĐỊNH DẠNG TRANG SÁCH A4 ĐỨNG */
         .book-page {
             background-color: #ffffff;
             border: 2px solid #795548;
@@ -171,7 +171,6 @@ def load_data():
             "profession": "",
             "spouse": "Bà chính thất",
             "father": "",
-            "thuTu": 1,
             "notes": "Thủy tổ di cư về lập ấp tại thôn Hội Hiền thời cố Chính Hòa.",
             "imageUrl": "",
         }
@@ -208,7 +207,6 @@ else:
             "profession",
             "spouse",
             "father",
-            "thuTu",
             "notes",
             "imageUrl",
         ]
@@ -228,12 +226,6 @@ if not df.empty:
         df["father"] = ""
     if "imageUrl" not in df.columns:
         df["imageUrl"] = ""
-    if "thuTu" not in df.columns:
-        df["thuTu"] = 1
-    else:
-        df["thuTu"] = (
-            pd.to_numeric(df["thuTu"], errors="coerce").fillna(1).astype(int)
-        )
 
     if "id" not in df.columns:
         df["id"] = [str(k + 1000) for k in range(len(df))]
@@ -242,7 +234,7 @@ if not df.empty:
         df["_original_index"] = range(len(df))
 
 
-# --- HÀM NỘI DUNG LỜI TỰA ĐẦY ĐỦ CHUẨN XÁC ---
+# --- HÀM NỘI DUNG LỜI TỰA ---
 def get_loi_tua_html():
     return """
     <h2 style='color: #795548; text-align: center; margin-top: 0;'>📜 NGUYỄN TỘC PHẢ KÝ</h2>
@@ -255,8 +247,6 @@ def get_loi_tua_html():
     <p><b>Đại ý như sau:</b> Người phải có tổ, cây phải có gốc, nước phải có nguồn. Cây có gốc mới nở cành sinh ngọn, nước có nguồn mới bể rộng sông sâu. Người ta có nguồn gốc từ đâu, có tổ tiên trước rồi sau có mình.</p>
     <p>Như vậy việc biên soạn, sao chép lại quá trình hình thành và phát triển của họ NGUYỄN ở thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là một việc rất cần thiết và quan trọng để tỏ lòng thành kính tưởng nhớ tới công ơn của các bậc tổ tiên.</p>
     <p>Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã, ban đầu di cư vào Hà Trung phủ, Hoằng Hóa huyện, Dương Sơn xã, Đại Yên thôn làm nghề thợ rèn. Sau đó chuyển lên Hội Hiền thôn, Phúc Trạch xã, vào thời cố Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm, qua 15 đời nối tiếp, hình thành 5 chi, có trên 100 hộ, là một trong những họ đông nhất của làng.</p>
-    <p>Do thời cuộc, từ sau Cách mạng Tháng Tám năm 1945 đến nay, nhiều hộ và cá nhân trong dòng họ đã thoát ly đi xây dựng vùng kinh tế mới, công tác, học tập và chiến đấu trên mọi miền Tổ quốc. Nhiều gia đình được Nhà nước tặng Bằng khen, Bảng vàng danh dự, nhiều cá nhân được tặng huân huy chương cao quý.</p>
-    <p>Kế thừa truyền thống <i>Kính như tại</i>, ngày 25-02-1990 (tức ngày 01/02 năm Canh Ngọ), các cụ cao tuổi và đại diện các chi đã họp bàn việc viết gia phả. Ban biên soạn gồm các ông: <b>Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng</b> đã tiến hành tra cứu từ các bản phả cổ bằng chữ Hán và chữ Quốc ngữ để hoàn thành tập phả ký vào Đông chí năm 2013 (Quý Tỵ).</p>
     <div style="text-align: right; margin-top: 20px;">
         <b>Ngày 22 tháng 12 năm 2013</b><br>
         <b>Đông Chí năm Quý Tỵ</b>
@@ -330,6 +320,7 @@ st.markdown(
 tabs = st.tabs([
     "🏠 Tổng Quan",
     "📋 Danh Sách & Quản Trị Trực Tiếp",
+    "📝 Bảng Thêm/Xóa Nhanh (Excel Grid)",
     "🌳 Cây Phả Hệ (Dạng Đứng)",
     "🌳 Cây Phả Hệ (Hàng Ngang Chi Tiết)",
     "📖 In Cuốn Gia Phả",
@@ -340,12 +331,13 @@ tabs = st.tabs([
 
 tab_tong_quan = tabs[0]
 tab_danh_sach = tabs[1]
-tab_so_do_doi = tabs[2]
-tab_so_do_cot = tabs[3]
-tab_in_phu = tabs[4]
-tab_xuat = tabs[5]
-tab_nhap = tabs[6]
-tab_quan_tri = tabs[7]
+tab_excel_grid = tabs[2]
+tab_so_do_doi = tabs[3]
+tab_so_do_cot = tabs[4]
+tab_in_phu = tabs[5]
+tab_xuat = tabs[6]
+tab_nhap = tabs[7]
+tab_quan_tri = tabs[8]
 
 
 # ================= TAB 1: TỔNG QUAN =================
@@ -389,7 +381,7 @@ with tab_tong_quan:
 # ================= TAB 2: DANH SÁCH & QUẢN TRỊ TRỰC TIẾP =================
 with tab_danh_sach:
     st.subheader(
-        "📋 Danh Sách Thành Viên & Quản Trị Hình Ảnh/Thông Tin (Hỗ trợ chọn ảnh từ thiết bị)"
+        "📋 Danh Sách Thành Viên & Quản Trị (Hỗ trợ thêm, sửa ảnh, thông tin hoặc xóa thành viên)"
     )
     if not df.empty:
         danh_sach_thanh_vien_chi_tiet = ["-- Không có / Chưa rõ --"]
@@ -397,24 +389,20 @@ with tab_danh_sach:
 
         df_temp = df.copy()
         df_temp["_gen_num"] = df_temp["generation"].apply(get_gen_number)
-        df_temp = df_temp.sort_values(by=["_gen_num", "thuTu", "_original_index"])
+        df_temp = df_temp.sort_values(by=["_gen_num", "_original_index"])
         for _, r in df_temp.iterrows():
             fname = str(r.get("fullName", "")).strip()
             fgen = str(r.get("generation", "")).strip()
             fchi = str(r.get("chi", "")).strip()
-            ftt = int(r.get("thuTu", 1))
             if fname:
-                if fgen == "Tiên Tổ Khảo":
-                    display_str = f"{fname} ({fgen} - {fchi})"
-                else:
-                    display_str = f"{fname} ({fgen} - {fchi} - Con thứ: {ftt})"
+                display_str = f"{fname} ({fgen} - {fchi})"
                 danh_sach_thanh_vien_chi_tiet.append(display_str)
                 mapping_display_to_real[display_str] = fname
 
         df_sorted = df.copy()
         df_sorted["_gen_num"] = df_sorted["generation"].apply(get_gen_number)
         df_sorted = df_sorted.sort_values(
-            by=["_gen_num", "thuTu", "_original_index"]
+            by=["_gen_num", "_original_index"]
         ).drop(columns=["_gen_num"])
 
         search_key = st.text_input(
@@ -428,13 +416,14 @@ with tab_danh_sach:
 
         if "editing_id" not in st.session_state:
             st.session_state.editing_id = None
+        if "inserting_under_id" not in st.session_state:
+            st.session_state.inserting_under_id = None
 
         for _, row in filtered_df.iterrows():
             m_id = str(row.get("id", ""))
             name = row.get("fullName", "Chưa rõ")
             gen = row.get("generation", "")
             chi = row.get("chi", "")
-            thu_tu = int(row.get("thuTu", 1))
             father = (
                 row.get("father", "")
                 if pd.notna(row.get("father")) and row.get("father") != ""
@@ -446,7 +435,7 @@ with tab_danh_sach:
                 else "Chưa rõ"
             )
 
-            col_i1, col_i2, col_i3 = st.columns([1, 4, 2])
+            col_i1, col_i2, col_i3 = st.columns([1, 4, 3])
             with col_i1:
                 img_url = str(row.get("imageUrl", "")).strip()
                 if img_url.startswith(("http://", "https://", "data:image/")):
@@ -457,27 +446,132 @@ with tab_danh_sach:
                 else:
                     st.markdown("👤 *Chưa có ảnh*")
             with col_i2:
-                if gen == "Tiên Tổ Khảo":
-                    st.markdown(f"**👤 {name}** (`{gen}` - **{chi}**)")
-                else:
-                    st.markdown(
-                        f"**👤 {name}** (Con thứ: **{thu_tu}** | `{gen}` - **{chi}**)"
-                    )
+                st.markdown(f"**👤 {name}** (`{gen}` - **{chi}**)")
                 st.caption(f"Cha: {father} | Phối: {spouse}")
             with col_i3:
                 if st.session_state.logged_in:
-                    if st.button("✏ Sửa / Chọn Ảnh", key=f"edit_{m_id}"):
-                        st.session_state.editing_id = m_id
-                        st.rerun()
+                    c_btn1, c_btn2, c_btn3 = st.columns(3)
+                    with c_btn1:
+                        if st.button("➕ Thêm", key=f"insert_{m_id}", help="Thêm thành viên mới liên quan"):
+                            st.session_state.inserting_under_id = m_id
+                            st.session_state.editing_id = None
+                            st.rerun()
+                    with c_btn2:
+                        if st.button("✏ Sửa", key=f"edit_{m_id}"):
+                            st.session_state.editing_id = m_id
+                            st.session_state.inserting_under_id = None
+                            st.rerun()
+                    with c_btn3:
+                        if st.button("🗑️ Xóa", key=f"del_{m_id}"):
+                            new_df_list = (
+                                df[df["id"] != m_id]
+                                .drop(columns=["_original_index"], errors="ignore")
+                                .to_dict(orient="records")
+                            )
+                            save_data(new_df_list)
+                            st.success(f"Đã xóa thành viên: {name}")
+                            st.rerun()
                 else:
                     st.caption("🔒 Cần đăng nhập")
 
+            # Giao diện Form Chèn (Insert) nhanh ngay dưới thành viên
+            if st.session_state.inserting_under_id == m_id:
+                with st.form(key=f"form_insert_{m_id}"):
+                    st.markdown(f"#### ➕ Thêm thành viên mới (Có cha/mẹ là: **{name}**) hoặc cùng nhánh")
+                    ins_name = st.text_input("Họ và tên thành viên mới:", key=f"ins_name_{m_id}")
+
+                    ins_col1, ins_col2 = st.columns(2)
+                    with ins_col1:
+                        danh_sach_doi = ["Tiên Tổ Khảo"] + [
+                            f"Đời thứ {i}" for i in range(1, 21)
+                        ]
+                        # Mặc định gợi ý đời kế tiếp hoặc giữ nguyên đời hiện tại
+                        ins_idx = danh_sach_doi.index(gen) if gen in danh_sach_doi else 0
+                        ins_gen = st.selectbox("Đời thứ:", danh_sach_doi, index=ins_idx, key=f"ins_gen_{m_id}")
+                    with ins_col2:
+                        chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
+                        c_idx = chi_options.index(chi) if chi in chi_options else 5
+                        ins_chi = st.selectbox("Thuộc Chi:", chi_options, index=c_idx, key=f"ins_chi_{m_id}")
+
+                    # Mặc định chọn cha là thành viên hiện tại hoặc giữ nguyên
+                    f_default_idx = 0
+                    current_parent_str = f"{name} ({gen} - {chi})"
+                    for idx, item in enumerate(danh_sach_thanh_vien_chi_tiet):
+                        if item.startswith(name + " ("):
+                            f_default_idx = idx
+                            break
+                    ins_father_select = st.selectbox(
+                        "Chọn Phụ Thân (Cha):", danh_sach_thanh_vien_chi_tiet, index=f_default_idx, key=f"ins_father_{m_id}"
+                    )
+                    ins_spouse = st.text_input("Vợ/Chồng (Phối):", key=f"ins_spouse_{m_id}")
+
+                    st.markdown("**📷 Chọn ảnh chân dung:**")
+                    uploaded_ins_img = st.file_uploader(
+                        "Tải ảnh lên (JPEG, PNG)",
+                        type=["jpg", "jpeg", "png"],
+                        key=f"ins_upl_{m_id}",
+                    )
+
+                    ins_notes = st.text_area("Tiểu sử / Ghi chú:", key=f"ins_notes_{m_id}")
+
+                    if_col1, if_col2 = st.columns(2)
+                    with if_col1:
+                        sub_ins_save = st.form_submit_button("💾 Xác Nhận Thêm")
+                    with if_col2:
+                        sub_ins_cancel = st.form_submit_button("❌ Hủy Bỏ")
+
+                    if sub_ins_save:
+                        if not ins_name.strip():
+                            st.error("Vui lòng nhập họ và tên thành viên mới!")
+                        else:
+                            final_ins_father = (
+                                ""
+                                if ins_father_select == "-- Không có / Chưa rõ --"
+                                else mapping_display_to_real.get(ins_father_select, "")
+                            )
+                            final_ins_img_url = ""
+                            if uploaded_ins_img is not None:
+                                bytes_data = uploaded_ins_img.getvalue()
+                                b64_str = base64.b64encode(bytes_data).decode("utf-8")
+                                final_ins_img_url = f"data:image/jpeg;base64,{b64_str}"
+
+                            new_sub_member = {
+                                "id": str(int(pd.Timestamp.now().timestamp())),
+                                "fullName": ins_name.strip(),
+                                "generation": ins_gen,
+                                "chi": ins_chi,
+                                "birthYear": "",
+                                "deathAnniversary": "",
+                                "location": "",
+                                "profession": "",
+                                "spouse": ins_spouse.strip(),
+                                "father": final_ins_father,
+                                "notes": ins_notes.strip(),
+                                "imageUrl": final_ins_img_url,
+                            }
+                            current_list = (
+                                df.drop(columns=["_original_index"], errors="ignore")
+                                .to_dict(orient="records")
+                                if not df.empty
+                                else []
+                            )
+                            current_list.append(new_sub_member)
+                            save_data(current_list)
+                            st.session_state.inserting_under_id = None
+                            st.success(f"Đã thêm thành công thành viên: {ins_name}!")
+                            st.rerun()
+
+                    if sub_ins_cancel:
+                        st.session_state.inserting_under_id = None
+                        st.rerun()
+
+            # Giao diện Form Sửa (Edit)
             if st.session_state.editing_id == m_id:
                 with st.form(key=f"form_inline_{m_id}"):
                     st.markdown(f"#### ✏️ Cập nhật chi tiết cho: **{name}**")
                     e_name = st.text_input("Họ và tên:", value=name)
 
-                    e_col1, e_col2, e_col3 = st.columns(3)
+                    e_col1, e_col2 = st.columns(2)
                     with e_col1:
                         danh_sach_doi = ["Tiên Tổ Khảo"] + [
                             f"Đời thứ {i}" for i in range(1, 21)
@@ -502,13 +596,6 @@ with tab_danh_sach:
                         )
                         e_chi = st.selectbox(
                             "Thuộc Chi:", chi_options, index=c_idx
-                        )
-                    with e_col3:
-                        e_thutu = st.number_input(
-                            "Thứ tự ra đời (Con thứ):",
-                            min_value=1,
-                            max_value=50,
-                            value=thu_tu,
                         )
 
                     current_father = str(father if father != "Chưa rõ" else "")
@@ -564,7 +651,6 @@ with tab_danh_sach:
                         df.loc[df["id"] == m_id, "fullName"] = e_name.strip()
                         df.loc[df["id"] == m_id, "generation"] = e_gen
                         df.loc[df["id"] == m_id, "chi"] = e_chi
-                        df.loc[df["id"] == m_id, "thuTu"] = int(e_thutu)
                         df.loc[df["id"] == m_id, "father"] = final_father
                         df.loc[df["id"] == m_id, "spouse"] = e_spouse.strip()
                         df.loc[df["id"] == m_id, "imageUrl"] = final_img_url
@@ -588,7 +674,55 @@ with tab_danh_sach:
                 unsafe_allow_html=True,
             )
 
-# ================= TAB 3: CÂY PHẢ HỆ (DẠNG ĐỨNG - SẮP XẾP THEO THỨ TỰ RA ĐỜI) =================
+# ================= TAB 3: BẢNG THÊM/XÓA NHANH (EXCEL GRID) =================
+with tab_excel_grid:
+    st.subheader("📝 Bảng Thêm, Xóa và Chỉnh Sửa Hàng Loạt (Excel Grid)")
+    st.info(
+        "💡 Bác có thể bấm vào dấu **`+`** ở dưới bảng để **thêm dòng mới**, tích chọn cột để **xóa dòng**, hoặc sửa trực tiếp nội dung các ô rồi bấm nút **Lưu Lại** phía dưới."
+    )
+
+    if st.session_state.logged_in:
+        editable_df = df.drop(
+            columns=["_original_index", "imageUrl"], errors="ignore"
+        ).copy()
+
+        edited_df = st.data_editor(
+            editable_df,
+            num_rows="dynamic",
+            key="grid_editor",
+            use_container_width=True,
+        )
+
+        if st.button("💾 Lưu Thay Đổi Từ Bảng Lưới"):
+            try:
+                old_img_map = (
+                    df.set_index("id")["imageUrl"].to_dict()
+                    if "id" in df.columns
+                    else {}
+                )
+                new_records = []
+                for idx, row in edited_df.iterrows():
+                    r_dict = row.to_dict()
+                    m_id = str(r_dict.get("id", ""))
+                    if not m_id or m_id == "nan" or m_id.strip() == "":
+                        m_id = str(int(pd.Timestamp.now().timestamp()) + idx)
+                    r_dict["id"] = m_id
+                    r_dict["imageUrl"] = old_img_map.get(m_id, "")
+                    new_records.append(r_dict)
+
+                save_data(new_records)
+                st.success(
+                    "Đã lưu thành công các thay đổi từ bảng lưới! Hãy tải lại trang."
+                )
+                st.rerun()
+            except Exception as e:
+                st.error(f"Lỗi khi lưu dữ liệu: {e}")
+    else:
+        st.warning(
+            "🔒 Vui lòng đăng nhập ở thanh bên trái để sử dụng tính năng chỉnh sửa bảng lưới."
+        )
+
+# ================= TAB 4: CÂY PHẢ HỆ (DẠNG ĐỨNG) =================
 with tab_so_do_doi:
     st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
     if not df.empty and "generation" in df.columns:
@@ -596,10 +730,9 @@ with tab_so_do_doi:
             df["generation"].dropna().unique(), key=get_gen_number
         )
         for gen in sorted_gens:
-            is_root_gen = gen == "Tiên Tổ Khảo"
             st.markdown(f"### 📌 {gen}")
             gen_members = df[df["generation"] == gen].sort_values(
-                by=["thuTu", "_original_index"]
+                by=["_original_index"]
             )
 
             raw_fathers = [
@@ -625,24 +758,19 @@ with tab_so_do_doi:
                     unsafe_allow_html=True,
                 )
                 children = gen_members[gen_members["father"] == f].sort_values(
-                    by=["thuTu", "_original_index"]
+                    by=["_original_index"]
                 )
                 for _, row in children.iterrows():
                     name = row.get("fullName", "Chưa rõ")
                     chi = row.get("chi", "Chưa rõ")
-                    thu_tu = int(row.get("thuTu", 1))
                     spouse = row.get("spouse", "")
                     spouse_str = (
                         f" | Phối: {spouse}"
                         if spouse and str(spouse).strip() != ""
                         else ""
                     )
-                    if is_root_gen:
-                        prefix_str = "• "
-                    else:
-                        prefix_str = f"• [Con thứ {thu_tu}] "
                     st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{prefix_str}<b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
                         unsafe_allow_html=True,
                     )
 
@@ -652,39 +780,29 @@ with tab_so_do_doi:
                     unsafe_allow_html=True,
                 )
                 for _, row in unassigned.sort_values(
-                    by=["thuTu", "_original_index"]
+                    by=["_original_index"]
                 ).iterrows():
                     name = row.get("fullName", "Chưa rõ")
                     chi = row.get("chi", "Chưa rõ")
-                    thu_tu = int(row.get("thuTu", 1))
                     spouse = row.get("spouse", "")
                     spouse_str = (
                         f" | Phối: {spouse}"
                         if spouse and str(spouse).strip() != ""
                         else ""
                     )
-                    if is_root_gen:
-                        prefix_str = "• "
-                    else:
-                        prefix_str = f"• [Con thứ {thu_tu}] "
                     st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{prefix_str}<b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
+                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
                         unsafe_allow_html=True,
                     )
 
             st.markdown("---")
 
-# ================= TAB 4: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT - ĐỒNG BỘ 100%) =================
+# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
 with tab_so_do_cot:
     st.markdown(
         "<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>",
         unsafe_allow_html=True,
     )
-    st.markdown(
-        "<p style='text-align: center; color: #555;'>Hiển thị đồng bộ tuyệt đối theo đúng thứ tự ra đời và phả hệ đứng.</p>",
-        unsafe_allow_html=True,
-    )
-
     if not df.empty and "generation" in df.columns:
         sorted_gens = sorted(
             df["generation"].dropna().unique(), key=get_gen_number
@@ -698,7 +816,7 @@ with tab_so_do_cot:
             )
 
             gen_members = df[df["generation"] == gen].sort_values(
-                by=["thuTu", "_original_index"]
+                by=["_original_index"]
             )
             if not gen_members.empty:
                 members_list = gen_members.to_dict(orient="records")
@@ -709,7 +827,6 @@ with tab_so_do_cot:
                         with cols[col_idx]:
                             name = row.get("fullName", "Chưa rõ")
                             chi = row.get("chi", "Gốc")
-                            thu_tu = int(row.get("thuTu", 1))
                             spouse_text = (
                                 f"Phối: {row.get('spouse')}"
                                 if pd.notna(row.get("spouse"))
@@ -748,12 +865,6 @@ with tab_so_do_cot:
                                 else ""
                             )
 
-                            thutu_html = (
-                                ""
-                                if is_root_gen
-                                else f'<span style="font-size: 12px; color: #555;">(Con thứ {thu_tu})</span>'
-                            )
-
                             st.markdown(
                                 f"""
                                 <div style="{card_style} padding: 15px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); margin-bottom: 15px;">
@@ -763,7 +874,7 @@ with tab_so_do_cot:
                                                 {img_html}
                                             </td>
                                             <td style="vertical-align: top; padding-left: 12px; border: none;">
-                                                <div style="font-weight: bold; color: #b71c1c; font-size: 17px; margin-bottom: 3px;">{name} {thutu_html}</div>
+                                                <div style="font-weight: bold; color: #b71c1c; font-size: 17px; margin-bottom: 3px;">{name}</div>
                                                 <div style="font-size: 13px; color: #e65100; font-weight: bold; margin-bottom: 3px;">Chi: {chi}</div>
                                                 <div style="font-size: 12px; color: #444; margin-bottom: 3px;">💍 {spouse_text}</div>
                                                 <div style="font-size: 11px; background-color: #fff3e0; color: #d84315; padding: 3px 6px; border-radius: 4px; border: 1px dashed #ffa726; display: inline-block; margin-top: 2px;">⬆ Cha: {father_text}</div>
@@ -780,13 +891,13 @@ with tab_so_do_cot:
                     unsafe_allow_html=True,
                 )
 
-# ================= TAB 5: IN CUỐN GIA PHẢ =================
+# ================= TAB 6: IN CUỐN GIA PHẢ =================
 with tab_in_phu:
     st.subheader(
         "📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Chuẩn Trang Trọng)"
     )
     st.info(
-        "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách đẹp tuyệt đối."
+        "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách."
     )
 
     cover_html = """
@@ -816,15 +927,13 @@ with tab_in_phu:
             df["generation"].dropna().unique(), key=get_gen_number
         )
         for gen in sorted_gens:
-            is_root_gen = gen == "Tiên Tổ Khảo"
             gen_members = df[df["generation"] == gen].sort_values(
-                by=["thuTu", "_original_index"]
+                by=["_original_index"]
             )
             members_html = ""
             for _, r in gen_members.iterrows():
                 name = r.get("fullName", "Chưa rõ")
                 chi = r.get("chi", "Gốc")
-                thu_tu = int(r.get("thuTu", 1))
                 father = r.get("father", "")
                 spouse = r.get("spouse", "")
                 notes = r.get("notes", "")
@@ -845,12 +954,7 @@ with tab_in_phu:
                     else ""
                 )
 
-                if is_root_gen:
-                    thutu_str = ""
-                else:
-                    thutu_str = f" <span style='color: #d84315; font-size: 13px;'>[Con thứ {thu_tu}]</span>"
-
-                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b>{thutu_str} <span style='color: #b71c1c; font-size: 13.5px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
+                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 13.5px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
 
             gen_page_html = f"""
                 <div class="book-page">
@@ -865,7 +969,7 @@ with tab_in_phu:
             """
             st.markdown(gen_page_html, unsafe_allow_html=True)
 
-# ================= TAB 6: XUẤT DỮ LIỆU =================
+# ================= TAB 7: XUẤT DỮ LIỆU =================
 with tab_xuat:
     st.subheader("💾 Xuất Dữ Liệu Gia Phả (Backup)")
     if not df.empty:
@@ -879,7 +983,7 @@ with tab_xuat:
             mime="application/json",
         )
 
-# ================= TAB 7: NHẬP DỮ LIỆU =================
+# ================= TAB 8: NHẬP DỮ LIỆU =================
 with tab_nhap:
     st.subheader("📥 Nhập Dữ Liệu Gia Phả Mới")
     uploaded_file = st.file_uploader("Chọn tệp JSON gia phả:", type=["json"])
@@ -893,14 +997,14 @@ with tab_nhap:
         except Exception as e:
             st.error(f"Lỗi: {e}")
 
-# ================= TAB 8: QUẢN TRỊ (THÊM MỚI) =================
+# ================= TAB 9: QUẢN TRỊ (THÊM MỚI) =================
 with tab_quan_tri:
-    st.subheader("⚙️ Thêm Thành Viên Mới Vào Dòng Họ")
+    st.subheader("⚙️️ Thêm Thành Viên Mới Vào Dòng Họ")
     if st.session_state.logged_in:
         with st.form("add_member_form"):
             new_name = st.text_input("Họ và tên thành viên mới:")
 
-            c_add1, c_add2, c_add3 = st.columns(3)
+            c_add1, c_add2 = st.columns(2)
             with c_add1:
                 danh_sach_doi = ["Tiên Tổ Khảo"] + [
                     f"Đời thứ {i}" for i in range(1, 21)
@@ -909,13 +1013,6 @@ with tab_quan_tri:
             with c_add2:
                 chi_options = ["Chi 1", "Chi 2", "Chi 3", "Chi 4", "Chi 5", "Gốc"]
                 new_chi = st.selectbox("Thuộc Chi:", chi_options)
-            with c_add3:
-                new_thutu = st.number_input(
-                    "Thứ tự ra đời (Con thứ):",
-                    min_value=1,
-                    max_value=50,
-                    value=1,
-                )
 
             danh_sach_cha = ["-- Không có / Chưa rõ --"]
             if not df.empty:
@@ -961,7 +1058,6 @@ with tab_quan_tri:
                         "fullName": new_name.strip(),
                         "generation": new_gen,
                         "chi": new_chi,
-                        "thuTu": int(new_thutu),
                         "birthYear": "",
                         "deathAnniversary": "",
                         "location": "",
