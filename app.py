@@ -751,82 +751,147 @@ with tab_excel_grid:
             "🔒 Vui lòng đăng nhập ở thanh bên trái để sử dụng tính năng chỉnh sửa bảng lưới."
         )
 
-# ================= TAB 4: CÂY PHẢ HỆ (DẠNG ĐỨNG) =================
+# ============================== TAB 4: CÂY PHẢ HỆ (DẠNG ĐỨNG) ==============================
+import re
+
+# Định nghĩa hàm xử lý lấy số đời nằm ở bên ngoài để dùng chung cho cả 2 tab con
+def xl_get_gen(x):
+    nums = re.findall(r'\d+', str(x))
+    return int(nums[0]) if nums else 0
+
 with tab_so_do_doi:
-    st.subheader("🌳 Cây Phả Hệ Trực Quan - Dạng Đứng (Chuẩn Phả Gốc)")
-    if not df.empty and "generation" in df.columns:
-        sorted_gens = sorted(
-            df["generation"].dropna().unique(), key=get_gen_number
+    # Tách thành 2 tab con bên trong
+    sub_tab1, sub_tab2 = st.tabs(["📜 Danh Sách Các Đời", "🌳 Sơ Đồ Khối Đồ Họa"])
+
+    # ==================== TAB 1: DANH SÁCH CÁC ĐỜI (Giao diện truyền thống) ====================
+    with sub_tab1:
+        st.markdown("### 📋 Danh Sách Thành Viên Phân Chia Theo Thế Hệ")
+        
+        if not df.empty and "generation" in df.columns:
+            danh_sach_doi = sorted(df["generation"].dropna().unique(), key=lambda x: xl_get_gen(x))
+            
+            for doi in danh_sach_doi:
+                st.markdown(f"#### 📌 {doi}")
+                df_doi = df[df["generation"] == doi]
+                for _, row in df_doi.iterrows():
+                    name = row.get("fullName", "")
+                    chi = row.get("chi", "")
+                    phu_than = row.get("father", "")
+                    phoi_nguau = row.get("spouse", "")
+                    
+                    info_parts = []
+                    if phu_than:
+                        info_parts.append(f"Phụ thân: {phu_than}")
+                    if chi:
+                        info_parts.append(f"Chi: {chi}")
+                    if phoi_nguau and str(phoi_nguau).strip() != "":
+                        info_parts.append(f"Phối: {phoi_nguau}")
+                        
+                    info_str = " | ".join(info_parts)
+                    st.markdown(f"• **{name}** {f'({info_str})' if info_str else ''}")
+                st.markdown("---")
+        else:
+            st.info("Chưa có dữ liệu thành viên để hiển thị danh sách.")
+
+    # ==================== TAB 2: SƠ ĐỒ KHỐI ĐỒ HỌA (Graphviz) ====================
+    with sub_tab2:
+        st.markdown("### 🗺️ Sơ Đồ Khối Cây Phả Hệ Trực Quan")
+        
+        # Hộp lựa chọn 6 nhóm theo yêu cầu
+        nhom_chon = st.selectbox(
+            "📂 Chọn nhóm / nhánh phả hệ để hiển thị:", 
+            [
+                "📜 Nhóm gốc (Từ đời 1 đến hết đời 8)", 
+                "🌿 Chi 1", 
+                "🌿 Chi 2", 
+                "🌿 Chi 3", 
+                "🌿 Chi 4", 
+                "🌿 Chi 5"
+            ],
+            key="select_6_nhom_pha_he_doi_tab2"
         )
-        for gen in sorted_gens:
-            st.markdown(f"### 📌 {gen}")
-            gen_members = df[df["generation"] == gen].sort_values(
-                by=["_original_index"]
-            )
 
-            raw_fathers = [
-                f
-                for f in gen_members["father"].dropna().unique()
-                if f and str(f).strip() != ""
-            ]
+        import graphviz
 
-            def get_father_sort_index(fname):
-                matched = df[df["fullName"] == fname]
-                if not matched.empty:
-                    return matched["_original_index"].min()
-                return 999999
+        # Khởi tạo biểu đồ Graphviz
+        dot = graphviz.Digraph(comment='Phả hệ Nguyễn Tộc', format='svg')
+        dot.attr(rankdir='TB', ranksep='0.4', nodesep='0.15', splines='ortho', dpi='150')
+        dot.attr('node', 
+                 shape='box', 
+                 style='rounded,filled', 
+                 fillcolor='#fffdf9', 
+                 fontname='Arial', 
+                 color='#9370DB', 
+                 penwidth='1.2',
+                 fontsize='11',     
+                 margin='0.12,0.08') 
 
-            fathers = sorted(raw_fathers, key=get_father_sort_index)
-            unassigned = gen_members[
-                gen_members["father"].isna() | (gen_members["father"] == "")
-            ]
+        if not df.empty and "fullName" in df.columns:
+            name_to_id = {}
+            for idx, row in df.iterrows():
+                name = str(row.get("fullName", "")).strip()
+                if name:
+                    name_to_id[name] = str(idx)
 
-            for f in fathers:
-                st.markdown(
-                    f"&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: {f}</b>",
-                    unsafe_allow_html=True,
-                )
-                children = gen_members[gen_members["father"] == f].sort_values(
-                    by=["_original_index"]
-                )
-                for _, row in children.iterrows():
-                    name = row.get("fullName", "Chưa rõ")
-                    chi = row.get("chi", "Chưa rõ")
-                    spouse = row.get("spouse", "")
-                    spouse_str = (
-                        f" | Phối: {spouse}"
-                        if spouse and str(spouse).strip() != ""
-                        else ""
-                    )
-                    st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
-                        unsafe_allow_html=True,
-                    )
+            df_hien_thi = df.copy()
+            
+            if "Nhóm gốc" in nhom_chon:
+                if "generation" in df.columns:
+                    df_hien_thi = df_hien_thi[df_hien_thi["generation"].apply(xl_get_gen) <= 8]
+            else:
+                chi_match = re.search(r'\d+', nhom_chon)
+                if chi_match and "chi" in df.columns:
+                    so_chi = chi_match.group(0)
+                    df_hien_thi = df_hien_thi[df_hien_thi["chi"].astype(str).str.contains(so_chi)]
 
-            if not unassigned.empty:
-                st.markdown(
-                    "&nbsp;&nbsp;&nbsp;&nbsp;<b>└─ Phụ thân: Chưa rõ / Khác</b>",
-                    unsafe_allow_html=True,
-                )
-                for _, row in unassigned.sort_values(
-                    by=["_original_index"]
-                ).iterrows():
-                    name = row.get("fullName", "Chưa rõ")
-                    chi = row.get("chi", "Chưa rõ")
-                    spouse = row.get("spouse", "")
-                    spouse_str = (
-                        f" | Phối: {spouse}"
-                        if spouse and str(spouse).strip() != ""
-                        else ""
-                    )
-                    st.markdown(
-                        f"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• <b>{name}</b> &nbsp;|&nbsp; <span style='color: #666; font-size: 13px;'>Chi: {chi}{spouse_str}</span>",
-                        unsafe_allow_html=True,
-                    )
+            for idx, row in df_hien_thi.iterrows():
+                node_id = str(idx)
+                name = row.get("fullName", "Chưa rõ")
+                gen = row.get("generation", "")
+                chi = row.get("chi", "")
+                
+                label = f"{name}\n({gen} - Chi {chi})"
+                dot.node(node_id, label)
 
-            st.markdown("---")
+            danh_sach_id_hien_thi = set(df_hien_thi.index.astype(str))
+            for idx, row in df_hien_thi.iterrows():
+                child_id = str(idx)
+                father_name = str(row.get("father", "")).strip()
+                
+                if father_name and father_name in name_to_id:
+                    father_id = name_to_id[father_name]
+                    if father_id in danh_sach_id_hien_thi:
+                        dot.edge(father_id, child_id)
 
-# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
+        svg_data = ""
+        try:
+            raw_svg = dot.pipe(format='svg').decode('utf-8')
+            svg_data = raw_svg.replace('<svg ', '<svg style="display: block; margin: 0 auto; width: 100%; height: auto;" ')
+        except Exception as e:
+            svg_data = f"<p style='color:red; text-align:center;'>Lỗi xuất SVG: {e}</p>"
+
+        # Sử dụng component chuẩn để render HTML sạch sẽ, không bị lỗi hiển thị thẻ thừa
+        import streamlit.components.v1 as components
+
+        custom_html = f"""
+        <div style="
+            width: 100%;
+            height: 820px;
+            overflow: auto;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-sizing: border-box;
+        ">
+            <div style="min-width: 3500px; margin: 0 auto;">
+                {svg_data}
+            </div>
+        </div>
+        """
+
+        components.html(custom_html, height=850, scrolling=False)
+        st.caption("💡 **Mẹo sử dụng:** Dùng thanh cuộn ngang/dọc để duyệt qua các nhánh, hoặc nhấn giữ phím **Ctrl** kết hợp **lăn con trỏ chuột** để phóng to / thu nhỏ toàn bộ sơ đồ phả hệ.")# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
 with tab_so_do_cot:
     st.markdown(
         "<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>",
@@ -920,85 +985,96 @@ with tab_so_do_cot:
                     unsafe_allow_html=True,
                 )
 
-# ================= TAB 6: IN CUỐN GIA PHẢ =================
-with tab_in_phu:
-    st.subheader(
-        "📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Chuẩn Trang Trọng)"
-    )
-    st.info(
-        "💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách."
-    )
+# ==================== TAB 6: IN CUỐN GIA PHẢ ===================
+    with tab_in_phu:
+        st.subheader("📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Chuẩn Trang Trọng)")
+        st.info("💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách.")
 
-    cover_html = """
-        <div class="book-page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 85vh;">
-            <div style="font-size: 22px; font-weight: bold; color: #795548; margin-bottom: 20px; letter-spacing: 2px;">ĐẠI TỘC GIA PHẢ</div>
-            <div style="font-size: 38px; font-weight: bold; color: #4e342e; text-transform: uppercase; margin-bottom: 20px; line-height: 1.2;">NGUYỄN TỘC PHẢ KÝ</div>
-            <div style="font-size: 20px; font-weight: bold; color: #5d4037; margin-bottom: 35px;">TOÀN TỘC 5 CHI</div>
-            <hr style="width: 45%; margin: 20px auto; border-top: 2px solid #795548;">
-            <div style="font-size: 15px; color: #444; margin-top: 50px; line-height: 1.9;">
-                <b>Địa chỉ dòng họ:</b> Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa<br>
-                <b>Nguyên quán Thủy tổ:</b> Hải Dương tỉnh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã<br>
-                <i style="margin-top: 30px; display: block; font-size: 16px; color: #795548;">Lưu truyền đời đời cho con cháu muôn phương</i>
-            </div>
-        </div>
-    """
-    st.markdown(cover_html, unsafe_allow_html=True)
+        # CSS chung cho toàn bộ các trang in gia phả mang phong cách giấy cổ và khung kép
+        st.markdown("""
+<style>
+.giay-co-kinh {
+    background-color: #fcf9f2;
+    background-image: radial-gradient(#e5dbc9 0.8px, transparent 0.8px), radial-gradient(#e5dbc9 0.8px, #fcf9f2 0.8px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    border: 4px double #795548 !important;
+    border-radius: 4px;
+    padding: 50px 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 850px;
+    margin: 0 auto 30px auto;
+    box-sizing: border-box;
+}
+.trang-bia {
+    min-height: 82vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+</style>
+""", unsafe_allow_html=True)
 
-    intro_page_html = f"""
-        <div class="book-page">
-            {get_loi_tua_html()}
-        </div>
-    """
-    st.markdown(intro_page_html, unsafe_allow_html=True)
+        # 1. TRANG BÌA
+        cover_html = """
+<div class="giay-co-kinh trang-bia">
+    <div style="font-size: 22px; font-weight: bold; color: #795548; font-family: 'Times New Roman', serif; margin-bottom: 20px; letter-spacing: 2px;">ĐẠI TỘC GIA PHẢ</div>
+    <div style="font-size: 38px; font-weight: bold; color: #4e342e; font-family: 'Times New Roman', serif; text-transform: uppercase; margin-bottom: 20px; line-height: 1.2;">NGUYỄN TỘC PHẢ KÝ</div>
+    <div style="font-size: 20px; font-weight: bold; color: #5d4037; font-family: 'Times New Roman', serif; margin-bottom: 35px;">TOÀN TỘC 5 CHI</div>
+    <hr style="width: 45%; margin: 20px auto; border-top: 2px solid #795548;">
+    <div style="font-size: 15px; color: #444; font-family: 'Times New Roman', serif; margin-top: 30px; line-height: 1.9;">
+        <b>Địa chỉ dòng họ:</b> Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa<br>
+        <b>Nguyên quán Thủy tổ:</b> Hải Dương tinh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã<br>
+        <i style="margin-top: 30px; display: block; font-size: 16px; color: #795548;">Lưu truyền đời đời cho con cháu muôn phương</i>
+    </div>
+</div>
+"""
+        st.markdown(cover_html, unsafe_allow_html=True)
 
-    if not df.empty and "generation" in df.columns:
-        sorted_gens = sorted(
-            df["generation"].dropna().unique(), key=get_gen_number
-        )
-        for gen in sorted_gens:
-            gen_members = df[df["generation"] == gen].sort_values(
-                by=["_original_index"]
+        # 2. TRANG LỜI TỰA / GIỚI THIỆU
+        intro_content = get_loi_tua_html() if 'get_loi_tua_html' in globals() else ''
+        intro_page_html = f"""
+<div class="giay-co-kinh" style="text-align: left;">
+    {intro_content}
+</div>
+"""
+        st.markdown(intro_page_html, unsafe_allow_html=True)
+
+        # 3. CÁC TRANG CHI TIẾT CÁC ĐỜI & THÀNH VIÊN
+        if not df.empty and "generation" in df.columns:
+            sorted_gens = sorted(
+                df["generation"].dropna().unique(), key=get_gen_number if 'get_gen_number' in globals() else str
             )
-            members_html = ""
-            for _, r in gen_members.iterrows():
-                name = r.get("fullName", "Chưa rõ")
-                chi = r.get("chi", "Gốc")
-                father = r.get("father", "")
-                spouse = r.get("spouse", "")
-                notes = r.get("notes", "")
+            for gen in sorted_gens:
+                gen_members = df[df["generation"] == gen].sort_values(by=["_original_index"] if "_original_index" in df.columns else df.columns[0])
+                
+                members_html = ""
+                for _, r in gen_members.iterrows():
+                    name = r.get("fullName", "Chưa rõ")
+                    chi = r.get("chi", "Gốc")
+                    father = r.get("father", "")
+                    spouse = r.get("spouse", "")
+                    notes = r.get("notes", "")
+                    
+                    father_str = f" | Cha: {father}" if father and str(father).strip() != "" else ""
+                    spouse_str = f" | Vợ/Chồng: {spouse}" if spouse and str(spouse).strip() != "" else ""
+                    notes_str = f"<br><span style='color: #666; font-style: italic;'>Thông tin: {notes}</span>" if notes and str(notes).strip() != "" else ""
+                    
+                    members_html += f'<div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #e0d4c3; font-family: \'Times New Roman\', serif;"><b style="color: #4e342e; font-size: 16px;">• {name}</b> <span style="color: #795548; font-size: 14px;">(Chi {chi}{father_str}{spouse_str})</span>{notes_str}</div>'
 
-                father_str = (
-                    f" | Cha: {father}"
-                    if father and str(father).strip() != ""
-                    else ""
-                )
-                spouse_str = (
-                    f" | Phối: {spouse}"
-                    if spouse and str(spouse).strip() != ""
-                    else ""
-                )
-                notes_str = (
-                    f" <i>({notes})</i>"
-                    if notes and str(notes).strip() != ""
-                    else ""
-                )
-
-                members_html += f"<li style='margin-bottom: 6px;'><b>{name}</b> <span style='color: #b71c1c; font-size: 13.5px;'>[{chi}]</span>{father_str}{spouse_str}{notes_str}</li>"
-
-            gen_page_html = f"""
-                <div class="book-page">
-                    <div style="text-align: center; border-bottom: 2px solid #795548; padding-bottom: 8px; margin-bottom: 18px;">
-                        <h2 style="color: #795548; margin: 0; text-transform: uppercase;">{gen}</h2>
-                        <p style="font-size: 13px; color: #666; margin: 4px 0 0 0;">(Ghi chép các bậc tiền nhân và hậu duệ)</p>
-                    </div>
-                    <ul style="line-height: 1.45; font-size: 14px; padding-left: 20px; margin: 0;">
-                        {members_html}
-                    </ul>
-                </div>
-            """
-            st.markdown(gen_page_html, unsafe_allow_html=True)
-
-# ================= TAB 7: XUẤT DỮ LIỆU =================
+                gen_page_html = f"""
+<div class="giay-co-kinh" style="text-align: left;">
+    <h3 style="color: #5c3a21; font-family: 'Times New Roman', serif; text-align: center; border-bottom: 2px solid #795548; padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase;">
+        {gen}
+    </h3>
+    <div style="font-size: 15px; color: #333; line-height: 1.6;">
+        {members_html}
+    </div>
+</div>
+"""
+                st.markdown(gen_page_html, unsafe_allow_html=True)# ================= TAB 7: XUẤT DỮ LIỆU =================
 with tab_xuat:
     st.subheader("💾 Xuất Dữ Liệu Gia Phả (Backup)")
     if not df.empty:
