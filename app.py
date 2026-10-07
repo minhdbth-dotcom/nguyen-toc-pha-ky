@@ -824,10 +824,10 @@ with tab_so_do_doi:
             so_chi = chi_match.group(0)
             df_hien_thi = df_hien_thi[df_hien_thi["chi"].astype(str).str.contains(so_chi)]
 
-    # Sắp xếp dữ liệu theo số thứ tự của Đời (generation) từ nhỏ đến lớn
+    # Sắp xếp theo đời, giữ nguyên thứ tự ban đầu trong bảng dữ liệu (đúng thứ tự sinh)
     if not df_hien_thi.empty and "generation" in df_hien_thi.columns:
         df_hien_thi["_gen_sort_val"] = df_hien_thi["generation"].apply(lambda x: xl_get_gen(x) if 'xl_get_gen' in globals() else 99)
-        df_hien_thi = df_hien_thi.sort_values(by=["_gen_sort_val", "fullName"])
+        df_hien_thi = df_hien_thi.sort_values(by=["_gen_sort_val"], kind="stable")
 
     # Xây dựng giao diện hiển thị phân nhóm theo từng đời
     tree_html = f"""
