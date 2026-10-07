@@ -828,6 +828,10 @@ with tab_so_do_doi:
     rows_html = ""
     if not df_hien_thi.empty and "generation" in df_hien_thi.columns:
         def get_gen_number(val):
+            val_str = str(val).lower()
+            # Ưu tiên các cụm từ Tiên tổ / Thủy tổ lên vị trí đầu tiên (đời 0)
+            if "tiên tổ" in val_str or "thủy tổ" in val_str:
+                return 0
             match = re.search(r'\d+', str(val))
             return int(match.group()) if match else 99
             
