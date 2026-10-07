@@ -254,7 +254,7 @@ def get_loi_tua_html():
         '</ul>',
         '<p>Hoặc cũng có câu thơ như sau:</p>',
         '<div style="text-align: center; font-style: italic; margin: 15px 0;">'
-        'Cây có gốc mới nở cành sinh ngọn,<br>'
+        'Cây có gốc mới nở cành xanh ngọn,<br>'
         'Nước có nguồn mới bể rộng sông sâu,<br>'
         'Người ta có nguồn gốc từ đâu,<br>'
         'Có tổ tiên trước rồi sau có mình.'
