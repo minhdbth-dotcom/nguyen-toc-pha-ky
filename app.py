@@ -793,105 +793,94 @@ with tab_so_do_doi:
         else:
             st.info("Chưa có dữ liệu thành viên để hiển thị danh sách.")
 
-    # ==================== TAB 2: SƠ ĐỒ KHỐI ĐỒ HỌA (Graphviz) ====================
-    with sub_tab2:
-        st.markdown("### 🗺️ Sơ Đồ Khối Cây Phả Hệ Trực Quan")
-        
-        # Hộp lựa chọn 6 nhóm theo yêu cầu
-        nhom_chon = st.selectbox(
-            "📂 Chọn nhóm / nhánh phả hệ để hiển thị:", 
-            [
-                "📜 Nhóm gốc (Từ đời 1 đến hết đời 8)", 
-                "🌿 Chi 1", 
-                "🌿 Chi 2", 
-                "🌿 Chi 3", 
-                "🌿 Chi 4", 
-                "🌿 Chi 5"
-            ],
-            key="select_6_nhom_pha_he_doi_tab2"
-        )
+    # ===============================================
+# TAB 2: SƠ ĐỒ KHỐI ĐỒ HỌA (Hiển thị dạng khối cổ điển)
+# ===============================================
+with sub_tab2:
+    st.markdown("### 🗺️ Sơ Đồ Khối Cây Phả Hệ Trực Quan")
 
-        import graphviz
+    # Hộp lựa chọn 6 nhóm theo yêu cầu
+    nhom_chon = st.selectbox(
+        "📁 Chọn nhóm / nhánh phả hệ để hiển thị:",
+        [
+            "📜 Nhóm gốc (Từ đời 1 đến hết đời 8)",
+            "🌿 Chi 1",
+            "🌿 Chi 2",
+            "🌿 Chi 3",
+            "🌿 Chi 4",
+            "🌿 Chi 5"
+        ],
+        key="select_6_nhom_pha_he_doi_tab2"
+    )
 
-        # Khởi tạo biểu đồ Graphviz
-        dot = graphviz.Digraph(comment='Phả hệ Nguyễn Tộc', format='svg')
-        dot.attr(rankdir='TB', ranksep='0.4', nodesep='0.15', splines='ortho', dpi='150')
-        dot.attr('node', 
-                 shape='box', 
-                 style='rounded,filled', 
-                 fillcolor='#fffdf9', 
-                 fontname='Arial', 
-                 color='#9370DB', 
-                 penwidth='1.2',
-                 fontsize='11',     
-                 margin='0.12,0.08') 
+    # Lọc dữ liệu theo nhánh được chọn
+    df_hien_thi = df.copy()
+    if "Nhóm gốc" in nhom_chon:
+        if "generation" in df_hien_thi.columns:
+            df_hien_thi = df_hien_thi[df_hien_thi["generation"].apply(xl_get_gen) <= 8]
+    else:
+        chi_match = re.search(r'\d+', nhom_chon)
+        if chi_match and "chi" in df_hien_thi.columns:
+            so_chi = chi_match.group(0)
+            df_hien_thi = df_hien_thi[df_hien_thi["chi"].astype(str).str.contains(so_chi)]
 
-        if not df.empty and "fullName" in df.columns:
-            name_to_id = {}
-            for idx, row in df.iterrows():
-                name = str(row.get("fullName", "")).strip()
-                if name:
-                    name_to_id[name] = str(idx)
+    # Xây dựng cấu trúc cây hiển thị bằng HTML chuẩn phong cách giấy cổ kính
+    tree_html = f"""
+    <div style="
+        background-color: #fdfbf7;
+        background-image: radial-gradient(#d5c3aa 0.75px, transparent 0.75px);
+        background-size: 15px 15px;
+        border: 4px double #795548;
+        border-radius: 8px;
+        padding: 25px;
+        font-family: 'Times New Roman', serif;
+        color: #3e2723;
+        max-height: 750px;
+        overflow-y: auto;
+        box-shadow: inset 0 0 15px rgba(121, 85, 72, 0.1);
+    ">
+        <h3 style="text-align: center; color: #5d4037; margin-bottom: 20px; border-bottom: 2px solid #8d6e63; padding-bottom: 10px;">
+            DANH MỤC THÀNH VIÊN - {nhom_chon.upper()}
+        </h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
+    """
 
-            df_hien_thi = df.copy()
+    if not df_hien_thi.empty:
+        for idx, row in df_hien_thi.iterrows():
+            name = str(row.get("fullName", "Chưa rõ")).strip()
+            gen = str(row.get("generation", "Đời ?"))
+            chi = str(row.get("chi", ""))
+            father = str(row.get("father", "")).strip()
             
-            if "Nhóm gốc" in nhom_chon:
-                if "generation" in df.columns:
-                    df_hien_thi = df_hien_thi[df_hien_thi["generation"].apply(xl_get_gen) <= 8]
-            else:
-                chi_match = re.search(r'\d+', nhom_chon)
-                if chi_match and "chi" in df.columns:
-                    so_chi = chi_match.group(0)
-                    df_hien_thi = df_hien_thi[df_hien_thi["chi"].astype(str).str.contains(so_chi)]
+            chi_info = f" - Chi {chi}" if chi else ""
+            father_info = f"<br><span style='font-size: 11px; font-style: italic;'>Phụ thân: {father}</span>" if father else ""
 
-            for idx, row in df_hien_thi.iterrows():
-                node_id = str(idx)
-                name = row.get("fullName", "Chưa rõ")
-                gen = row.get("generation", "")
-                chi = row.get("chi", "")
-                
-                label = f"{name}\n({gen} - Chi {chi})"
-                dot.node(node_id, label)
-
-            danh_sach_id_hien_thi = set(df_hien_thi.index.astype(str))
-            for idx, row in df_hien_thi.iterrows():
-                child_id = str(idx)
-                father_name = str(row.get("father", "")).strip()
-                
-                if father_name and father_name in name_to_id:
-                    father_id = name_to_id[father_name]
-                    if father_id in danh_sach_id_hien_thi:
-                        dot.edge(father_id, child_id)
-
-        svg_data = ""
-        try:
-            raw_svg = dot.pipe(format='svg').decode('utf-8')
-            svg_data = raw_svg.replace('<svg ', '<svg style="display: block; margin: 0 auto; width: 100%; height: auto;" ')
-        except Exception as e:
-            svg_data = f"<p style='color:red; text-align:center;'>Lỗi xuất SVG: {e}</p>"
-
-        # Sử dụng component chuẩn để render HTML sạch sẽ, không bị lỗi hiển thị thẻ thừa
-        import streamlit.components.v1 as components
-
-        custom_html = f"""
-        <div style="
-            width: 100%;
-            height: 820px;
-            overflow: auto;
-            border: 1px solid #dcdcdc;
-            border-radius: 8px;
-            background-color: #ffffff;
-            padding: 20px;
-            box-sizing: border-box;
-        ">
-            <div style="min-width: 3500px; margin: 0 auto;">
-                {svg_data}
+            tree_html += f"""
+            <div style="
+                background: #fff8e1;
+                border: 2px solid #a1887f;
+                border-radius: 6px;
+                padding: 12px 16px;
+                width: 220px;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+                text-align: center;
+            ">
+                <div style="font-weight: bold; color: #4e342e; font-size: 15px; margin-bottom: 4px;">{name}</div>
+                <div style="font-size: 12px; color: #6d4c41; background: #efebe9; padding: 2px 6px; border-radius: 4px; display: inline-block;">{gen}{chi_info}</div>
+                {father_info}
             </div>
-        </div>
-        """
+            """
+    else:
+        tree_html += "<p style='text-align: center; font-style: italic;'>Không có dữ liệu thành viên trong nhánh này.</p>"
 
-        components.html(custom_html, height=850, scrolling=False)
-        st.caption("💡 **Mẹo sử dụng:** Dùng thanh cuộn ngang/dọc để duyệt qua các nhánh, hoặc nhấn giữ phím **Ctrl** kết hợp **lăn con trỏ chuột** để phóng to / thu nhỏ toàn bộ sơ đồ phả hệ.")# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
+    tree_html += """
+        </div>
+    </div>
+    """
+
+    # Hiển thị ra giao diện Streamlit
+    st.markdown(tree_html, unsafe_allow_html=True)
+    st.caption("💡 **Mẹo sử dụng:** Giao diện được thiết kế theo phong cách gia phả cổ điển, tự động cuộn xem danh sách các thành viên trong chi/nhóm rõ ràng, không phụ thuộc vào gói phần mềm hệ thống.")# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
 with tab_so_do_cot:
     st.markdown(
         "<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>",
