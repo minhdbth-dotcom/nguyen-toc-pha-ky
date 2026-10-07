@@ -879,7 +879,23 @@ with sub_tab2:
     """
 
     # Hiển thị ra giao diện Streamlit
-    st.markdown(tree_html, unsafe_allow_html=True)
+    # Sử dụng component chuẩn để render HTML sạch sẽ, không bị lộ thẻ code
+    import streamlit.components.v1 as components
+
+    final_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body style="margin: 0; padding: 0;">
+        {tree_html}
+    </body>
+    </html>
+    """
+
+    components.html(final_html, height=750, scrolling=True)
+    st.caption("💡 **Mẹo sử dụng:** Giao diện được thiết kế theo phong cách gia phả cổ điển, tự động cuộn xem danh sách các thành viên trong chi/nhóm rõ ràng, không phụ thuộc vào gói phần mềm hệ thống.")
     st.caption("💡 **Mẹo sử dụng:** Giao diện được thiết kế theo phong cách gia phả cổ điển, tự động cuộn xem danh sách các thành viên trong chi/nhóm rõ ràng, không phụ thuộc vào gói phần mềm hệ thống.")# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
 with tab_so_do_cot:
     st.markdown(
