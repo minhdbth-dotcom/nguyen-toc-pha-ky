@@ -793,11 +793,11 @@ with tab_so_do_doi:
         else:
             st.info("Chưa có dữ liệu thành viên để hiển thị danh sách.")
 
-    # ===============================================
-# TAB 2: SƠ ĐỒ KHỐI CÂY PHẢ HỆ (Sơ đồ nhánh nối CSS thuần)
+   # ===============================================
+# TAB 2: SƠ ĐỒ KHỐI CÂY PHẢ HỆ (Sắp xếp theo thứ tự các đời)
 # ===============================================
 with tab_so_do_doi:
-    st.markdown("### 🗺️ Sơ Đồ Khối Cây Phả Hệ Trực Quan (Nhánh Nối Cha - Con)")
+    st.markdown("### 🗺️ Sơ Đồ Khối Cây Phả Hệ Trực Quan (Phân Theo Thế Hệ)")
 
     # Hộp lựa chọn 6 nhóm theo yêu cầu
     nhom_chon = st.selectbox(
@@ -810,7 +810,7 @@ with tab_so_do_doi:
             "🌿 Chi 4",
             "🌿 Chi 5"
         ],
-        key="select_6_nhom_pha_he_doi_tab2_css"
+        key="select_6_nhom_pha_he_doi_tab2_ordered"
     )
 
     # Lọc dữ liệu theo nhánh được chọn
@@ -824,7 +824,12 @@ with tab_so_do_doi:
             so_chi = chi_match.group(0)
             df_hien_thi = df_hien_thi[df_hien_thi["chi"].astype(str).str.contains(so_chi)]
 
-    # Xây dựng cấu trúc cây phân cấp có nhánh nối CSS (Org Chart)
+    # Sắp xếp dữ liệu theo số thứ tự của Đời (generation) từ nhỏ đến lớn
+    if not df_hien_thi.empty and "generation" in df_hien_thi.columns:
+        df_hien_thi["_gen_sort_val"] = df_hien_thi["generation"].apply(lambda x: xl_get_gen(x) if 'xl_get_gen' in globals() else 99)
+        df_hien_thi = df_hien_thi.sort_values(by=["_gen_sort_val", "fullName"])
+
+    # Xây dựng giao diện hiển thị phân nhóm theo từng đời
     tree_html = f"""
     <!DOCTYPE html>
     <html>
@@ -846,7 +851,6 @@ with tab_so_do_doi:
                 padding: 25px;
                 background: #fdfbf7;
                 box-shadow: inset 0 0 15px rgba(121, 85, 72, 0.1);
-                overflow-x: auto;
             }}
             h3.title {{
                 text-align: center;
@@ -855,82 +859,36 @@ with tab_so_do_doi:
                 border-bottom: 2px solid #8d6e63;
                 padding-bottom: 10px;
             }}
-            /* CSS Tree Structure */
-            .tree ul {{
-                padding-top: 20px; 
-                position: relative;
-                transition: all 0.5s;
+            .generation-row {{
+                margin-bottom: 25px;
+                border-bottom: 1px dashed #d7ccc8;
+                padding-bottom: 15px;
+            }}
+            .generation-title {{
+                font-weight: bold;
+                font-size: 16px;
+                color: #5d4037;
+                margin-bottom: 10px;
+                background: #efebe9;
+                padding: 5px 12px;
+                border-radius: 4px;
+                display: inline-block;
+                border-left: 4px solid #795548;
+            }}
+            .nodes-grid {{
                 display: flex;
-                justify-content: center;
-                list-style-type: none;
-                margin: 0;
+                flex-wrap: wrap;
+                gap: 12px;
             }}
-            .tree li {{
-                text-align: center;
-                list-style-type: none;
-                position: relative;
-                padding: 20px 5px 0 5px;
-                transition: all 0.5s;
-            }}
-            /* Đường nối ngang (Connector lines) */
-            .tree li::before, .tree li::after {{
-                content: '';
-                position: absolute; 
-                top: 0; 
-                right: 50%;
-                border-top: 2px solid #8d6e63;
-                width: 50%; 
-                height: 20px;
-            }}
-            .tree li::after {{
-                right: auto; left: 50%;
-                border-left: 2px solid #8d6e63;
-            }}
-            /* Xóa đường nối thừa cho các node đơn lẻ hoặc đầu/cuối */
-            .tree li:only-child::after, .tree li:only-child::before {{
-                display: none;
-            }}
-            .tree li:only-child {{
-                padding-top: 0;
-            }}
-            .tree li:first-child::before, .tree li:last-child::after {{
-                border: 0;
-            }}
-            .tree li:last-child::before {{
-                border-right: 2px solid #8d6e63;
-                border-radius: 0 5px 0 0;
-            }}
-            .tree li:first-child::after {{
-                border-radius: 5px 0 0 0;
-            }}
-            /* Đường nối dọc xuống từ cha */
-            .tree ul ul::before {{
-                content: '';
-                position: absolute; 
-                top: 0; left: 50%;
-                border-left: 2px solid #8d6e63;
-                width: 0; height: 20px;
-            }}
-            /* Thẻ thành viên (Node box) */
-            .tree .node {{
+            .node {{
                 border: 2px solid #a1887f;
                 padding: 10px 14px;
-                text-decoration: none;
                 background: #fff8e1;
                 color: #4e342e;
-                font-family: 'Times New Roman', serif;
-                display: inline-block;
                 border-radius: 6px;
-                box-shadow: 2px 2px 5px rgba(0,0,0,0.08);
-                width: 180px;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+                width: 210px;
                 text-align: center;
-                position: relative;
-                transition: all 0.3s;
-            }}
-            .tree .node:hover {{
-                background: #ffecb3;
-                border-color: #6d4c41;
-                transform: translateY(-2px);
             }}
             .node-name {{
                 font-weight: bold;
@@ -956,48 +914,49 @@ with tab_so_do_doi:
     <body>
         <div class="tree-container">
             <h3 class="title">SƠ ĐỒ PHẢ HỆ - {nhom_chon.upper()}</h3>
-            <div class="tree">
-                <ul>
     """
 
     if not df_hien_thi.empty:
-        # Lấy danh sách thành viên dạng phân cấp đơn giản hoặc danh sách nút nối
-        # Giả lập cấu trúc cây phân nhánh hiển thị trực quan
-        tree_html += "<li>"
-        count = 0
-        for idx, row in df_hien_thi.head(30).iterrows(): # Giới hạn hiển thị để sơ đồ gọn gàng, rõ nét
-            name = str(row.get("fullName", "Chưa rõ")).strip()
-            gen = str(row.get("generation", "Đời ?"))
-            chi = str(row.get("chi", ""))
-            father = str(row.get("father", "")).strip()
-            
-            chi_str = f" - Chi {chi}" if chi else ""
-            father_str = f"<div class='node-father'>Phụ thân: {father}</div>" if father else ""
-
+        # Nhóm các thành viên theo từng đời để hiển thị thành các hàng riêng biệt
+        grouped = df_hien_thi.groupby("generation")
+        for gen_name, group in grouped:
             tree_html += f"""
+            <div class="generation-row">
+                <div class="generation-title">📜 {gen_name}</div>
+                <div class="nodes-grid">
+            """
+            for idx, row in group.iterrows():
+                name = str(row.get("fullName", "Chưa rõ")).strip()
+                chi = str(row.get("chi", ""))
+                father = str(row.get("father", "")).strip()
+                
+                chi_str = f" - Chi {chi}" if chi else ""
+                father_str = f"<div class='node-father'>Phụ thân: {father}</div>" if father else ""
+
+                tree_html += f"""
                     <div class="node">
                         <div class="node-name">{name}</div>
-                        <div class="node-gen">{gen}{chi_str}</div>
+                        <div class="node-gen">{gen_name}{chi_str}</div>
                         {father_str}
                     </div>
+                """
+            tree_html += """
+                </div>
+            </div>
             """
-            count += 1
-        tree_html += "</li>"
     else:
-        tree_html += "<li><p style='text-align: center; font-style: italic;'>Không có dữ liệu thành viên trong nhánh này.</p></li>"
+        tree_html += "<p style='text-align: center; font-style: italic;'>Không có dữ liệu thành viên trong nhánh này.</p>"
 
     tree_html += """
-                </ul>
-            </div>
         </div>
     </body>
     </html>
     """
 
-    # Render trực quan qua Streamlit component sạch sẽ
+    # Render giao diện mượt mà trên Streamlit
     import streamlit.components.v1 as components
     components.html(tree_html, height=750, scrolling=True)
-    st.caption("💡 **Mẹo sử dụng:** Sơ đồ cây phân cấp kết nối nhánh dòng họ bằng CSS thuần, hiển thị rõ ràng, trang trọng và chạy cực kỳ ổn định trên đám mây.")# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
+    st.caption("💡 **Mẹo sử dụng:** Các thành viên được tự động sắp xếp và chia thành từng hàng riêng biệt theo từng thế hệ (Đời 1, Đời 2,...) giúp quan sát dòng họ mạch lạc, có trật tự rõ ràng.")# ================= TAB 5: CÂY PHẢ HỆ (HÀNG NGANG CHI TIẾT) =================
 with tab_so_do_cot:
     st.markdown(
         "<div style='text-align: center;'><h2 style='color: #2e7d32;'>🌳 SƠ ĐỒ CÂY PHẢ HỆ HÀNG NGANG CHI TIẾT</h2></div>",
