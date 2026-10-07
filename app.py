@@ -824,9 +824,13 @@ with tab_so_do_doi:
             so_chi = chi_match.group(0)
             df_hien_thi = df_hien_thi[df_hien_thi["chi"].astype(str).str.contains(so_chi)]
 
-    # Sắp xếp theo đời, giữ nguyên thứ tự ban đầu trong bảng dữ liệu (đúng thứ tự sinh)
+    # Sắp xếp chuẩn theo số nguyên của đời (tránh lỗi chuỗi chữ cái làm 15 đứng trước 8)
     if not df_hien_thi.empty and "generation" in df_hien_thi.columns:
-        df_hien_thi["_gen_sort_val"] = df_hien_thi["generation"].apply(lambda x: xl_get_gen(x) if 'xl_get_gen' in globals() else 99)
+        def get_gen_number(val):
+            match = re.search(r'\d+', str(val))
+            return int(match.group()) if match else 99
+            
+        df_hien_thi["_gen_sort_val"] = df_hien_thi["generation"].apply(get_gen_number)
         df_hien_thi = df_hien_thi.sort_values(by=["_gen_sort_val"], kind="stable")
 
     # Xây dựng giao diện hiển thị phân nhóm theo từng đời
