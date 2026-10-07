@@ -237,64 +237,61 @@ if not df.empty:
 # --- HÀM NỘI DUNG TỔNG QUAN ---
 def get_loi_tua_html():
     parts = [
-        '<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">',
+        '<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; text-align: justify;">',
+        '<h3 style="color: #b30000; font-weight: bold; margin-bottom: 15px; text-align: left;">Lời nói đầu</h3>',
         '<p>Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Các cụ ngày xưa đã nói:</p>',
         '<ul style="margin-left: 20px;">',
-        '<li><em>Nhân do hồ tổ</em></li>',
-        '<li><em>Mộc do hồ bản</em></li>',
-        '<li><em>Thủy do hồ nguyên</em></li>',
+        '<li><em>Nhân do hổ tổ</em></li>',
+        '<li><em>Mộc do hổ bản</em></li>',
+        '<li><em>Thủy do hổ nguyên.</em></li>',
         '</ul>',
         '<p><b>Đại ý như sau:</b></p>',
         '<ul style="margin-left: 20px;">',
         '<li>Người phải có tổ.</li>',
         '<li>Cây phải có gốc.</li>',
         '<li>Nước phải có nguồn.</li>',
+        '<li>Người phải có hàng xóm láng giềng....</li>',
         '</ul>',
         '<p>Hoặc cũng có câu thơ như sau:</p>',
-        '<div style="text-align: center; font-style: italic; margin: 15px 0;">',
-        'Cây có gốc mới nở cành sinh ngọn,<br>',
-        'Nước có nguồn mới bể rộng sông sâu.<br>',
-        'Người ta có nguồn gốc từ đâu,<br>',
-        'Có tổ tiên trước rồi sau có mình.',
+        '<div style="text-align: center; font-style: italic; margin: 15px 0;">'
+        'Cây có gốc mới nở cành sinh ngọn,<br>'
+        'Nước có nguồn mới bể rộng sông sâu,<br>'
+        'Người ta có nguồn gốc từ đâu,<br>'
+        'Có tổ tiên trước rồi sau có mình.'
         '</div>',
         '<p>Như vậy việc biên soạn, sao chép lại quá trình hình thành và phát triển của họ <b>NGUYỄN</b> ở thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa là một việc rất cần thiết và quan trọng. Để tỏ lòng thành kính tưởng nhớ tới công ơn của các bậc tổ tiên dòng họ Nguyễn, những người đã có công sinh thành và phát triển dòng họ.</p>',
-        '<p>Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương Tỉnh, Nam Sách Phủ, Tuyên Minh huyện, An Đô Hạ xã. Ban đầu di cư vào tại bản tỉnh Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn. Sinh cơ lập nghiệp (Thiết tương triệu cơ) nghĩa là làm nghề thợ rèn. Sau đó chuyển lên Hội Hiền thôn, Phúc Trạch xã, vào thời cố Chính Hòa (1680-1704). Tính đến nay đã gần 300 năm. Đã có 15 đời nối tiếp, hình thành 5 chi, có trên 100 hộ, là một trong những họ đông nhất của làng.</p>',
+        '<p>Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở Hải Dương Tỉnh, Nam Sách Phủ, Tuyên Minh huyện, An Đô Hạ xã. Ban đầu di cư vào tại bản tỉnh Hà Trung phủ, Hoàng Hóa huyện, Dương Sơn xã, Đại Yên thôn. Sinh cơ lập nghiệp (Thiết tương triệu cơ) nghĩa là làm nghề thợ rèn. Sau đó chuyển lên Hội Hiền thôn, Phúc Trạch xã, vào thời cổ Chính Hòa (1680 - 1704). Tính đến nay đã gần 300 năm. Đã có hơn 15 đời nối tiếp, hình thành 5 chi, có trên 100 hộ, là một trong những họ đông nhất của làng.</p>',
         '<p>Do thời cuộc nhất là sau Cách mạng Tháng Tám năm 1945 đến nay có nhiều hộ, nhiều cá nhân trong dòng họ đã thoát ly đi xây dựng vùng kinh tế mới, đi công tác, học tập và chiến đấu ở nhiều vùng trên mọi miền đất nước. Các thế hệ có những anh dũng hy sinh cho sự nghiệp giải phóng dân tộc và bảo vệ Tổ quốc, nhất là thời kỳ đế quốc phong kiến ông cha ta đã tham gia các phong trào, Hội Ái Nghĩa, Hội Tương Tế, hướng nghiệp, Thanh niên Cách Mạng Đồng Chí Hội.....</p>',
-        '<p>Có nhiều gia đình được Nhà nước tặng Bằng Khen "Gia đình có công với nước", Bảng Vàng Danh Dự, gia đình vẻ vang, có nhiều cá nhân được tặng huân huy chương và các phần thưởng cao quý khác.</p>',
-        '<p>Càng nghiên cứu tìm hiểu về cội nguồn gốc tích tôn thống Nguyễn tộc, thân thế và sự nghiệp của ông cha ta chúng ta càng tự hào về quá khứ và hiện tại như bức đại tự ở nhà thờ đã nêu:</p>',
-        '<p style="text-align: center; font-weight: bold; color: #795548;">KÍNH NHƯ TẠI</p>',
+        '<p>Có nhiều gia đình được Nhà nước tặng Bằng Khen Gia đình có công với nước. Bảng Vàng Danh Dự. Gia đình vẻ vang, có nhiều cá nhân được tặng huân huy chương và các phần thưởng cao quý khác.</p>',
+        '<p>Càng nghiên cứu tìm hiểu về cội nguồn gốc tích tôn thống Nguyễn tộc, thân thế và sự nghiệp của ông cha ta chúng ta càng tự hào về quá khứ và hiện tại như bức đại tự ở nhà thờ đã nêu.</p>',
+        '<p style="text-align: center; font-weight: bold; margin-top: 20px;">KÍNH NHƯ TẠI</p>',
         '<p>Và hai câu đối:</p>',
-        '<div style="text-align: center; font-style: italic; margin: 10px 0;">',
-        'Cương thường chi trậu ngất trung thiên<br>',
-        'Bản thế vi niên tử tôn sinh.',
+        '<div style="text-align: center; font-style: italic; margin: 15px 0;">'
+        'Cương thường chi trậu ngất trung thiên<br>'
+        'Bản thế vi niên tử tôn sinh.'
         '</div>',
         '<p>Hoặc hai câu đối ở cột cạnh bức bình phong ở sân cũng ghi:</p>',
-        '<div style="text-align: center; font-style: italic; margin: 10px 0;">',
-        'Nhân nghĩa căn cơ tùy vĩnh thế<br>',
-        'Cương thường để trậu ngất trung thiên',
+        '<div style="text-align: center; font-style: italic; margin: 15px 0;">'
+        'Nhân nghĩa căn cơ tùy vĩnh thế<br>'
+        'Cương thường để trậu ngất trung thiên'
         '</div>',
-        '<p>Thật vậy:</p>',
-        '<div style="text-align: center; font-style: italic; margin: 10px 0;">',
-        'Tổ tông công đức bao trùm hậu thế<br>',
-        'Con cháu muôn đời không sao quên được',
+        '<p><b>Thật vậy:</b></p>',
+        '<div style="text-align: center; font-style: italic; margin: 15px 0;">'
+        'Tổ tông công đức bao trùm hậu thế<br>'
+        'Con cháu muôn đời không sao quên được'
         '</div>',
-        '<p>Vì thế theo nguyện vọng chung xây dựng và giữ vững tôn thống <b>NGUYỄN TỘC</b> là trách nhiệm và nghĩa vụ của mỗi thành viên trong dòng họ. Do đó ngày 25-02-1990 tức là ngày Xuân Kỵ ngày 01 tháng 02 năm Canh Ngọ các ông đầu chi và các cụ cao tuổi trong họ đã họp tại nhà ông Nguyễn Văn Chơn (nhà thờ của họ) dưới sự chủ trì của ông Nguyễn Văn Hiếu trưởng họ, đã họp bàn nhiều việc trong đó có việc viết gia phả và thành lập ban soạn dịch, tìm hiểu để viết lại gia phả, y sao lại bản chính của các cụ để lại là quan trọng. Phải nói đây là cuộc họp có nhiều ý nghĩa của cả họ.</p>',
-        '<p>Ngày 11-03-1990 tức ngày 15 tháng 02 năm Canh Ngọ ban viết gia phả gồm có các ông sau:<br> <b>Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng</b>. Và lên kế hoạch tiến hành dịch và viết phấn đấu đến Đông chí phải hoàn thành tập <b>NGUYỄN TỘC PHẢ KÝ</b>.</p>',
-        '<p>Tập <b>NGUYỄN TỘC PHẢ KÝ</b> này được viết căn cứ vào các tư liệu sau đây:</p>',
-        '<p>Dịch từ chữ Hán cuốn phả ký của cố Nguyễn Hoàng Cừ sao chép trước lúc đi thi nhưng chỉ được đến đời thứ tám và các quyển viết tay bằng chữ quốc ngữ của ông <b>NGỌC MƠN</b> (cố Vợi), <b>NGỌC HIỆP</b>, các ông trưởng chi một <b>VĂN HIẾU, TRƯỜNG AN</b>, và các ông cao tuổi trong họ cung cấp đồng thời có sự giúp đỡ của các ông <b>ĐOÀN ĐỈNH, ÔNG TÂM, CỤ GIÁO CHINH, ÔNG PHÓ ĐIỀN</b> Nam Giang và tra khảo các gia phả khác của các dòng họ có liên quan, đến tận các gia đình trong dòng họ để ghi chép lại.</p>',
-        '<p>Do những hạn chế trong việc sưu tầm, biên soạn cũng như sự hiểu biết nên việc biên soạn chắc chắn không tránh khỏi những thiếu sót, rất mong được sự đóng góp và bổ sung ý kiến của các Cụ, Ông, Bà, con cháu trong và ngoài dòng họ để các lần tái bản sau được đầy đủ rõ ràng hơn. Mải tới Đông chí năm 2013 (Quý Tỵ) con cháu mới sao chép, biên soạn lại được tập <b>NGUYỄN TỘC PHẢ KÝ</b> này với đầy đủ ý nghĩa và hy vọng nó sẽ tiếp thêm sức mạnh cho dòng họ Nguyễn để có những thắng lợi mới, góp phần vào sự phát triển của dòng họ cũng như góp phần cho sự phát triển của cả dân tộc.</p>',
-        '<p>Trong quá trình sao viết lại không sao tránh khỏi những thiếu sót chúng tôi rất mong có sự đóng góp xây dựng chung để tập <b>NGUYỄN TỘC PHẢ KÝ</b> này hoàn thiện hơn.</p>',
+        '<p>Vì thế theo nguyện vọng chung xây dựng và giữ vững tôn thống NGUYỄN TỘC là trách nhiệm và nghĩa vụ của mỗi thành viên trong dòng họ. Do đó ngày 25-02-1990 tức là ngày Xuân Kỵ ngày 01 tháng 02 năm Canh Ngọ các ông đầu chi và các cụ cao tuổi trong họ đã họp tại nhà ông Nguyễn Văn Chơn (nhà thờ của họ) dưới sự chủ trì của ông Nguyễn Văn Hiếu trưởng họ, đã họp bàn nhiều việc trong đó có việc viết gia phả và thành lập ban soạn dịch, tìm hiểu để viết lại gia phả, y sao lại bản chính của các cụ để lại là quan trọng. Phải nói đây là cuộc họp có nhiều ý nghĩa của cả họ.</p>',
+        '<p>Ngày 11-03-1990 tức ngày 15 tháng 02 năm Canh Ngọ ban viết gia phả gồm có các ông sau:</p>',
+        '<p><b>Nguyễn Văn Hiếu, Nguyễn Văn Nghĩa, Nguyễn Hoàng Biền, Nguyễn Văn Yên, Nguyễn Công Thăng.</b> Và lên kế hoạch tiến hành dịch và viết phấn đấu đến Đông chí phải hoàn thành tập NGUYỄN TỘC PHẢ KÝ.</p>',
+        '<p>Tập NGUYỄN TỘC PHẢ KÝ này được viết căn cứ vào các tư liệu sau đây:</p>',
+        '<p>Dịch từ chữ Hán cuốn phả ký của cố Nguyễn Hoàng Cừ sao chép trước lúc đi thi nhưng chỉ được đến đời thứ tám và các quyển viết tay bằng chữ quốc ngữ của ông NGỌC MƠN (cố Vợi), NGỌC HIỆP, các ông trưởng chi một VĂN HIẾU, TRƯỜNG AN, và các ông cao tuổi trong họ cung cấp đồng thời có sự giúp đỡ của các ông ĐOÀN ĐỈNH, ÔNG TÂM, CỤ GIÁO CHINH, ÔNG PHÓ ĐIỀN Nam Giang và tra khảo các gia phả khác của các dòng họ có liên quan, đến tận các gia đình trong dòng họ để ghi chép lại.</p>',
+        '<p>Do những hạn chế trong việc sưu tầm, biên soạn cũng như sự hiểu biết nên việc biên soạn chắc chắn không tránh khỏi những thiếu sót, rất mong được sự đóng góp và bổ sung ý kiến của các Cụ, Ông, Bà, con cháu trong và ngoài dòng họ để các lần tái bản sau được đầy đủ rõ ràng hơn. Mãi tới Đông chí năm 2013 (Quý Tỵ) con cháu mới sao chép, biên soạn lại được tập NGUYỄN TỘC PHẢ KÝ này với đầy đủ ý nghĩa và hy vọng nó sẽ tiếp thêm sức mạnh cho dòng họ Nguyễn để có những thắng lợi mới, góp phần vào sự phát triển của dòng họ cũng như góp phần cho sự phát triển của cả dân tộc.</p>',
+        '<p>Trong quá trình sao viết lại không sao tránh khỏi những thiếu sót chúng tôi rất mong có sự đóng góp xây dựng chung để tập NGUYỄN TỘC PHẢ KÝ này hoàn thiện hơn.</p>',
         '<p>Một lần nữa xin chân thành cảm ơn sự đóng góp chung của các quý vị gần xa!</p>',
-        '<p style="text-align: right; margin-top: 20px;">',
-        '<b>Ngày 22 tháng 12 năm 2013</b><br>',
-        '<em>Đông Chí 20 tháng 11 năm Quý Tỵ</em>',
-        '</p>',
+        '<p style="text-align: right; font-style: italic; margin-top: 25px;">Ngày 22 tháng 12 năm 2013<br>Đông Chí 20 tháng 11 năm Quý Tỵ</p>',
         '</div>'
     ]
-    return "".join(parts)
-
-
-# --- THANH ĐĂNG NHẬP & PHÂN QUYỀN (SIDEBAR) ---
+    return ''.join(parts)# --- THANH ĐĂNG NHẬP & PHÂN QUYỀN (SIDEBAR) ---
 st.sidebar.markdown("## 🔐 Cổng Đăng Nhập Phân Quyền")
 
 ACCOUNTS = {
