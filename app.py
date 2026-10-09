@@ -99,6 +99,28 @@ st.markdown(
                 padding: 0 !important;
             }
         }
+/* PHÓNG TO NÚT TAB ĐỂ DỄ BẤM TRÊN ĐIỆN THOẠI */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .stTabs [data-baseweb="tab"] {
+            height: 50px;
+            white-space: pre-wrap;
+            background-color: #f5f0eb;
+            border-radius: 8px 8px 0px 0px;
+            padding: 10px 18px;
+            font-size: 16px !important;
+            font-weight: bold;
+            color: #4e342e;
+            border: 1px solid #d7ccc8;
+        }
+        .stTabs [aria-selected="true"] {
+            background-color: #795548 !important;
+            color: white !important;
+            border-color: #5d4037 !important;
+        }
     </style>
 """,
     unsafe_allow_html=True,
@@ -230,8 +252,70 @@ if not df.empty:
     if "id" not in df.columns:
         df["id"] = [str(k + 1000) for k in range(len(df))]
 
+    if "id" not in df.columns:
+        df["id"] = [str(k + 1000) for k in range(len(df))]
+
     if "_original_index" not in df.columns:
         df["_original_index"] = range(len(df))
+
+    # --- ĐỒNG BỘ TOÀN CỤC: SẮP XẾP CÂY GIA PHẢ NGAY TỪ GỐC ĐỂ CON LUÔN ĐỨNG SÁT SAU CHA ---
+    row_list = df.to_dict(orient="records")
+    
+    # Map tên (chữ thường) -> danh sách các con
+    children_map = {}
+    for r in row_list:
+        f_val = str(r.get("father", "")).strip().lower()
+        if f_val and f_val != "chưa rõ":
+            if f_val not in children_map:
+                children_map[f_val] = []
+            children_map[f_val].append(r)
+            
+    # Sắp xếp anh em trong cùng một nhà theo đúng thứ tự thời gian nhập ban đầu (_original_index)
+    for f_val in children_map:
+        children_map[f_val].sort(key=lambda x: x.get("_original_index", 0))
+
+    visited_ids = set()
+    ordered_records = []
+
+    def traverse_global_tree(row):
+        r_id = str(row.get("id", ""))
+        if r_id in visited_ids:
+            return
+        visited_ids.add(r_id)
+        ordered_records.append(row)
+        
+        c_name = str(row.get("fullName", "")).strip().lower()
+        if c_name in children_map:
+            for child in children_map[c_name]:
+                traverse_global_tree(child)
+
+    # Tìm các gốc phả hệ (không có cha, hoặc cha không tồn tại trong danh sách)
+    all_names = {str(r.get("fullName", "")).strip().lower() for r in row_list}
+    roots = [
+        r for r in row_list
+        if not r.get("father")
+        or str(r.get("father")).strip() == ""
+        or str(r.get("father")).strip().lower() not in all_names
+        or str(r.get("father")).strip().lower() == str(r.get("fullName", "")).strip().lower()
+    ]
+    
+    # Sắp xếp các gốc theo số đời và thời gian
+    roots.sort(key=lambda x: (get_gen_number(x.get("generation", "")), x.get("_original_index", 0)))
+
+    for root in roots:
+        traverse_global_tree(root)
+        
+    # Vét cạn các trường hợp còn lại (nếu có đứt gãy liên kết)
+    remaining = [r for r in row_list if str(r.get("id", "")) not in visited_ids]
+    remaining.sort(key=lambda x: (get_gen_number(x.get("generation", "")), x.get("_original_index", 0)))
+    for r in remaining:
+        traverse_global_tree(r)
+        
+    # Gán lại _original_index theo chuẩn cây gia phả mới
+    for new_idx, r in enumerate(ordered_records):
+        r["_original_index"] = new_idx
+        
+    df = pd.DataFrame(ordered_records)
 
 
 # --- HÀM NỘI DUNG TỔNG QUAN ---
@@ -356,10 +440,10 @@ st.markdown(
 # --- MENU ĐIỀU HƯỚNG ---
 tabs = st.tabs([
     "🏠 Tổng Quan",
-    "📋 Danh Sách & Quản Trị Trực Tiếp",
-    "📝 Bảng Thêm/Xóa Nhanh (Excel Grid)",
     "🌳 Cây Phả Hệ (Dạng Đứng)",
     "🌳 Cây Phả Hệ (Hàng Ngang Chi Tiết)",
+    "📋 Danh Sách & Quản Trị Trực Tiếp",
+    "📝 Bảng Thêm/Xóa Nhanh (Excel Grid)",
     "📖 In Cuốn Gia Phả",
     "💾 Xuất Dữ Liệu",
     "📥 Nhập Dữ Liệu",
@@ -367,10 +451,10 @@ tabs = st.tabs([
 ])
 
 tab_tong_quan = tabs[0]
-tab_danh_sach = tabs[1]
-tab_excel_grid = tabs[2]
-tab_so_do_doi = tabs[3]
-tab_so_do_cot = tabs[4]
+tab_so_do_doi = tabs[1]      # Cây phả hệ dạng đứng đưa lên vị trí 2
+tab_so_do_cot = tabs[2]      # Cây phả hệ hàng ngang đưa lên vị trí 3
+tab_danh_sach = tabs[3]
+tab_excel_grid = tabs[4]
 tab_in_phu = tabs[5]
 tab_xuat = tabs[6]
 tab_nhap = tabs[7]
