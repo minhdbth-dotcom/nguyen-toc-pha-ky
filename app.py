@@ -440,22 +440,22 @@ st.markdown(
 # --- MENU ĐIỀU HƯỚNG ---
 tabs = st.tabs([
     "🏠 Tổng Quan",
+    "📖 In Cuốn Gia Phả",                  # Đưa lên vị trí thứ 2 ngay sau Tổng quan
     "🌳 Cây Phả Hệ (Dạng Đứng)",
     "🌳 Cây Phả Hệ (Hàng Ngang Chi Tiết)",
     "📋 Danh Sách & Quản Trị Trực Tiếp",
     "📝 Bảng Thêm/Xóa Nhanh (Excel Grid)",
-    "📖 In Cuốn Gia Phả",
     "💾 Xuất Dữ Liệu",
     "📥 Nhập Dữ Liệu",
     "⚙️ Quản Trị (Thêm Mới)",
 ])
 
 tab_tong_quan = tabs[0]
-tab_so_do_doi = tabs[1]      # Cây phả hệ dạng đứng đưa lên vị trí 2
-tab_so_do_cot = tabs[2]      # Cây phả hệ hàng ngang đưa lên vị trí 3
-tab_danh_sach = tabs[3]
-tab_excel_grid = tabs[4]
-tab_in_phu = tabs[5]
+tab_in_phu = tabs[1]         # Tab in sách gia phả được gán vào vị trí 1
+tab_so_do_doi = tabs[2]      # Cây phả hệ dạng đứng chuyển xuống vị trí 2
+tab_so_do_cot = tabs[3]      # Cây phả hệ hàng ngang chuyển xuống vị trí 3
+tab_danh_sach = tabs[4]
+tab_excel_grid = tabs[5]
 tab_xuat = tabs[6]
 tab_nhap = tabs[7]
 tab_quan_tri = tabs[8]
