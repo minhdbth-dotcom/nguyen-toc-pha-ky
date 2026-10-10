@@ -325,9 +325,9 @@ def get_loi_tua_html():
         '<h3 style="color: #b30000; font-weight: bold; margin-bottom: 15px; text-align: left;">Lời nói đầu</h3>',
         '<p>Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách. Các cụ ngày xưa đã nói:</p>',
         '<ul style="margin-left: 20px;">',
-        '<li><em>Nhân do hổ tổ</em></li>',
-        '<li><em>Mộc do hổ bản</em></li>',
-        '<li><em>Thủy do hổ nguyên.</em></li>',
+        '<li><em>Nhân do hồ tổ</em></li>',
+        '<li><em>Mộc do hồ bản</em></li>',
+        '<li><em>Thủy do hồ nguyên.</em></li>',
         '</ul>',
         '<p><b>Đại ý như sau:</b></p>',
         '<ul style="margin-left: 20px;">',
@@ -461,41 +461,90 @@ tab_nhap = tabs[7]
 tab_quan_tri = tabs[8]
 
 
-# ================= TAB 1: TỔNG QUAN =================
-with tab_tong_quan:
-  col1, col2, col3 = st.columns(3)
-  with col1:
-    st.markdown(
-        f"""<div class="metric-card">
-              <p style="color: gray; margin: 0;">Tổng số thành viên toàn tộc</p>
-              <h2 style="color: #795548; margin: 5px 0;">{len(df)}</h2>
-          </div>""",
-        unsafe_allow_html=True,
-    )
-  with col2:
-    gen_count = (
-        df["generation"].nunique()
-        if not df.empty and "generation" in df.columns
-        else 0
-    )
-    st.markdown(
-        f"""<div class="metric-card">
-              <p style="color: gray; margin: 0;">Số đời đã quy tập</p>
-              <h2 style="color: #2e7d32; margin: 5px 0;">{gen_count}</h2>
-          </div>""",
-        unsafe_allow_html=True,
-    )
-  with col3:
-    st.markdown(
-        """<div class="metric-card">
-              <p style="color: gray; margin: 0;">Trạng thái dữ liệu</p>
-              <h4 style="color: #1976d2; margin: 8px 0;">Đã lưu tự động (Local)</h4>
-          </div>""",
-        unsafe_allow_html=True,
-    )
+# ==================== TRANG TỔNG QUAN / GIỚI THIỆU ===================
+with tab_tong_quan: # (Hoặc tên biến tab tương ứng của trang tổng quan trong code của bác)
+    st.markdown("""
+    <div style="text-align: center; padding: 10px 0 20px 0;">
+        <span style="background-color: #f7eedd; color: #8c6239; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; font-family: 'Times New Roman', serif; border: 1px solid #d4c5b9;">PHẢ KÝ DÒNG HỌ NGUYỄN</span>
+        <h1 style="color: #5c3a21; font-family: 'Times New Roman', serif; margin-top: 10px; font-size: 32px; text-transform: uppercase;">NGUỒN GỐC PHÁT TÍCH & TRUYỀN THỐNG GIA TỘC</h1>
+        <p style="color: #666; font-family: 'Times New Roman', serif; font-size: 16px; font-style: italic;">Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-  # Hiển thị nội dung lời tựa tổng quan chuẩn HTML
-  st.markdown(get_loi_tua_html(), unsafe_allow_html=True)
+    # Style chung cho các hộp khối thông tin
+    box_style = """
+        background-color: #fcf9f2; 
+        border: 1px solid #e5dbc9; 
+        border-left: 5px solid #8c6239; 
+        padding: 20px; 
+        border-radius: 6px; 
+        margin-bottom: 20px; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        font-family: 'Times New Roman', serif;
+    """
+
+    # 1. Lời mở đầu & Triết lý nguồn cội
+    st.markdown(f"""
+    <div style="{box_style}">
+        <h3 style="color: #5c3a21; margin-top: 0; font-size: 20px;">📜 1. Lời mở đầu & Triết lý nguồn cội</h3>
+        <p style="font-style: italic; color: #444; margin-bottom: 10px;">"Họ hàng và gia đình có phả ký cũng giống như đất nước có sử sách." Các cụ ngày xưa đã dạy:</p>
+        <ul style="color: #333; line-height: 1.6; margin-bottom: 10px;">
+            <li><b>Nhân do hồ tổ</b> (Người phải có tổ)</li>
+            <li><b>Mộc do hồ bản</b> (Cây phải có gốc)</li>
+            <li><b>Thủy do hồ nguyên</b> (Nước phải có nguồn)</li>
+        </ul>
+        <p style="color: #444; line-height: 1.6; margin: 0;"><i>Cây có gốc mới nở cành sinh ngọn / Nước có nguồn mới bể rộng sông sâu / Người ta có nguồn gốc từ đâu / Có tổ tiên trước rồi sau có mình.</i></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 2 cột cho phần 2 và phần 3
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(f"""
+        <div style="{box_style} height: 100%;">
+            <h3 style="color: #5c3a21; margin-top: 0; font-size: 20px;">🌍 2. Hành trình di cư & Lập nghiệp</h3>
+            <p style="color: #333; line-height: 1.7; text-align: justify; margin: 0;">
+                Kể từ khi cố Thủy tổ từ bản tộc Tiên Tổ ở <b>Hải Dương tinh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã</b>, ban đầu di cư vào bản tỉnh Hà Trung phủ, Hoằng Hóa huyện, Dương Sơn xã, Đại Yên thôn sinh cơ lập nghiệp bằng nghề thợ rèn (Thiết tương triệu cơ). Sau đó, gia tộc chuyển lên <b>Hội Hiền thôn, Phúc Trạch xã</b> vào thời vua Lê Chính Hòa (1680 – 1704). Tính đến nay đã gần 300 năm, hình thành <b>5 chi phái</b> với trên 100 hộ.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown(f"""
+        <div style="{box_style} height: 100%;">
+            <h3 style="color: #5c3a21; margin-top: 0; font-size: 20px;">🏛️ 3. Thủy tổ khảo & Các thế hệ</h3>
+            <ul style="color: #333; line-height: 1.7; padding-left: 20px; margin: 0;">
+                <li><b>Húy:</b> Công tình | <b>Tự:</b> Trung Lương | <b>Tỷ Húy:</b> Thị Thịnh (Hiệu: Tử Tai).</li>
+                <li><b>Sinh hạ 2 người con:</b> Trường húy <b>Công Dinh</b> (tự Trung Ý, phụng tự vi thủy tổ); Thứ húy <b>Văn Tự</b> (vô tự).</li>
+                <li>Tư liệu gốc được sao dịch từ bản chữ Hán của cố Nguyễn Hoàng Cử (từ đời Thành Thái tháng 2 năm Nhâm Thìn 1882) và tài liệu của các cụ trong họ.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # 4. Truyền thống & Lịch sử biên soạn
+    st.markdown(f"""
+    <div style="{box_style}">
+        <h3 style="color: #5c3a21; margin-top: 0; font-size: 20px;">📖 4. Truyền thống & Lịch sử biên soạn</h3>
+        <p style="color: #333; line-height: 1.7; text-align: justify; margin-bottom: 10px;">
+            Trải qua các thời kỳ lịch sử, con cháu dòng họ đã tham gia các phong trào yêu nước, đóng góp công sức cho sự nghiệp giải phóng dân tộc, nhiều gia đình được tặng Bằng khen có công với nước.
+        </p>
+        <p style="color: #333; line-height: 1.7; text-align: justify; margin: 0;">
+            Ngày 25/02/1990, các cụ cao tuổi và đầu chi đã họp tại nhà thờ họ dưới sự chủ trì của Trường họ Nguyễn Văn Hiếu để thành lập ban soạn dịch. Tới Đông chí năm 2013 (Quý Tỵ), tập Phả Ký chính thức được hoàn thiện để lưu truyền muôn đời.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 5. Quy mô số hóa hiện tại (Tự động lấy số lượng thành viên thực tế từ dữ liệu nếu có)
+    total_members = len(df) if 'df' in globals() and not df.empty else 231
+    st.markdown(f"""
+    <div style="{box_style}">
+        <h3 style="color: #5c3a21; margin-top: 0; font-size: 20px;">💻 5. Quy mô số hóa hiện tại</h3>
+        <p style="color: #333; line-height: 1.7; text-align: justify; margin: 0;">
+            Trải qua gần 300 năm hình thành và phát triển từ năm 1680, dòng họ Nguyễn tại Hội Hiền nay đã phát triển lớn mạnh. Hệ thống số hóa hiện tại đã quy tập được <b>{total_members} thành viên</b> trải dài qua nhiều thế hệ, tập trung vào <b>6 chi phái</b> (Gốc, Chi I, Chi II, Chi III, Chi IV, Chi V) (các nhánh còn lại đang tiếp tục được bổ sung). Con cháu đời đời ghi khắc công đức tổ tiên, đoàn kết xây dựng gia tộc văn hóa và phát triển quê hương đất nước.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 # ================= TAB 2: DANH SÁCH & QUẢN TRỊ TRỰC TIẾP =================
 with tab_danh_sach:
     st.subheader(
@@ -1144,12 +1193,12 @@ with tab_so_do_cot:
                 )
 
 # ==================== TAB 6: IN CUỐN GIA PHẢ ===================
-    with tab_in_phu:
-        st.subheader("📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Chuẩn Trang Trọng)")
-        st.info("💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách.")
+with tab_in_phu:
+    st.subheader("📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Chuẩn Trang Trọng)")
+    st.info("💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách.")
 
-        # CSS chung cho toàn bộ các trang in gia phả mang phong cách giấy cổ và khung kép
-        st.markdown("""
+    # CSS chuẩn lề sách in: Lề trái 2.5cm, lề phải 1.8cm, đồng bộ kích thước trang bìa và trang nội dung
+    st.markdown("""
 <style>
 .giay-co-kinh {
     background-color: #fcf9f2;
@@ -1158,81 +1207,165 @@ with tab_so_do_cot:
     background-position: 0 0, 15px 15px;
     border: 4px double #795548 !important;
     border-radius: 4px;
-    padding: 50px 40px;
+    padding: 50px 1.8cm 50px 2.5cm !important; /* Lề trái 2.5cm, Lề phải 1.8cm */
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     max-width: 850px;
     margin: 0 auto 30px auto;
     box-sizing: border-box;
 }
-.trang-bia {
-    min-height: 82vh;
+
+/* Riêng trang bìa đồng bộ kích thước khung nhưng căn giữa tuyệt đối */
+.giay-trang-bia {
+    background-color: #fcf9f2;
+    background-image: radial-gradient(#e5dbc9 0.8px, transparent 0.8px), radial-gradient(#e5dbc9 0.8px, #fcf9f2 0.8px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    border: 4px double #795548 !important;
+    border-radius: 4px;
+    padding: 40px 20px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 850px;
+    margin: 0 auto 30px auto;
+    box-sizing: border-box;
+    text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    page-break-after: always;
 }
 </style>
 """, unsafe_allow_html=True)
 
-        # 1. TRANG BÌA
-        cover_html = """
-<div class="giay-co-kinh trang-bia">
-    <div style="font-size: 22px; font-weight: bold; color: #795548; font-family: 'Times New Roman', serif; margin-bottom: 20px; letter-spacing: 2px;">ĐẠI TỘC GIA PHẢ</div>
-    <div style="font-size: 38px; font-weight: bold; color: #4e342e; font-family: 'Times New Roman', serif; text-transform: uppercase; margin-bottom: 20px; line-height: 1.2;">NGUYỄN TỘC PHẢ KÝ</div>
-    <div style="font-size: 20px; font-weight: bold; color: #5d4037; font-family: 'Times New Roman', serif; margin-bottom: 35px;">TOÀN TỘC 5 CHI</div>
-    <hr style="width: 45%; margin: 20px auto; border-top: 2px solid #795548;">
-    <div style="font-size: 15px; color: #444; font-family: 'Times New Roman', serif; margin-top: 30px; line-height: 1.9;">
-        <b>Địa chỉ dòng họ:</b> Thôn Hội Hiền, xã Tây Hồ, huyện Thọ Xuân, tỉnh Thanh Hóa<br>
-        <b>Nguyên quán Thủy tổ:</b> Hải Dương tinh, Nam Sách phủ, Tuyên Minh huyện, An Đô Hạ xã<br>
-        <i style="margin-top: 30px; display: block; font-size: 16px; color: #795548;">Lưu truyền đời đời cho con cháu muôn phương</i>
+    # ==================== TAB 6: IN CUỐN GIA PHẢ ===================
+with tab_in_phu:
+    st.subheader("📖 Bản In Sách Gia Phả Dòng Họ (Khổ Đứng A4 - Chuẩn Trang Trọng)")
+    st.info("💡 Bác nhấn **Ctrl + P** (hoặc **Cmd + P** trên Mac), trong cài đặt máy in chọn khổ giấy **Portrait (Đứng)** để in các trang sách.")
+
+    # CSS chuẩn lề sách in và class riêng cho trang bìa tràn viền khung cổ
+    st.markdown("""
+<style>
+.giay-co-kinh {
+    background-color: #fcf9f2;
+    background-image: radial-gradient(#e5dbc9 0.8px, transparent 0.8px), radial-gradient(#e5dbc9 0.8px, #fcf9f2 0.8px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    border: 4px double #795548 !important;
+    border-radius: 4px;
+    padding: 50px 1.8cm 50px 2.5cm !important; /* Lề chuẩn cho trang nội dung văn bản */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 850px;
+    margin: 0 auto 30px auto;
+    box-sizing: border-box;
+}
+
+/* Khung giấy cổ dành riêng cho trang bìa: sát mép, tràn viền cân đối */
+.giay-bia-full {
+    background-color: #fcf9f2;
+    background-image: radial-gradient(#e5dbc9 0.8px, transparent 0.8px), radial-gradient(#e5dbc9 0.8px, #fcf9f2 0.8px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    border: 4px double #795548 !important;
+    border-radius: 4px;
+    padding: 12px !important; /* Tràn sát mép khung viền kép */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 850px;
+    margin: 0 auto 30px auto;
+    box-sizing: border-box;
+    text-align: center;
+    page-break-after: always;
+}
+</style>
+""", unsafe_allow_html=True)
+
+    # 1. TRANG BÌA CHÍNH (Ảnh tràn sát mép khung giấy cổ)
+    import os
+    import base64
+
+    img_data_b64 = ""
+    img_filename = None
+    for filename in ["bia_giapha.jpg", "bia_giapha.png", "bia.jpg", "bia.png"]:
+        if os.path.exists(filename):
+            img_filename = filename
+            break
+
+    if img_filename:
+        try:
+            with open(img_filename, "rb") as img_file:
+                img_data_b64 = base64.b64encode(img_file.read()).decode("utf-8")
+        except Exception as e:
+            pass
+
+    if img_data_b64:
+        cover_display_html = f"""
+<div class="giay-bia-full">
+    <img src="data:image/jpeg;base64,{img_data_b64}" style="width: 100%; height: auto; display: block; margin: 0 auto; border: 1px solid #795548; box-sizing: border-box;" alt="Trang Bìa Nguyễn Tộc Phả Ký">
+</div>
+"""
+    else:
+        cover_display_html = """
+<div class="giay-bia-full">
+    <h3 style="color: red; padding: 40px;">⚠️ Không tìm thấy file ảnh bìa trong thư mục dự án!</h3>
+</div>
+"""
+    st.markdown(cover_display_html, unsafe_allow_html=True)
+
+    # 2. TRANG LỜI NÓI ĐẦU / LỜI TỰA (Đã loại bỏ tiêu đề thừa, chỉ giữ 1 tiêu đề chuẩn căn giữa)
+    raw_intro = ""
+    if 'get_loi_tua_html' in globals():
+        try:
+            raw_intro = get_loi_tua_html()
+            # Nếu hàm trả về có chứa thẻ tiêu đề cũ màu đỏ, ta lọc/bỏ bớt để tránh bị lặp
+            import re
+            raw_intro = re.sub(r'<h[1-3][^>]*>.*?</h[1-3]>', '', raw_intro, flags=re.IGNORECASE)
+        except:
+            pass
+
+    intro_page_html = f"""
+<div class="giay-co-kinh" style="page-break-after: always;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #5c3a21; font-family: 'Times New Roman', serif; text-transform: uppercase; border-bottom: 2px solid #795548; display: inline-block; padding-bottom: 8px; margin: 0 auto;">LỜI NÓI ĐẦU</h2>
+    </div>
+    <div style="font-size: 15px; color: #333; line-height: 1.8; font-family: 'Times New Roman', serif; text-align: justify;">
+        {raw_intro if raw_intro.strip() else '<p>Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây. Ghi chép gia phả là lưu giữ cội nguồn tổ tiên cho con cháu muôn đời...</p>'}
     </div>
 </div>
 """
-        st.markdown(cover_html, unsafe_allow_html=True)
+    st.markdown(intro_page_html, unsafe_allow_html=True)
 
-        # 2. TRANG LỜI TỰA / GIỚI THIỆU
-        intro_content = get_loi_tua_html() if 'get_loi_tua_html' in globals() else ''
-        intro_page_html = f"""
-<div class="giay-co-kinh" style="text-align: left;">
-    {intro_content}
-</div>
-"""
-        st.markdown(intro_page_html, unsafe_allow_html=True)
-
-        # 3. CÁC TRANG CHI TIẾT CÁC ĐỜI & THÀNH VIÊN
-        if not df.empty and "generation" in df.columns:
-            sorted_gens = sorted(
-                df["generation"].dropna().unique(), key=get_gen_number if 'get_gen_number' in globals() else str
-            )
-            for gen in sorted_gens:
-                gen_members = df[df["generation"] == gen].sort_values(by=["_original_index"] if "_original_index" in df.columns else df.columns[0])
+    # 3. CÁC TRANG CHI TIẾT CÁC ĐỜI & THÀNH VIÊN (Canh đều 2 bên)
+    if 'df' in globals() and not df.empty and "generation" in df.columns:
+        sorted_gens = sorted(
+            df["generation"].dropna().unique(), key=get_gen_number if 'get_gen_number' in globals() else str
+        )
+        for gen in sorted_gens:
+            gen_members = df[df["generation"] == gen].sort_values(by=["_original_index"] if "_original_index" in df.columns else df.columns[0])
+            
+            members_html = ""
+            for _, r in gen_members.iterrows():
+                name = r.get("fullName", "Chưa rõ")
+                chi = r.get("chi", "Gốc")
+                father = r.get("father", "")
+                spouse = r.get("spouse", "")
+                notes = r.get("notes", "")
                 
-                members_html = ""
-                for _, r in gen_members.iterrows():
-                    name = r.get("fullName", "Chưa rõ")
-                    chi = r.get("chi", "Gốc")
-                    father = r.get("father", "")
-                    spouse = r.get("spouse", "")
-                    notes = r.get("notes", "")
-                    
-                    father_str = f" | Cha: {father}" if father and str(father).strip() != "" else ""
-                    spouse_str = f" | Vợ/Chồng: {spouse}" if spouse and str(spouse).strip() != "" else ""
-                    notes_str = f"<br><span style='color: #666; font-style: italic;'>Thông tin: {notes}</span>" if notes and str(notes).strip() != "" else ""
-                    
-                    members_html += f'<div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #e0d4c3; font-family: \'Times New Roman\', serif;"><b style="color: #4e342e; font-size: 16px;">• {name}</b> <span style="color: #795548; font-size: 14px;">(Chi {chi}{father_str}{spouse_str})</span>{notes_str}</div>'
+                father_str = f" | Cha: {father}" if father and str(father).strip() != "" else ""
+                spouse_str = f" | Vợ/Chồng: {spouse}" if spouse and str(spouse).strip() != "" else ""
+                notes_str = f"<br><span style='color: #666; font-style: italic;'>Thông tin: {notes}</span>" if notes and str(notes).strip() != "" else ""
+                
+                members_html += f'<div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #e0d4c3; font-family: \'Times New Roman\', serif;"><b style="color: #4e342e; font-size: 16px;">• {name}</b> <span style="color: #795548; font-size: 14px;">(Chi {chi}{father_str}{spouse_str})</span>{notes_str}</div>'
 
-                gen_page_html = f"""
-<div class="giay-co-kinh" style="text-align: left;">
-    <h3 style="color: #5c3a21; font-family: 'Times New Roman', serif; text-align: center; border-bottom: 2px solid #795548; padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase;">
-        {gen}
-    </h3>
-    <div style="font-size: 15px; color: #333; line-height: 1.6;">
+            gen_page_html = f"""
+<div class="giay-co-kinh" style="page-break-after: always;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #5c3a21; font-family: 'Times New Roman', serif; text-transform: uppercase; border-bottom: 2px solid #795548; display: inline-block; padding-bottom: 8px; margin: 0 auto;">{gen}</h2>
+    </div>
+    <div style="font-size: 15px; color: #333; line-height: 1.8; font-family: 'Times New Roman', serif; text-align: justify;">
         {members_html}
     </div>
 </div>
 """
-                st.markdown(gen_page_html, unsafe_allow_html=True)# ================= TAB 7: XUẤT DỮ LIỆU =================
+            st.markdown(gen_page_html, unsafe_allow_html=True)# ================= TAB 7: XUẤT DỮ LIỆU =================
 with tab_xuat:
     st.subheader("💾 Xuất Dữ Liệu Gia Phả (Backup)")
     if not df.empty:
